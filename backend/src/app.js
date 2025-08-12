@@ -7,11 +7,11 @@ import nodemailer from 'nodemailer';
 import morgan from 'morgan';
 import routes from './routes/index.js';
 
-// Configurar zona horaria
-process.env.TZ = 'America/Bogota';
-console.log('🇨🇴 [SERVER] Zona horaria configurada:', process.env.TZ);
-console.log('🕐 [SERVER] Hora actual Colombia:', new Date().toLocaleString('es-CO', {
-  timeZone: 'America/Bogota',
+// Configurar zona horaria Argentina
+process.env.TZ = 'America/Argentina/Buenos_Aires';
+console.log('�� [SERVER] Zona horaria configurada:', process.env.TZ);
+console.log('🕐 [SERVER] Hora actual Argentina:', new Date().toLocaleString('es-AR', {
+  timeZone: 'America/Argentina/Buenos_Aires',
   year: 'numeric',
   month: '2-digit',
   day: '2-digit',
@@ -25,15 +25,14 @@ dotenv.config();
 
 const app = express();
 app.use(morgan('dev'));
+const upload = multer({ dest: 'uploads/' });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Static files example (uncomment if needed)
 // app.use('/images', express.static(path.join(process.cwd(), 'images')));
 
-// Multer config (archivos en /uploads)
-const upload = multer({ dest: path.join(process.cwd(), 'uploads/') });
-app.use(upload.any());
+// Multer solo se usa en rutas específicas (ejemplo en /upload y paquetesRoutes)
 
 // CORS configuration
 app.use(cors({
@@ -71,6 +70,8 @@ app.post('/send-email', async (req, res, next) => {
     next(error);
   }
 });
+
+
 
 // Ejemplo de endpoint para subir archivos
 app.post('/upload', upload.single('file'), (req, res) => {
