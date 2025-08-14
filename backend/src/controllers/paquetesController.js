@@ -43,16 +43,31 @@ export const update = async (req, res, next) => {
   try {
     const paquete = await PaqueteTuristico.findByPk(req.params.id);
     if (!paquete) return res.status(404).json({ error: 'No encontrado' });
-    let imagenesUrls = paquete.imagenes || [];
+    
+    // Manejar imágenes existentes que se quieren mantener
+    let imagenesUrls = [];
+    if (req.body.imagenesExistentes) {
+      try {
+        imagenesUrls = JSON.parse(req.body.imagenesExistentes);
+      } catch (e) {
+        imagenesUrls = paquete.imagenes || [];
+      }
+    } else {
+      imagenesUrls = paquete.imagenes || [];
+    }
+    
+    // Agregar nuevas imágenes subidas
     if (req.files && req.files.length > 0) {
       const uploadPromises = req.files.map(file => uploadImage(file.path, 'paquetes'));
       const results = await Promise.all(uploadPromises);
       imagenesUrls = imagenesUrls.concat(results.map(r => r.secure_url));
     }
+    
     await paquete.update({
       ...req.body,
       imagenes: imagenesUrls,
     });
+    
     res.json(paquete);
   } catch (err) {
     next(err);

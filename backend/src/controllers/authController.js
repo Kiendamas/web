@@ -1,3 +1,9 @@
+import User from '../models/user.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { sendRegistrationMail } from '../utils/mailer.js';
+import { sendPasswordRecoveryMail } from '../utils/mailer.js';
+
 export const resetPassword = async (req, res, next) => {
   try {
     const { token, password } = req.body;
@@ -26,7 +32,7 @@ export const resetPassword = async (req, res, next) => {
     next(error);
   }
 };
-import { sendPasswordRecoveryMail } from '../utils/mailer.js';
+
 export const recoverPassword = async (req, res, next) => {
   try {
     const { username } = req.body;
@@ -50,10 +56,7 @@ export const recoverPassword = async (req, res, next) => {
   }
 };
 
-import User from '../models/user.js';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { sendRegistrationMail } from '../utils/mailer.js';
+
 export const register = async (req, res, next) => {
   try {
     const { username, password, role } = req.body;

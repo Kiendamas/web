@@ -14,6 +14,18 @@ Resena.init({
     type: DataTypes.TEXT,
     allowNull: false,
   },
+  nombreCliente: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  emailCliente: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  comentario: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
   media: {
     type: DataTypes.JSON, // Array de URLs (Cloudinary)
     allowNull: true,
