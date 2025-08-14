@@ -40,7 +40,7 @@ const DashboardTabs = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'overview':
-        return <DashboardStats />;
+        return <DashboardStats onTabChange={setActiveTab} />;
       case 'categorias':
         return <CategoriasManager />;
       case 'subcategorias':
@@ -50,13 +50,21 @@ const DashboardTabs = () => {
       case 'resenas':
         return <ResenasManager />;
       case 'users':
-        return isAdmin ? <UsersManager /> : <div>No autorizado</div>;
+        return <UsersManager />;
+      case 'usuarios':
+        return <UsersManager />;
       case 'analytics':
-        return isAdmin ? <div className="text-center py-8 text-gray-500">Analytics próximamente...</div> : <div>No autorizado</div>;
+        return (
+          <div className="text-center py-12">
+            <ChartBarIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Analytics Dashboard</h3>
+            <p className="text-gray-500">Próximamente: Gráficos detallados y métricas avanzadas</p>
+          </div>
+        );
       case 'settings':
         return <DashboardSettings />;
       default:
-        return <DashboardStats />;
+        return <DashboardStats onTabChange={setActiveTab} />;
     }
   };
 
