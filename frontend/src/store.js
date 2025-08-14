@@ -19,6 +19,7 @@ import { categoriasApi, categoriasReducer } from './features/categorias';
 import { subcategoriasApi, subcategoriasReducer } from './features/subcategorias';
 import { resenasApi, resenasReducer } from './features/resenas';
 import { contactoApi, contactoReducer } from './features/contacto';
+import { heroSlidesApi, heroSlidesSlice } from './features/heroSlides';
 
 // Configuración de persistencia
 const persistConfig = {
@@ -56,6 +57,7 @@ const rootReducer = combineReducers({
   subcategorias: subcategoriasReducer,
   resenas: resenasReducer,
   contacto: contactoReducer,
+  heroSlides: heroSlidesSlice,
   [authApi.reducerPath]: authApi.reducer,
   [usersApi.reducerPath]: usersApi.reducer,
   [paquetesApi.reducerPath]: paquetesApi.reducer,
@@ -63,6 +65,7 @@ const rootReducer = combineReducers({
   [subcategoriasApi.reducerPath]: subcategoriasApi.reducer,
   [resenasApi.reducerPath]: resenasApi.reducer,
   [contactoApi.reducerPath]: contactoApi.reducer,
+  [heroSlidesApi.reducerPath]: heroSlidesApi.reducer,
 });
 
 // Reducer persistido
@@ -82,7 +85,8 @@ export const store = configureStore({
       .concat(categoriasApi.middleware)
       .concat(subcategoriasApi.middleware)
       .concat(resenasApi.middleware)
-      .concat(contactoApi.middleware),
+      .concat(contactoApi.middleware)
+      .concat(heroSlidesApi.middleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 

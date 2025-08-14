@@ -22,6 +22,12 @@ export function uploadVideo(filePath, folder = 'videos') {
   return cloudinary.uploader.upload(filePath, {
     resource_type: 'video',
     folder,
+    chunk_size: 6000000, // 6MB chunks
+    eager: [
+      { width: 300, height: 300, crop: 'pad', audio_codec: 'none' }, 
+      { width: 160, height: 100, crop: 'crop', gravity: 'south', audio_codec: 'none' }
+    ],
+    eager_async: true,
   });
 }
 

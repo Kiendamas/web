@@ -6,6 +6,7 @@ import categoriasRoutes from './categoriasRoutes.js';
 import subcategoriasRoutes from './subcategoriasRoutes.js';
 import resenasRoutes from './resenasRoutes.js';
 import contactoRoutes from './contactoRoutes.js';
+import heroSlidesRoutes from './heroSlidesRoutes.js';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use('/categorias', categoriasRoutes);
 router.use('/subcategorias', subcategoriasRoutes);
 router.use('/resenas', resenasRoutes);
 router.use('/contacto', contactoRoutes);
+router.use('/hero-slides', heroSlidesRoutes);
 
 export default router;
