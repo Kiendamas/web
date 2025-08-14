@@ -5,6 +5,7 @@ import HeroSection from '../components/landing/HeroSection';
 import CategoryFilter from '../components/landing/CategoryFilter';
 import ServicesSection from '../components/landing/ServicesSection';
 import PackagesSection from '../components/landing/PackagesSection';
+import AboutSection from '../components/landing/AboutSection';
 import SocialMediaFixed from '../components/landing/SocialMediaFixed';
 
 const LandingPage = () => {
@@ -71,6 +72,9 @@ const LandingPage = () => {
         {/* Sección de Paquetes */}
         <PackagesSection selectedFilter={activeFilter} />
         
+        {/* Sección de Nosotros */}
+        <AboutSection />
+        
         {/* Secciones de contenido */}
         <div className="min-h-screen">
           {/* Secciones principales */}
@@ -89,13 +93,6 @@ const LandingPage = () => {
             <div className="text-center">
               <h2 className="text-4xl font-bold text-gray-900 mb-4">Información Comercial</h2>
               <p className="text-gray-600">Conoce nuestros paquetes y promociones...</p>
-            </div>
-          </div>
-
-          <div id="nosotros" className="min-h-screen bg-gray-50 flex items-center justify-center">
-            <div className="text-center">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Nosotros</h2>
-              <p className="text-gray-600">Conoce nuestra historia y misión...</p>
             </div>
           </div>
 
