@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 
-const CategoryFilter = () => {
+const CategoryFilter = ({ onFilterChange, activeFilter = 'todos' }) => {
   const [isSticky, setIsSticky] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('premium');
 
   const categories = [
-    { id: 'premium', label: 'PREMIUM', color: 'bg-amber-600' },
-    { id: 'internacional', label: 'INTERNACIONAL', color: 'bg-blue-600' },
-    { id: 'nacional', label: 'NACIONAL', color: 'bg-green-600' },
+    { id: 'todos', label: 'TODOS', color: 'bg-primary' },
+    { id: 'premium', label: 'PREMIUM', color: 'bg-accent' },
+    { id: 'internacionales', label: 'INTERNACIONAL', color: 'bg-secondary' },
+    { id: 'nacionales', label: 'NACIONAL', color: 'bg-brown' },
   ];
 
   useEffect(() => {
@@ -20,12 +20,15 @@ const CategoryFilter = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (categoryId) => {
-    setActiveCategory(categoryId);
-    // Aquí puedes agregar lógica para scroll a secciones específicas
-    const sectionElement = document.getElementById(`section-${categoryId}`);
-    if (sectionElement) {
-      sectionElement.scrollIntoView({ 
+  const handleFilterClick = (categoryId) => {
+    if (onFilterChange) {
+      onFilterChange(categoryId);
+    }
+    
+    // Scroll suave hacia la sección de paquetes
+    const paquetesSection = document.getElementById('paquetes');
+    if (paquetesSection) {
+      paquetesSection.scrollIntoView({ 
         behavior: 'smooth',
         block: 'start'
       });
@@ -40,23 +43,23 @@ const CategoryFilter = () => {
           : 'absolute top-32 left-1/2 transform -translate-x-1/2'
       }`}
     >
-      <div className="max-w-md mx-auto px-4 py-3">
+      <div className="max-w-lg mx-auto px-4 py-3">
         <div className="flex bg-white rounded-full shadow-lg overflow-hidden border border-gray-200">
           {categories.map((category, index) => (
             <button
               key={category.id}
-              onClick={() => scrollToSection(category.id)}
-              className={`flex-1 px-4 py-3 text-sm font-medium transition-all duration-200 relative ${
-                activeCategory === category.id
+              onClick={() => handleFilterClick(category.id)}
+              className={`flex-1 px-3 py-3 text-xs sm:text-sm font-medium transition-all duration-200 relative font-raleway ${
+                activeFilter === category.id
                   ? `${category.color} text-white shadow-lg`
-                  : 'text-gray-700 hover:bg-gray-50'
+                  : 'text-dark hover:bg-cream'
               } ${
                 index === 0 ? 'rounded-l-full' : 
                 index === categories.length - 1 ? 'rounded-r-full' : ''
               }`}
             >
               {category.label}
-              {activeCategory === category.id && (
+              {activeFilter === category.id && (
                 <div className="absolute inset-0 bg-black/10 rounded-full animate-pulse" />
               )}
             </button>
@@ -67,9 +70,9 @@ const CategoryFilter = () => {
         {isSticky && (
           <div className="flex justify-center mt-2">
             <div className="flex space-x-1">
-              <div className="w-1 h-1 bg-amber-400 rounded-full animate-bounce"></div>
-              <div className="w-1 h-1 bg-amber-400 rounded-full animate-bounce delay-100"></div>
-              <div className="w-1 h-1 bg-amber-400 rounded-full animate-bounce delay-200"></div>
+              <div className="w-1 h-1 bg-accent rounded-full animate-bounce"></div>
+              <div className="w-1 h-1 bg-accent rounded-full animate-bounce delay-100"></div>
+              <div className="w-1 h-1 bg-accent rounded-full animate-bounce delay-200"></div>
             </div>
           </div>
         )}

@@ -22,6 +22,31 @@ export const paquetesApi = createApi({
       providesTags: ['Paquete'],
     }),
 
+    // Get packages by category
+    getPaquetesByCategoria: builder.query({
+      query: (categoriaId) => `/paquetes/categoria/${categoriaId}`,
+      providesTags: ['Paquete'],
+    }),
+
+    // Get packages by subcategory
+    getPaquetesBySubcategoria: builder.query({
+      query: (subcategoriaId) => `/paquetes/subcategoria/${subcategoriaId}`,
+      providesTags: ['Paquete'],
+    }),
+
+    // Get packages with filters
+    getPaquetesFiltered: builder.query({
+      query: ({ categoria, subcategoria, tipo }) => {
+        let url = '/paquetes?';
+        const params = new URLSearchParams();
+        if (categoria) params.append('categoria', categoria);
+        if (subcategoria) params.append('subcategoria', subcategoria);
+        if (tipo) params.append('tipo', tipo);
+        return url + params.toString();
+      },
+      providesTags: ['Paquete'],
+    }),
+
     // Get package by ID
     getPaqueteById: builder.query({
       query: (id) => `/paquetes/${id}`,
@@ -62,6 +87,9 @@ export const paquetesApi = createApi({
 
 export const {
   useGetPaquetesQuery,
+  useGetPaquetesByCategoriaQuery,
+  useGetPaquetesBySubcategoriaQuery,
+  useGetPaquetesFilteredQuery,
   useGetPaqueteByIdQuery,
   useCreatePaqueteMutation,
   useUpdatePaqueteMutation,

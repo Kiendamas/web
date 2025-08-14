@@ -1,9 +1,22 @@
 import PaqueteTuristico from '../models/paqueteTuristico.js';
+import Categoria from '../models/categoria.js';
+import Subcategoria from '../models/subcategoria.js';
 import { uploadImage } from '../config/cloudinary.js';
 
 export const getAll = async (req, res, next) => {
   try {
-    const paquetes = await PaqueteTuristico.findAll();
+    const paquetes = await PaqueteTuristico.findAll({
+      include: [
+        {
+          model: Categoria,
+          attributes: ['id', 'nombre']
+        },
+        {
+          model: Subcategoria,
+          attributes: ['id', 'nombre']
+        }
+      ]
+    });
     res.json(paquetes);
   } catch (err) {
     next(err);
@@ -12,9 +25,95 @@ export const getAll = async (req, res, next) => {
 
 export const getOne = async (req, res, next) => {
   try {
-    const paquete = await PaqueteTuristico.findByPk(req.params.id);
+    const paquete = await PaqueteTuristico.findByPk(req.params.id, {
+      include: [
+        {
+          model: Categoria,
+          attributes: ['id', 'nombre']
+        },
+        {
+          model: Subcategoria,
+          attributes: ['id', 'nombre']
+        }
+      ]
+    });
     if (!paquete) return res.status(404).json({ error: 'No encontrado' });
     res.json(paquete);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getByCategoria = async (req, res, next) => {
+  try {
+    const { categoriaId } = req.params;
+    const paquetes = await PaqueteTuristico.findAll({
+      where: { categoriaId },
+      include: [
+        {
+          model: Categoria,
+          attributes: ['id', 'nombre']
+        },
+        {
+          model: Subcategoria,
+          attributes: ['id', 'nombre']
+        }
+      ],
+      order: [['subcategoriaId', 'ASC'], ['nombre', 'ASC']]
+    });
+    res.json(paquetes);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getBySubcategoria = async (req, res, next) => {
+  try {
+    const { subcategoriaId } = req.params;
+    const paquetes = await PaqueteTuristico.findAll({
+      where: { subcategoriaId },
+      include: [
+        {
+          model: Categoria,
+          attributes: ['id', 'nombre']
+        },
+        {
+          model: Subcategoria,
+          attributes: ['id', 'nombre']
+        }
+      ],
+      order: [['nombre', 'ASC']]
+    });
+    res.json(paquetes);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getFiltered = async (req, res, next) => {
+  try {
+    const { categoria, subcategoria, tipo } = req.query;
+    const whereClause = {};
+    
+    if (categoria) whereClause.categoriaId = categoria;
+    if (subcategoria) whereClause.subcategoriaId = subcategoria;
+    if (tipo) whereClause.tipo = tipo;
+    
+    const paquetes = await PaqueteTuristico.findAll({
+      where: whereClause,
+      include: [
+        {
+          model: Categoria,
+          attributes: ['id', 'nombre']
+        },
+        {
+          model: Subcategoria,
+          attributes: ['id', 'nombre']
+        }
+      ],
+      order: [['nombre', 'ASC']]
+    });
+    res.json(paquetes);
   } catch (err) {
     next(err);
   }

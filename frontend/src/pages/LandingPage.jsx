@@ -4,11 +4,13 @@ import LandingSidebar from '../components/landing/LandingSidebar';
 import HeroSection from '../components/landing/HeroSection';
 import CategoryFilter from '../components/landing/CategoryFilter';
 import ServicesSection from '../components/landing/ServicesSection';
+import PackagesSection from '../components/landing/PackagesSection';
 import SocialMediaFixed from '../components/landing/SocialMediaFixed';
 
 const LandingPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('inicio');
+  const [activeFilter, setActiveFilter] = useState('todos');
 
   // Cerrar sidebar cuando se hace clic fuera
   useEffect(() => {
@@ -34,6 +36,10 @@ const LandingPage = () => {
     setSidebarOpen(false);
   };
 
+  const handleFilterChange = (filter) => {
+    setActiveFilter(filter);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -54,10 +60,16 @@ const LandingPage = () => {
       {/* Hero Section */}
       <main>
         <HeroSection />
-        <CategoryFilter />
+        <CategoryFilter 
+          onFilterChange={handleFilterChange}
+          activeFilter={activeFilter}
+        />
         
         {/* Sección de Servicios */}
         <ServicesSection />
+        
+        {/* Sección de Paquetes */}
+        <PackagesSection selectedFilter={activeFilter} />
         
         {/* Secciones de contenido */}
         <div className="min-h-screen">
