@@ -1,5 +1,5 @@
 import HeroSlide from '../models/heroSlide.js';
-import { uploadImage } from '../config/cloudinary.js';
+import { uploadImage, uploadVideo } from '../config/cloudinary.js';
 
 export const getAll = async (req, res, next) => {
   try {
@@ -41,14 +41,26 @@ export const create = async (req, res, next) => {
 
     // Si se subió un archivo de media
     if (req.files && req.files['media'] && req.files['media'][0]) {
-      const mediaResult = await uploadImage(req.files['media'][0].path, 'hero');
-      mediaUrl = mediaResult.secure_url;
+      const mediaType = req.body.mediaType || 'image';
+      
+      console.log(`Subiendo ${mediaType} de tamaño: ${req.files['media'][0].size} bytes`);
+      
+      if (mediaType === 'video') {
+        const mediaResult = await uploadVideo(req.files['media'][0].path, 'hero/videos');
+        mediaUrl = mediaResult.secure_url;
+        console.log('Video subido exitosamente:', mediaUrl);
+      } else {
+        const mediaResult = await uploadImage(req.files['media'][0].path, 'hero/images');
+        mediaUrl = mediaResult.secure_url;
+        console.log('Imagen subida exitosamente:', mediaUrl);
+      }
     }
 
     // Si se subió un archivo de poster (para videos)
     if (req.files && req.files['poster'] && req.files['poster'][0]) {
       const posterResult = await uploadImage(req.files['poster'][0].path, 'hero/posters');
       posterUrl = posterResult.secure_url;
+      console.log('Poster subido exitosamente:', posterUrl);
     }
 
     const slideData = {
@@ -61,6 +73,20 @@ export const create = async (req, res, next) => {
     res.status(201).json(slide);
   } catch (err) {
     console.error('Error creating hero slide:', err);
+    
+    // Enviar mensaje de error más específico
+    if (err.message && err.message.includes('File size too large')) {
+      return res.status(400).json({ 
+        error: 'El archivo es muy grande. El tamaño máximo permitido es 100MB.' 
+      });
+    }
+    
+    if (err.message && err.message.includes('Invalid image file')) {
+      return res.status(400).json({ 
+        error: 'Formato de archivo no válido. Solo se permiten imágenes y videos.' 
+      });
+    }
+    
     next(err);
   }
 };
@@ -75,8 +101,15 @@ export const update = async (req, res, next) => {
 
     // Si se subió un nuevo archivo de media
     if (req.files && req.files['media'] && req.files['media'][0]) {
-      const mediaResult = await uploadImage(req.files['media'][0].path, 'hero');
-      mediaUrl = mediaResult.secure_url;
+      const mediaType = req.body.mediaType || slide.mediaType || 'image';
+      
+      if (mediaType === 'video') {
+        const mediaResult = await uploadVideo(req.files['media'][0].path, 'hero/videos');
+        mediaUrl = mediaResult.secure_url;
+      } else {
+        const mediaResult = await uploadImage(req.files['media'][0].path, 'hero/images');
+        mediaUrl = mediaResult.secure_url;
+      }
     }
 
     // Si se subió un nuevo archivo de poster

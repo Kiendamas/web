@@ -3,7 +3,22 @@ import { getAll, getAllAdmin, getOne, create, update, deleteSlide, updateOrder, 
 import { authenticateToken, isAdmin } from '../middlewares/auth.js';
 import multer from 'multer';
 
-const upload = multer({ dest: 'uploads/' });
+// Configurar multer con límites más grandes para videos
+const upload = multer({ 
+  dest: 'uploads/',
+  limits: {
+    fileSize: 100 * 1024 * 1024, // 100MB limit para videos
+  },
+  fileFilter: (req, file, cb) => {
+    // Permitir imágenes y videos
+    if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Solo se permiten archivos de imagen y video'), false);
+    }
+  }
+});
+
 const router = Router();
 
 // Rutas públicas

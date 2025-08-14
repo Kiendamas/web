@@ -38,40 +38,45 @@ const HeroSection = () => {
 
   const slides = heroSlides.length > 0 ? heroSlides : defaultSlides;
 
-  // Auto-slide cada 5 segundos
+  // Auto-slide cada 5 segundos, pero pausar si hay video reproduciéndose
   useEffect(() => {
-    if (slides.length <= 1) return; // No hacer auto-slide si hay 1 o menos slides
+    if (slides.length <= 1) return;
+    
+    const currentSlideData = slides[currentSlide];
+    const isCurrentSlideVideo = currentSlideData?.mediaType === 'video';
     
     const interval = setInterval(() => {
-      if (!isVideoPlaying) {
+      // No cambiar slide si es video y está reproduciéndose
+      if (!isCurrentSlideVideo || !isVideoPlaying) {
         dispatch(nextSlide(slides.length));
       }
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isVideoPlaying, slides.length, dispatch]);
+  }, [isVideoPlaying, slides.length, dispatch, currentSlide, slides]);
+
+  // Manejar reproducción automática de videos
+  useEffect(() => {
+    const currentSlideData = slides[currentSlide];
+    if (currentSlideData?.mediaType === 'video') {
+      // Iniciar video automáticamente cuando se muestre el slide
+      dispatch(setVideoPlaying(true));
+    } else {
+      // Parar video si cambiamos a imagen
+      dispatch(setVideoPlaying(false));
+    }
+  }, [currentSlide, slides, dispatch]);
 
   const handleNextSlide = () => {
     dispatch(nextSlide(slides.length));
-    dispatch(setVideoPlaying(false));
   };
 
   const handlePrevSlide = () => {
     dispatch(prevSlide(slides.length));
-    dispatch(setVideoPlaying(false));
   };
 
   const handleGoToSlide = (index) => {
     dispatch(setCurrentSlide(index));
-    dispatch(setVideoPlaying(false));
-  };
-
-  const handleVideoPlay = () => {
-    dispatch(setVideoPlaying(true));
-  };
-
-  const handleVideoEnd = () => {
-    dispatch(setVideoPlaying(false));
   };
 
   const handleButtonClick = (link) => {
@@ -124,27 +129,62 @@ const HeroSection = () => {
               />
             ) : (
               <div className="relative h-full">
-                {!isVideoPlaying ? (
-                  <div
-                    className="h-full bg-cover bg-center bg-no-repeat cursor-pointer relative"
-                    style={{ backgroundImage: `url(${slide.posterUrl || slide.mediaUrl})` }}
-                    onClick={handleVideoPlay}
-                  >
-                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                      <button className="bg-white/90 hover:bg-white rounded-full p-4 transition-all duration-200 transform hover:scale-110">
+                <video
+                  className="h-full w-full object-cover"
+                  src={slide.mediaUrl}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  onLoadedData={() => {
+                    if (index === currentSlide) {
+                      dispatch(setVideoPlaying(true));
+                    }
+                  }}
+                  onError={(e) => {
+                    console.error('Error loading video:', e);
+                    dispatch(setVideoPlaying(false));
+                  }}
+                  style={{ 
+                    display: index === currentSlide && isVideoPlaying ? 'block' : 'none' 
+                  }}
+                />
+                
+                {/* Fallback poster/thumbnail */}
+                {(!isVideoPlaying || index !== currentSlide) && (
+                  <div className="h-full bg-gray-800 bg-cover bg-center bg-no-repeat absolute inset-0 flex items-center justify-center">
+                    {/* Intentar mostrar poster si existe */}
+                    {slide.posterUrl && (
+                      <img 
+                        src={slide.posterUrl}
+                        alt="Video preview"
+                        className="h-full w-full object-cover absolute inset-0"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    )}
+                    
+                    {/* Video preview (primer frame) */}
+                    <video
+                      className="h-full w-full object-cover absolute inset-0"
+                      src={slide.mediaUrl}
+                      preload="metadata"
+                      muted
+                      style={{ display: slide.posterUrl ? 'none' : 'block' }}
+                      onError={() => {
+                        console.warn('No se pudo cargar preview del video');
+                      }}
+                    />
+                    
+                    {/* Play button overlay */}
+                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-10">
+                      <div className="bg-white/90 hover:bg-white rounded-full p-4 transition-all duration-200 transform hover:scale-110">
                         <PlayIcon className="h-8 w-8 text-gray-900 ml-1" />
-                      </button>
+                      </div>
                     </div>
                   </div>
-                ) : (
-                  <video
-                    className="h-full w-full object-cover"
-                    src={slide.mediaUrl}
-                    autoPlay
-                    muted
-                    loop
-                    onEnded={handleVideoEnd}
-                  />
                 )}
               </div>
             )}
@@ -199,16 +239,21 @@ const HeroSection = () => {
 
       {/* Dots Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3">
-        {slides.map((_, index) => (
+        {slides.map((slide, index) => (
           <button
             key={index}
             onClick={() => handleGoToSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-200 ${
+            className={`relative w-3 h-3 rounded-full transition-all duration-200 ${
               index === currentSlide 
                 ? 'bg-white scale-125' 
                 : 'bg-white/50 hover:bg-white/75'
             }`}
-          />
+            title={slide.mediaType === 'video' ? 'Video' : 'Imagen'}
+          >
+            {slide.mediaType === 'video' && (
+              <PlayIcon className="absolute -top-1 -right-1 h-2 w-2 text-white" />
+            )}
+          </button>
         ))}
       </div>
     </div>
