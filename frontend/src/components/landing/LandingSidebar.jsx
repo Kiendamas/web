@@ -43,33 +43,33 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
       />
 
       {/* Sidebar */}
-      <div className={`sidebar fixed inset-y-0 left-0 z-50 w-80 sm:w-96 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
+      <div className={`sidebar fixed inset-y-0 left-0 z-50 w-80 sm:w-96 bg-kiendamas-cream shadow-xl transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="flex h-full flex-col overflow-y-auto">
           {/* Header del Sidebar */}
-          <div className="flex items-center justify-between px-6 py-6 bg-gradient-to-r from-amber-500 to-amber-600">
+          <div className="flex items-center justify-between px-6 py-6 bg-kiendamas-brown border-b border-gray-300/30">
             <div className="flex items-center space-x-3">
               <img
-                src="/logo.png"
+                src="/src/assets/logo.jpg"
                 alt="Kiendamas"
-                className="h-12 w-12 rounded-full object-cover border-2 border-white/20"
+                className="h-12 w-12 rounded-full object-cover border-2 border-white/30"
                 onError={(e) => {
-                  e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' fill='%23FFFFFF'/%3E%3Ctext x='24' y='30' text-anchor='middle' fill='%23B8860B' font-family='Arial' font-size='20' font-weight='bold'%3EK%3C/text%3E%3C/svg%3E";
+                  e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23B8860B'/%3E%3Ctext x='24' y='30' text-anchor='middle' fill='white' font-family='Raleway' font-size='18' font-weight='bold'%3EK%3C/text%3E%3C/svg%3E";
                 }}
               />
               <div>
-                <h2 className="text-xl font-bold text-white">
+                <h2 className="text-xl font-bold text-white font-raleway">
                   Kiendamas
                 </h2>
-                <p className="text-sm text-amber-100">
+                <p className="text-sm text-amber-100 font-raleway">
                   Agencia de Viajes
                 </p>
               </div>
             </div>
             <button
               type="button"
-              className="text-white hover:text-amber-200 transition-colors p-2 rounded-full hover:bg-white/10"
+              className="text-gray-700 hover:text-gray-900 transition-colors p-2 rounded-full hover:bg-white/20"
               onClick={onClose}
             >
               <XMarkIcon className="h-6 w-6" />
@@ -99,7 +99,7 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
                         ? 'text-amber-500' 
                         : 'text-gray-400 group-hover:text-amber-500'
                     }`} />
-                    <span className="font-semibold text-sm tracking-wide">
+                    <span className="font-raleway font-semibold text-sm tracking-wide">
                       {item.label}
                     </span>
                   </button>
@@ -109,9 +109,9 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
           </div>
 
           {/* Footer del Sidebar */}
-          <div className="border-t border-gray-200 px-6 py-6">
+          <div className="border-t border-gray-300/30 px-6 py-6 sidebar-bg">
             <div className="text-center">
-              <p className="text-sm text-gray-600 font-medium mb-3">
+              <p className="text-sm text-gray-600 font-raleway font-medium mb-3">
                 Tu aventura comienza aquí
               </p>
               <div className="flex justify-center space-x-2 mb-4">
@@ -119,7 +119,7 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
                 <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse delay-75"></div>
                 <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse delay-150"></div>
               </div>
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-gray-500 font-raleway">
                 <p>📧 info@kiendamas.com</p>
                 <p className="mt-1">📱 +54 9 11 1234-5678</p>
               </div>

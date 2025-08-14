@@ -3,6 +3,7 @@ import LandingHeader from '../components/landing/LandingHeader';
 import LandingSidebar from '../components/landing/LandingSidebar';
 import HeroSection from '../components/landing/HeroSection';
 import CategoryFilter from '../components/landing/CategoryFilter';
+import ServicesSection from '../components/landing/ServicesSection';
 import SocialMediaFixed from '../components/landing/SocialMediaFixed';
 
 const LandingPage = () => {
@@ -55,18 +56,14 @@ const LandingPage = () => {
         <HeroSection />
         <CategoryFilter />
         
+        {/* Sección de Servicios */}
+        <ServicesSection />
+        
         {/* Secciones de contenido */}
         <div className="min-h-screen">
           {/* Secciones principales */}
           <div id="inicio" className="min-h-screen pt-16">
             {/* Hero ya está incluido arriba */}
-          </div>
-
-          <div id="servicios" className="min-h-screen bg-white flex items-center justify-center">
-            <div className="text-center">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Nuestros Servicios</h2>
-              <p className="text-gray-600">Descubre todo lo que podemos hacer por ti...</p>
-            </div>
           </div>
 
           <div id="experiencias" className="min-h-screen bg-gray-50 flex items-center justify-center">

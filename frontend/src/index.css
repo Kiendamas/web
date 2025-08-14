@@ -1,6 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Fuente Raleway para el proyecto */
+.font-raleway {
+  font-family: 'Raleway', sans-serif;
+}
+
+/* Clase especial para el título principal */
+.title-raleway {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+}
+
+/* Color de fondo del sidebar */
+.sidebar-bg {
+  background-color: #F2E2CE;
+}
 
 /* Animaciones para el Hero Section */
 @keyframes fade-in {

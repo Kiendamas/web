@@ -21,42 +21,41 @@ const LandingHeader = ({ onMenuClick, onSectionClick, activeSection }) => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-kiendamas-cream shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo y Título */}
-          <div className="flex items-center space-x-3">
+          {/* Menú Hamburguesa */}
+          <div className="flex items-center">
             <button
               onClick={onMenuClick}
-              className="menu-button p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+              className="menu-button p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-white/20 transition-colors"
             >
               <Bars3Icon className="h-6 w-6" />
             </button>
+          </div>
+
+          {/* Logo y Título Centrado */}
+          <div className="flex items-center space-x-3 flex-1 justify-center">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <img
+                src="/src/assets/logo.jpg"
+                alt="Kiendamas"
+                className="h-12 w-12 rounded-full object-cover"
+                onError={(e) => {
+                  e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23B8860B'/%3E%3Ctext x='24' y='30' text-anchor='middle' fill='white' font-family='Raleway' font-size='18' font-weight='bold'%3EK%3C/text%3E%3C/svg%3E";
+                }}
+              />
+            </div>
             
-            <div className="flex items-center space-x-3">
-              {/* Logo */}
-              <div className="flex-shrink-0">
-                <img
-                  src="/logo.png" // Aquí puedes poner tu logo
-                  alt="Kiendamas"
-                  className="h-10 w-10 rounded-full object-cover"
-                  onError={(e) => {
-                    e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23B8860B'/%3E%3Ctext x='20' y='25' text-anchor='middle' fill='white' font-family='Arial' font-size='16' font-weight='bold'%3EK%3C/text%3E%3C/svg%3E";
-                  }}
-                />
-              </div>
-              
-              {/* Título */}
-              <div className="hidden sm:block">
-                <h1 className="text-xl font-bold text-gray-900">
-                  Kiendamas Agencia de Viajes
-                </h1>
-              </div>
-              <div className="sm:hidden">
-                <h1 className="text-lg font-bold text-gray-900">
-                  Kiendamas
-                </h1>
-              </div>
+            {/* Título con estilos específicos */}
+            <div>
+              <h1 className="font-raleway font-bold text-kiendamas-title leading-none tracking-none text-center text-gray-800 hidden sm:block">
+                Kiendamas Agencia de Viajes
+              </h1>
+              <h1 className="font-raleway font-bold text-xl leading-none tracking-none text-center text-gray-800 sm:hidden">
+                Kiendamas
+              </h1>
             </div>
           </div>
 
@@ -65,7 +64,7 @@ const LandingHeader = ({ onMenuClick, onSectionClick, activeSection }) => {
             <div className="relative">
               <button
                 onClick={() => setShowLoginMenu(!showLoginMenu)}
-                className="p-2 rounded-full text-gray-600 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                className="p-2 rounded-full text-gray-700 hover:text-gray-900 hover:bg-white/20 transition-colors"
               >
                 <UserIcon className="h-6 w-6" />
               </button>
