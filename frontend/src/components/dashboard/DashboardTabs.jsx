@@ -8,7 +8,8 @@ import {
   StarIcon,
   UsersIcon,
   ChartBarIcon,
-  CogIcon
+  CogIcon,
+  PhotoIcon
 } from '@heroicons/react/24/outline';
 
 // Componentes de cada sección
@@ -19,9 +20,11 @@ import PaquetesManager from './PaquetesManager';
 import ResenasManager from './ResenasManager';
 import UsersManager from './UsersManager';
 import DashboardSettings from './DashboardSettings';
+import HeroSlidesManager from './HeroSlidesManager';
 
 const tabs = [
   { id: 'overview', name: 'Resumen', icon: HomeIcon },
+  { id: 'hero-slides', name: 'Hero Slides', icon: PhotoIcon, adminOnly: true },
   { id: 'categorias', name: 'Categorías', icon: FolderIcon },
   { id: 'subcategorias', name: 'Subcategorías', icon: TagIcon },
   { id: 'paquetes', name: 'Paquetes', icon: MapIcon },
@@ -41,6 +44,8 @@ const DashboardTabs = () => {
     switch (activeTab) {
       case 'overview':
         return <DashboardStats onTabChange={setActiveTab} />;
+      case 'hero-slides':
+        return <HeroSlidesManager />;
       case 'categorias':
         return <CategoriasManager />;
       case 'subcategorias':
