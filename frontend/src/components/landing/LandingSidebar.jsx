@@ -43,33 +43,33 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
       />
 
       {/* Sidebar */}
-      <div className={`sidebar fixed inset-y-0 left-0 z-50 w-80 sm:w-96 bg-kiendamas-cream shadow-xl transform transition-transform duration-300 ease-in-out ${
+      <div className={`sidebar fixed inset-y-0 left-0 z-50 w-80 sm:w-96 bg-kiendamas-beige shadow-xl transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="flex h-full flex-col overflow-y-auto">
           {/* Header del Sidebar */}
-          <div className="flex items-center justify-between px-6 py-6 bg-kiendamas-brown border-b border-gray-300/30">
+          <div className="flex items-center justify-between px-6 py-6 bg-kiendamas-darkBrown border-b border-kiendamas-brown/30">
             <div className="flex items-center space-x-3">
               <img
                 src="/src/assets/logo.jpg"
                 alt="Kiendamas"
-                className="h-12 w-12 rounded-full object-cover border-2 border-white/30"
+                className="h-12 w-12 rounded-full object-cover border-2 border-kiendamas-beige/30"
                 onError={(e) => {
-                  e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23B8860B'/%3E%3Ctext x='24' y='30' text-anchor='middle' fill='white' font-family='Raleway' font-size='18' font-weight='bold'%3EK%3C/text%3E%3C/svg%3E";
+                  e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23E6AF32'/%3E%3Ctext x='24' y='30' text-anchor='middle' fill='%23646464' font-family='Raleway' font-size='18' font-weight='bold'%3EK%3C/text%3E%3C/svg%3E";
                 }}
               />
               <div>
-                <h2 className="text-xl font-bold text-white font-raleway">
+                <h2 className="text-xl font-bold text-kiendamas-beige font-raleway">
                   Kiendamas
                 </h2>
-                <p className="text-sm text-amber-100 font-raleway">
+                <p className="text-sm text-kiendamas-beige/80 font-raleway">
                   Agencia de Viajes
                 </p>
               </div>
             </div>
             <button
               type="button"
-              className="text-gray-700 hover:text-gray-900 transition-colors p-2 rounded-full hover:bg-white/20"
+              className="text-kiendamas-beige hover:text-white transition-colors p-2 rounded-full hover:bg-white/20"
               onClick={onClose}
             >
               <XMarkIcon className="h-6 w-6" />
@@ -90,14 +90,14 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
                     }}
                     className={`w-full flex items-center px-4 py-4 text-left rounded-xl transition-all duration-200 group ${
                       activeSection === item.id
-                        ? 'bg-amber-50 text-amber-700 shadow-sm border-l-4 border-amber-500'
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-amber-600 hover:shadow-sm'
+                        ? 'bg-kiendamas-cream text-kiendamas-darkBrown shadow-sm border-l-4 border-kiendamas-gold'
+                        : 'text-kiendamas-text hover:bg-kiendamas-cream/50 hover:text-kiendamas-darkBrown hover:shadow-sm'
                     }`}
                   >
                     <Icon className={`h-6 w-6 mr-4 transition-colors ${
                       activeSection === item.id 
-                        ? 'text-amber-500' 
-                        : 'text-gray-400 group-hover:text-amber-500'
+                        ? 'text-kiendamas-gold' 
+                        : 'text-kiendamas-text group-hover:text-kiendamas-gold'
                     }`} />
                     <span className="font-raleway font-semibold text-sm tracking-wide">
                       {item.label}
@@ -109,17 +109,17 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
           </div>
 
           {/* Footer del Sidebar */}
-          <div className="border-t border-gray-300/30 px-6 py-6 sidebar-bg">
+          <div className="border-t border-kiendamas-darkBrown/30 px-6 py-6 bg-kiendamas-cream/50">
             <div className="text-center">
-              <p className="text-sm text-gray-600 font-raleway font-medium mb-3">
+              <p className="text-sm text-kiendamas-text font-raleway font-medium mb-3">
                 Tu aventura comienza aquí
               </p>
               <div className="flex justify-center space-x-2 mb-4">
-                <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
-                <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse delay-75"></div>
-                <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse delay-150"></div>
+                <div className="w-2 h-2 bg-kiendamas-gold rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-kiendamas-gold rounded-full animate-pulse delay-75"></div>
+                <div className="w-2 h-2 bg-kiendamas-gold rounded-full animate-pulse delay-150"></div>
               </div>
-              <div className="text-xs text-gray-500 font-raleway">
+              <div className="text-xs text-kiendamas-text/80 font-raleway">
                 <p>📧 info@kiendamas.com</p>
                 <p className="mt-1">📱 +54 9 11 1234-5678</p>
               </div>

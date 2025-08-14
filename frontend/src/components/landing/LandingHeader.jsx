@@ -21,14 +21,14 @@ const LandingHeader = ({ onMenuClick, onSectionClick, activeSection }) => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-kiendamas-cream shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-kiendamas-beige shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Menú Hamburguesa */}
           <div className="flex items-center">
             <button
               onClick={onMenuClick}
-              className="menu-button p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-white/20 transition-colors"
+              className="menu-button p-2 rounded-md text-kiendamas-text hover:text-kiendamas-darkBrown hover:bg-white/20 transition-colors"
             >
               <Bars3Icon className="h-6 w-6" />
             </button>
@@ -37,23 +37,15 @@ const LandingHeader = ({ onMenuClick, onSectionClick, activeSection }) => {
           {/* Logo y Título Centrado */}
           <div className="flex items-center space-x-3 flex-1 justify-center">
             {/* Logo */}
-            <div className="flex-shrink-0">
-              <img
-                src="/src/assets/logo.jpg"
-                alt="Kiendamas"
-                className="h-12 w-12 rounded-full object-cover"
-                onError={(e) => {
-                  e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='24' fill='%23B8860B'/%3E%3Ctext x='24' y='30' text-anchor='middle' fill='white' font-family='Raleway' font-size='18' font-weight='bold'%3EK%3C/text%3E%3C/svg%3E";
-                }}
-              />
-            </div>
+           
+           
             
             {/* Título con estilos específicos */}
             <div>
-              <h1 className="font-raleway font-bold text-kiendamas-title leading-none tracking-none text-center text-gray-800 hidden sm:block">
+              <h1 className="font-raleway font-bold text-kiendamas-title leading-none tracking-none text-center text-kiendamas-text hidden sm:block">
                 Kiendamas Agencia de Viajes
               </h1>
-              <h1 className="font-raleway font-bold text-xl leading-none tracking-none text-center text-gray-800 sm:hidden">
+              <h1 className="font-raleway font-bold text-xl leading-none tracking-none text-center text-kiendamas-text sm:hidden">
                 Kiendamas
               </h1>
             </div>
@@ -64,7 +56,7 @@ const LandingHeader = ({ onMenuClick, onSectionClick, activeSection }) => {
             <div className="relative">
               <button
                 onClick={() => setShowLoginMenu(!showLoginMenu)}
-                className="p-2 rounded-full text-gray-700 hover:text-gray-900 hover:bg-white/20 transition-colors"
+                className="p-2 rounded-full text-kiendamas-text hover:text-kiendamas-darkBrown hover:bg-white/20 transition-colors"
               >
                 <UserIcon className="h-6 w-6" />
               </button>

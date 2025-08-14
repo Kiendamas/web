@@ -3,6 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Configuración base con Raleway */
+body {
+  font-family: 'Raleway', sans-serif;
+}
+
 /* Fuente Raleway para el proyecto */
 .font-raleway {
   font-family: 'Raleway', sans-serif;
@@ -18,9 +23,29 @@
   text-align: center;
 }
 
-/* Color de fondo del sidebar */
-.sidebar-bg {
-  background-color: #F2E2CE;
+/* Clases para colores de la paleta Kiendamas */
+.text-kiendamas {
+  color: #646464; /* Color principal para títulos, iconos y textos */
+}
+
+.text-kiendamas-light {
+  color: #F2E2CE; /* Color claro para textos de servicios */
+}
+
+.bg-kiendamas-brown {
+  background-color: #8C592B; /* Fondo para sección de servicios */
+}
+
+.bg-kiendamas-beige {
+  background-color: #F2E2CE; /* Fondo del sidebar */
+}
+
+.bg-kiendamas-cream {
+  background-color: #F7E5CD; /* Crema claro */
+}
+
+.bg-kiendamas-gold {
+  background-color: #E6AF32; /* Dorado */
 }
 
 /* Animaciones para el Hero Section */

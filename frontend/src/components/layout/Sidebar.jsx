@@ -73,7 +73,7 @@ const SidebarContent = ({ navigation, user, onLogout }) => {
     <div className="flex flex-col h-full pt-5 pb-4 overflow-y-auto">
       {/* Header */}
       <div className="flex items-center flex-shrink-0 px-4 mb-5">
-        <h1 className="text-xl font-semibold text-gray-900">Boilerplate App</h1>
+        <h1 className="text-xl font-semibold text-gray-900">KIENDAMAS</h1>
       </div>
 
       {/* Navigation */}
