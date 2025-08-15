@@ -7,7 +7,8 @@ import {
   StarIcon,
   BriefcaseIcon,
   UsersIcon,
-  PhoneIcon
+  PhoneIcon,
+  ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 
 const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
@@ -16,9 +17,9 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
   const navigationItems = [
     { id: 'inicio', label: 'INICIO', icon: HomeIcon },
     { id: 'servicios', label: 'SERVICIOS', icon: CogIcon },
-    { id: 'experiencias', label: 'EXPERIENCIAS', icon: StarIcon },
-    { id: 'comercial', label: 'COMERCIAL', icon: BriefcaseIcon },
+    { id: 'paquetes', label: 'PAQUETES', icon: BriefcaseIcon },
     { id: 'nosotros', label: 'NOSOTROS', icon: UsersIcon },
+    { id: 'resenas', label: 'RESEÑAS', icon: ChatBubbleLeftRightIcon },
     { id: 'contacto', label: 'CONTACTO', icon: PhoneIcon },
   ];
 

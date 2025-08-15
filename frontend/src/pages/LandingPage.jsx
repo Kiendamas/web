@@ -8,6 +8,8 @@ import ServicesSection from '../components/landing/ServicesSection';
 import PackagesSection from '../components/landing/PackagesSection';
 import AboutSection from '../components/landing/AboutSection';
 import ContactSection from '../components/landing/ContactSection';
+import ReviewsSection from '../components/landing/ReviewsSection';
+import Footer from '../components/landing/Footer';
 import SocialMediaFixed from '../components/landing/SocialMediaFixed';
 
 const LandingPage = () => {
@@ -94,25 +96,14 @@ const LandingPage = () => {
           <ContactSection />
         </div>
         
-        {/* Secciones adicionales */}
-        <div id="inicio" className="min-h-screen pt-16">
-          {/* Hero ya está incluido arriba */}
-        </div>
-
-        <div id="experiencias" className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Experiencias Únicas</h2>
-            <p className="text-gray-600">Vive aventuras inolvidables...</p>
-          </div>
-        </div>
-
-        <div id="comercial" className="min-h-screen bg-white flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Información Comercial</h2>
-            <p className="text-gray-600">Conoce nuestros paquetes y promociones...</p>
-          </div>
+        {/* Sección de Reseñas */}
+        <div id="resenas">
+          <ReviewsSection />
         </div>
       </main>
+
+      {/* Footer */}
+      <Footer />
 
       {/* Redes Sociales Fijas */}
       <SocialMediaFixed />

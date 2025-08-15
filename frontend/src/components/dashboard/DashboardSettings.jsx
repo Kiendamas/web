@@ -35,32 +35,7 @@ const DashboardSettings = () => {
           </div>
         </div>
 
-        {/* Configuración del sistema */}
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">Sistema</h3>
-          </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-900">Estado del sistema</span>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  Activo
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-900">Modo de desarrollo</span>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                  Habilitado
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-900">Versión</span>
-                <span className="text-sm text-gray-500">1.0.0</span>
-              </div>
-            </div>
-          </div>
-        </div>
+       
       </div>
 
       {/* Acciones */}
