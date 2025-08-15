@@ -28,10 +28,10 @@ const AboutSection = () => {
   return (
     <section className="py-16 bg-kiendamas-rosa" id="nosotros">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Título de la sección */}
-        <div className="flex justify-center mb-12">
-          <div className="bg-white text-kiendamas-text px-12 py-4 rounded-full shadow-sm">
-            <h2 className="text-4xl font-normal font-raleway">
+        {/* Título de la sección desde el lado izquierdo */}
+        <div className="relative mb-12 -mx-4 sm:-mx-6 lg:-mx-8">
+          <div className="bg-white rounded-r-3xl pl-4 sm:pl-6 lg:pl-8 pr-12 py-4 max-w-md">
+            <h2 className="text-3xl font-normal text-kiendamas-text font-raleway leading-none">
               Nosotros
             </h2>
           </div>

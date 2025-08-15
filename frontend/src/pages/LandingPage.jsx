@@ -6,6 +6,7 @@ import CategoryFilter from '../components/landing/CategoryFilter';
 import ServicesSection from '../components/landing/ServicesSection';
 import PackagesSection from '../components/landing/PackagesSection';
 import AboutSection from '../components/landing/AboutSection';
+import ContactSection from '../components/landing/ContactSection';
 import SocialMediaFixed from '../components/landing/SocialMediaFixed';
 
 const LandingPage = () => {
@@ -75,6 +76,9 @@ const LandingPage = () => {
         {/* Sección de Nosotros */}
         <AboutSection />
         
+        {/* Sección de Contacto */}
+        <ContactSection />
+        
         {/* Secciones de contenido */}
         <div className="min-h-screen">
           {/* Secciones principales */}
@@ -93,13 +97,6 @@ const LandingPage = () => {
             <div className="text-center">
               <h2 className="text-4xl font-bold text-gray-900 mb-4">Información Comercial</h2>
               <p className="text-gray-600">Conoce nuestros paquetes y promociones...</p>
-            </div>
-          </div>
-
-          <div id="contacto" className="min-h-screen bg-white flex items-center justify-center">
-            <div className="text-center">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Contacto</h2>
-              <p className="text-gray-600">Ponte en contacto con nosotros...</p>
             </div>
           </div>
         </div>
