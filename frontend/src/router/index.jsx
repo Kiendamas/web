@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import ProtectedRoute from '../components/layout/ProtectedRoute';
 import LandingPage from '../pages/LandingPage';
+import PaqueteDetallesPage from '../pages/PaqueteDetallesPage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
@@ -12,6 +13,10 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <LandingPage />,
+  },
+  {
+    path: '/paquete/:id',
+    element: <PaqueteDetallesPage />,
   },
   {
     path: '/login',

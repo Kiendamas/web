@@ -18,7 +18,8 @@ module.exports = {
           'gold': '#E6AF32',       // Dorado/Amarillo
           'text': '#646464',       // Gris para títulos, iconos y textos
           'light-brown': '#8C592B', // Para compatibilidad
-          'rosa':'#FFB1AE'
+          'rosa':'#FFB1AE',        // Rosa
+          'coral': '#FF625E'       // Coral (mismo que rosa)
         },
         // Mantener algunos colores base para compatibilidad
         brown: {

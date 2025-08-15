@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useGetPaquetesQuery } from '../../features/paquetes/paquetesApi';
 
 const PackagesSection = ({ selectedFilter }) => {
+  const navigate = useNavigate();
   const { data: allPaquetes = [], isLoading: paquetesLoading } = useGetPaquetesQuery();
 
   // Filtrar paquetes según el filtro seleccionado
@@ -147,7 +149,10 @@ const PackagesSection = ({ selectedFilter }) => {
                           </div>
 
                           {/* Botón Más info */}
-                          <button className="w-full border-2 border-kiendamas-brown text-kiendamas-brown hover:bg-kiendamas-brown rounded-full hover:text-white py-2 px-4 transition-all duration-200 font-medium font-raleway">
+                          <button 
+                            onClick={() => navigate(`/paquete/${paquete.id}`)}
+                            className="w-full border-2 border-kiendamas-brown text-kiendamas-brown hover:bg-kiendamas-brown rounded-full hover:text-white py-2 px-4 transition-all duration-200 font-medium font-raleway"
+                          >
                             Más info
                           </button>
                         </div>
