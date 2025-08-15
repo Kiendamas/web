@@ -21,31 +21,27 @@ const LandingHeader = ({ onMenuClick, onSectionClick, activeSection }) => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-kiendamas-beige shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-30 bg-kiendamas-beige shadow-sm lg:left-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Menú Hamburguesa */}
-          <div className="flex items-center">
+          {/* Botón hamburguesa solo en móviles */}
+          <div className="lg:hidden">
             <button
               onClick={onMenuClick}
-              className="menu-button p-2 rounded-md text-kiendamas-text hover:text-kiendamas-darkBrown hover:bg-white/20 transition-colors"
+              className="p-2 rounded-md text-kiendamas-text hover:text-kiendamas-darkBrown hover:bg-white/20 transition-colors"
             >
               <Bars3Icon className="h-6 w-6" />
             </button>
           </div>
 
-          {/* Logo y Título Centrado */}
-          <div className="flex items-center space-x-3 flex-1 justify-center">
-            {/* Logo */}
-           
-           
-            
+          {/* Logo y Título */}
+          <div className="flex items-center space-x-3 flex-1 lg:justify-center">
             {/* Título con estilos específicos */}
-            <div>
-              <h1 className="font-raleway font-bold text-kiendamas-title leading-none tracking-none text-center text-kiendamas-text hidden sm:block">
+            <div className="text-center lg:text-center">
+              <h1 className="font-raleway font-bold text-kiendamas-title leading-none tracking-none text-kiendamas-text hidden sm:block">
                 Kiendamas Agencia de Viajes
               </h1>
-              <h1 className="font-raleway font-bold text-xl leading-none tracking-none text-center text-kiendamas-text sm:hidden">
+              <h1 className="font-raleway font-bold text-xl leading-none tracking-none text-kiendamas-text sm:hidden">
                 Kiendamas
               </h1>
             </div>
