@@ -1,7 +1,7 @@
 import React from 'react';
-import marianaImg from '../../Assets/MARIANA.png';
-import diegoImg from '../../Assets/DIEGO.png';
-import virginiaImg from '../../Assets/VIRGINIA.png';
+import marianaImg from '../../assets/MARIANA.png';
+import diegoImg from '../../assets/DIEGO.png';
+import virginiaImg from '../../assets/VIRGINIA.png';
 
 const AboutSection = () => {
   const teamMembers = [
