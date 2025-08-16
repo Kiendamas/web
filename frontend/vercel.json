@@ -2,5 +2,5 @@
   "buildCommand": "npm ci && npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "nodejs": "18"
+  "nodejs": "20.11.0"
 }
