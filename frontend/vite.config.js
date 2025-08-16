@@ -1,4 +1,3 @@
-// filepath: [vite.config.js](http://_vscodecontentref_/0)
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
@@ -21,23 +20,27 @@ export default defineConfig({
   
   build: {
     outDir: 'dist',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
   
   // Solo para desarrollo
   server: {
     port: process.env.PORT || 5173,
-    host: true, // Para Docker/containers
+    host: true,
     open: true,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
+    // Proxy solo en desarrollo
+    ...(process.env.NODE_ENV !== 'production' && {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3001',
+          changeOrigin: true,
+        },
       },
-    },
-  },
-  
-  // Variables de entorno
-  define: {
-    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+    }),
   },
 });
