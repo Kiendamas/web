@@ -1,6 +1,8 @@
 {
-  "buildCommand": "npm ci && npm run build",
-  "outputDirectory": "dist",
-  "framework": "vite",
-  "nodejs": "20.11.0"
+    "rewrites":[
+        {
+            "source": "/(.*)",
+            "destination":"/"
+        }
+    ]
 }
