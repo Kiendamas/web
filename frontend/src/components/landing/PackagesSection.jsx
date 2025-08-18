@@ -22,15 +22,15 @@ const PackageCard = ({ paquete, formatPrice, navigate }) => (
     {/* Contenido */}
     <div className="flex flex-col px-3 py-2">
       <div className="flex justify-between items-center mb-1">
-        <h4 className="text-base font-semibold text-gray-800 font-raleway truncate mr-2">
-          {paquete.nombre}
+        <h4 className="text-base font-semibold text-kiendamas-text font-raleway truncate mr-2">
+          {paquete.nombre.charAt(0).toUpperCase() + paquete.nombre.slice(1).toLowerCase()}
         </h4>
-        <span className="text-base font-bold text-gray-800 font-raleway whitespace-nowrap">
+        <span className="text-base font-bold text-kiendamas-text font-raleway whitespace-nowrap">
           {formatPrice(paquete.precio)}
         </span>
       </div>
 
-      <div className="text-xs text-gray-600 font-raleway leading-snug whitespace-normal break-words">
+      <div className="text-xs text-kiendamas-text font-raleway leading-snug whitespace-normal break-words">
         {(() => {
           if (!paquete.descripcion) return null;
           const primerPunto = paquete.descripcion.indexOf(".");
@@ -159,8 +159,10 @@ const PackagesSection = ({ selectedFilter }) => {
                     <div key={subcategoriaNombre} className="mt-4 mb-0">
                       {/* Header subcategoría */}
                       <div className="flex items-center justify-between mb-6 pl-8">
-                        <h3 className="text-lg font-semibold text-gray-600 font-raleway">
-                          {subcategoriaNombre}
+                        <h3
+                          className={`text-lg font-semibold font-raleway ${categoriaNombre === 'Nacionales' ? 'text-white' : 'text-gray-600'}`}
+                        >
+                          {subcategoriaNombre.charAt(0).toUpperCase() + subcategoriaNombre.slice(1).toLowerCase()}
                         </h3>
                       </div>
 
@@ -171,14 +173,14 @@ const PackagesSection = ({ selectedFilter }) => {
                             <button
                               onClick={() => scroll(carouselId, 'left')}
                               aria-label="Anterior"
-                              className="hidden md:flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-gray-600 z-10"
+                              className="hidden md:flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
                             >
                               <ChevronLeftIcon className="h-5 w-5" />
                             </button>
                             <button
                               onClick={() => scroll(carouselId, 'right')}
                               aria-label="Siguiente"
-                              className="hidden md:flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-gray-600 z-10"
+                              className="hidden md:flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
                             >
                               <ChevronRightIcon className="h-5 w-5" />
                             </button>
