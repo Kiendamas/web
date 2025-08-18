@@ -18,9 +18,27 @@ const PackagesSection = ({ selectedFilter }) => {
 
   // Agrupar paquetes por categoría y subcategoría, pero solo Premium, Nacionales, Internacionales
   const categoriasOrden = [
-    { nombre: 'Premium', fondo: 'bg-white', titulo: 'bg-kiendamas-beige' },
-    { nombre: 'Nacionales', fondo: 'bg-sky-100', titulo: 'bg-white' },
-    { nombre: 'Internacionales', fondo: 'bg-kiendamas-beige', titulo: 'bg-white' },
+    {
+      nombre: 'Premium',
+      fondo: 'bg-white',
+      titulo: 'bg-kiendamas-beige',
+      tituloBg: 'bg-kiendamas-beige',
+      sectionBg: 'bg-white',
+    },
+    {
+      nombre: 'Nacionales',
+      fondo: 'bg-[#3071CD]',
+      titulo: 'bg-white',
+      tituloBg: 'bg-white',
+      sectionBg: 'bg-[#3071CD]',
+    },
+    {
+      nombre: 'Internacionales',
+      fondo: 'bg-[#F2E2CE]',
+      titulo: 'bg-white',
+      tituloBg: 'bg-white',
+      sectionBg: 'bg-[#F2E2CE]',
+    },
   ];
 
   const paquetesAgrupados = {
@@ -77,16 +95,28 @@ const PackagesSection = ({ selectedFilter }) => {
   return (
     <section className="m-0 p-0" id="paquetes">
       <div className="max-w-7xl mx-auto p-0">
-        {categoriasOrden.map(({ nombre: categoriaNombre, fondo, titulo }) => {
+  {categoriasOrden.map(({ nombre: categoriaNombre, sectionBg, tituloBg }) => {
           const subcategorias = paquetesAgrupados[categoriaNombre];
           const seccionId = `categoria-${categoriaNombre.toLowerCase()}`;
           if (!subcategorias || Object.values(subcategorias).flat().length === 0) return null;
           return (
-            <section key={categoriaNombre} className={`w-full m-0 p-0 ${fondo} py-16`} id={seccionId}>
+            <section key={categoriaNombre} className={`w-full m-0 p-0 ${sectionBg} py-16`} id={seccionId}>
               {/* Título de la categoría, fuera del contenido interno */}
               <div className="relative mb-12 -mx-4 sm:-mx-6 lg:-mx-8">
-                <div className="bg-white rounded-r-3xl pl-4 sm:pl-6 lg:pl-8 pr-12 py-4 max-w-md">
-                  <h2 className="text-3xl ml-4 font-normal text-kiendamas-text font-raleway leading-none">
+                <div className={`${tituloBg} rounded-r-3xl pl-4 sm:pl-6 lg:pl-8 pr-12 py-4 max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930]`}>
+                  <h2
+                    className="font-raleway font-normal"
+                    style={{
+                      fontSize: '25px',
+                      color: '#646464',
+                      lineHeight: '100%',
+                      letterSpacing: '0%',
+                      verticalAlign: 'middle',
+                      fontWeight: 400,
+                      fontStyle: 'normal',
+                      marginLeft: '8px',
+                    }}
+                  >
                     Paquetes {categoriaNombre}
                   </h2>
                 </div>
