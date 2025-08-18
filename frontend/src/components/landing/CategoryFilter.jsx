@@ -38,7 +38,7 @@ const CategoryFilter = ({ onFilterChange, activeFilter = 'todos' }) => {
     <div 
       className={`transition-all duration-300 z-40 ${
         isSticky 
-          ? 'fixed top-16 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-md' 
+          ? 'fixed top-16 left-0 right-0' 
           : 'absolute top-32 left-1/2 transform -translate-x-1/2'
       }`}
     >

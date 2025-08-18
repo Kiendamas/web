@@ -75,109 +75,91 @@ const PackagesSection = ({ selectedFilter }) => {
   }
 
   return (
-    <section className="py-16 bg-white" id="paquetes">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="m-0 p-0" id="paquetes">
+      <div className="max-w-7xl mx-auto p-0">
         {categoriasOrden.map(({ nombre: categoriaNombre, fondo, titulo }) => {
           const subcategorias = paquetesAgrupados[categoriaNombre];
           const seccionId = `categoria-${categoriaNombre.toLowerCase()}`;
-          // Si no hay paquetes en la categoría, no mostrar la sección
           if (!subcategorias || Object.values(subcategorias).flat().length === 0) return null;
           return (
-            <div key={categoriaNombre} className="w-full" id={seccionId}>
-              {/* Fondo de color a todo el ancho */}
-              <div className={`w-screen relative left-1/2 right-1/2 -mx-[50vw] ${fondo}`}
-                style={{ position: 'relative', left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw' }}
-              >
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                  {/* Título de categoría alineado al borde izquierdo y sin espacio extra arriba */}
-                  <div className="relative mt-0 mb-4">
-                    <div className={`${titulo} rounded-r-3xl pl-0 pr-12 py-4 max-w-md border border-gray-300`}>
-                      <h2 className="text-3xl font-normal text-kiendamas-text font-raleway leading-none ml-4">
-                        Paquetes {categoriaNombre}
-                      </h2>
-                    </div>
-                  </div>
-
-                  {/* Subcategorías */}
-                  {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes]) => (
-                    <div key={subcategoriaNombre} className="mb-6">
-                      {/* Título de subcategoría */}
-                      <div className="flex items-center justify-between mb-6 pl-8">
-                        <h3 className="text-lg font-semibold text-gray-600 font-raleway">
-                          {subcategoriaNombre}
-                        </h3>
-                        {/* Controles de navegación */}
-                        {paquetes.length > 4 && (
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={() => scroll(`carousel-${categoriaNombre}-${subcategoriaNombre}`, 'left')}
-                              className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow text-gray-600 hover:text-primary"
-                            >
-                              <ChevronLeftIcon className="h-5 w-5" />
-                            </button>
-                            <button
-                              onClick={() => scroll(`carousel-${categoriaNombre}-${subcategoriaNombre}`, 'right')}
-                              className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow text-gray-600 hover:text-primary"
-                            >
-                              <ChevronRightIcon className="h-5 w-5" />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Carousel de paquetes con diseño cuadrado */}
-                      <div className="relative pl-8">
-                        <div
-                          id={`carousel-${categoriaNombre}-${subcategoriaNombre}`}
-                          className="flex overflow-x-auto scrollbar-hide space-x-6 pb-4"
-                          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                        >
-                          {paquetes.map((paquete) => (
-                            <div
-                              key={paquete.id}
-                              className="flex-none w-64 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300"
-                            >
-                              {/* Imagen cuadrada del paquete */}
-                              <div className="relative w-full h-64 overflow-hidden">
-                                <img
-                                  src={paquete.imagenes?.[0] || '/placeholder-travel.jpg'}
-                                  alt={paquete.nombre}
-                                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                                  onError={(e) => {
-                                    e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='%23f3f4f6'/%3E%3Ctext x='128' y='128' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3EImagen no disponible%3C/text%3E%3C/svg%3E";
-                                  }}
-                                />
-                              </div>
-
-                              {/* Contenido de la tarjeta rectangular */}
-                              <div className="p-4">
-                                {/* Nombre del paquete */}
-                                <h4 className="text-lg font-bold text-kiendamas-text mb-2 font-raleway">
-                                  {paquete.nombre}
-                                </h4>
-                                {/* Precio */}
-                                <div className="mb-4">
-                                  <span className="text-lg font-bold text-kiendamas-text font-raleway">
-                                    {formatPrice(paquete.precio)}
-                                  </span>
-                                </div>
-                                {/* Botón Más info */}
-                                <button 
-                                  onClick={() => navigate(`/paquete/${paquete.id}`)}
-                                  className="w-full border-2 border-kiendamas-brown text-kiendamas-brown hover:bg-kiendamas-brown rounded-full hover:text-white py-2 px-4 transition-all duration-200 font-medium font-raleway"
-                                >
-                                  Más info
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+            <section key={categoriaNombre} className={`w-full m-0 p-0 ${fondo} py-16`} id={seccionId}>
+              {/* Título de la categoría, fuera del contenido interno */}
+              <div className="relative mb-12 -mx-4 sm:-mx-6 lg:-mx-8">
+                <div className="bg-white rounded-r-3xl pl-4 sm:pl-6 lg:pl-8 pr-12 py-4 max-w-md">
+                  <h2 className="text-3xl ml-4 font-normal text-kiendamas-text font-raleway leading-none">
+                    Paquetes {categoriaNombre}
+                  </h2>
                 </div>
               </div>
-            </div>
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-0">
+                {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes], idx, arr) => (
+                  <div key={subcategoriaNombre} className={idx === arr.length - 1 ? "mt-4 mb-0" : "mt-4 mb-0"}>
+                    <div className="flex items-center justify-between mb-6 pl-8">
+                      <h3 className="text-lg font-semibold text-gray-600 font-raleway">
+                        {subcategoriaNombre}
+                      </h3>
+                      {paquetes.length > 4 && (
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => scroll(`carousel-${categoriaNombre}-${subcategoriaNombre}`, 'left')}
+                            className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow text-gray-600 hover:text-primary"
+                          >
+                            <ChevronLeftIcon className="h-5 w-5" />
+                          </button>
+                          <button
+                            onClick={() => scroll(`carousel-${categoriaNombre}-${subcategoriaNombre}`, 'right')}
+                            className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow text-gray-600 hover:text-primary"
+                          >
+                            <ChevronRightIcon className="h-5 w-5" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <div className="relative pl-8">
+                      <div
+                        id={`carousel-${categoriaNombre}-${subcategoriaNombre}`}
+                        className="flex overflow-x-auto scrollbar-hide space-x-6 pb-4"
+                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                      >
+                        {paquetes.map((paquete) => (
+                          <div
+                            key={paquete.id}
+                            className="flex-none w-64 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300"
+                          >
+                            <div className="relative w-full h-64 overflow-hidden">
+                              <img
+                                src={paquete.imagenes?.[0] || '/placeholder-travel.jpg'}
+                                alt={paquete.nombre}
+                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                onError={(e) => {
+                                  e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='%23f3f4f6'/%3E%3Ctext x='128' y='128' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3EImagen no disponible%3C/text%3E%3C/svg%3E";
+                                }}
+                              />
+                            </div>
+                            <div className="p-4">
+                              <h4 className="text-lg font-bold text-kiendamas-text mb-2 font-raleway">
+                                {paquete.nombre}
+                              </h4>
+                              <div className="mb-4">
+                                <span className="text-lg font-bold text-kiendamas-text font-raleway">
+                                  {formatPrice(paquete.precio)}
+                                </span>
+                              </div>
+                              <button 
+                                onClick={() => navigate(`/paquete/${paquete.id}`)}
+                                className="w-full border-2 border-kiendamas-brown text-kiendamas-brown hover:bg-kiendamas-brown rounded-full hover:text-white py-2 px-4 transition-all duration-200 font-medium font-raleway"
+                              >
+                                Más info
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
           );
         })}
 
