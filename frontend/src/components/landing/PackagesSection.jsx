@@ -1,12 +1,10 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; 
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useGetPaquetesQuery } from '../../features/paquetes/paquetesApi';
+import { useState, useEffect, useRef } from 'react';
 
 const PackageCard = ({ paquete, formatPrice, navigate }) => (
-  <div
-    className="package-card p-1 shrink-0 w-[280px] sm:w-[300px] md:w-[340px] bg-white shadow-md border border-[#f3f3f3] overflow-hidden"
-  >
-    {/* Imagen */}
+  <div className="package-card shrink-0 bg-white shadow-md border border-[#f3f3f3] overflow-hidden p-1 w-[250px] sm:w-[250px] md:w-[280px] lg:w-[300px]">
     <div className="w-full h-44 overflow-hidden">
       <img
         src={paquete.imagenes?.[0] || '/placeholder-travel.jpg'}
@@ -19,7 +17,6 @@ const PackageCard = ({ paquete, formatPrice, navigate }) => (
       />
     </div>
 
-    {/* Contenido */}
     <div className="flex flex-col px-3 py-2">
       <div className="flex justify-between items-center mb-1">
         <h4 className="text-base font-semibold text-kiendamas-text font-raleway truncate mr-2">
@@ -30,12 +27,12 @@ const PackageCard = ({ paquete, formatPrice, navigate }) => (
         </span>
       </div>
 
-      <div className="text-xs text-kiendamas-text font-raleway leading-snug whitespace-normal break-words">
+      <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal">
         {(() => {
           if (!paquete.descripcion) return null;
           const primerPunto = paquete.descripcion.indexOf(".");
           return primerPunto !== -1
-            ? paquete.descripcion.slice(0, primerPunto + 1) // incluye el punto
+            ? paquete.descripcion.slice(0, primerPunto + 1)
             : paquete.descripcion;
         })()}
       </div>
@@ -55,28 +52,25 @@ const PackageCard = ({ paquete, formatPrice, navigate }) => (
 const PackagesSection = ({ selectedFilter }) => {
   const navigate = useNavigate();
   const { data: allPaquetes = [], isLoading: paquetesLoading } = useGetPaquetesQuery();
+  const containerRefs = useRef({});
 
-  // Formato de precio
   const formatPrice = (price) =>
     new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD' }).format(price);
 
-  // Filtrar por categoría seleccionada
   const filteredPaquetes = allPaquetes.filter((paquete) => {
     const cat = paquete.Categorium?.nombre?.toLowerCase();
     if (selectedFilter === 'premium') return cat === 'premium';
     if (selectedFilter === 'nacionales') return cat === 'nacionales';
     if (selectedFilter === 'internacionales') return cat === 'internacionales';
-    return true; // 'todos'
+    return true;
   });
 
-  // Orden de categorías a renderizar
   const categoriasOrden = [
     { nombre: 'Premium', sectionBg: 'bg-white', tituloBg: 'bg-kiendamas-beige' },
     { nombre: 'Nacionales', sectionBg: 'bg-[#3071CD]', tituloBg: 'bg-white' },
     { nombre: 'Internacionales', sectionBg: 'bg-[#F2E2CE]', tituloBg: 'bg-white' },
   ];
 
-  // Agrupar por categoría y subcategoría (usando los filtrados)
   const paquetesAgrupados = { Premium: {}, Nacionales: {}, Internacionales: {} };
   filteredPaquetes.forEach((paquete) => {
     const categoriaNombre = paquete.Categorium?.nombre || 'Sin categoría';
@@ -89,112 +83,118 @@ const PackagesSection = ({ selectedFilter }) => {
     }
   });
 
-  // Scroll por el ancho de una card + gap (dinámico)
-  const scroll = (containerId, direction) => {
-    const container = document.getElementById(containerId);
+  const getCardsPerView = () => {
+    if (window.innerWidth >= 1024) return 3;
+    if (window.innerWidth >= 768) return 2;
+    return 1;
+  };
+
+  const scroll = (carouselId, direction) => {
+    const container = containerRefs.current[carouselId];
     if (!container) return;
+
     const track = container.querySelector('[data-track]');
     if (!track) return;
+
     const firstItem = track.querySelector('.package-card');
-    const styles = window.getComputedStyle(track);
-    const gap =
-      parseInt(styles.columnGap || styles.gap || '24', 10) || 24; // gap-6 ≈ 24px
-    const cardWidth = firstItem ? firstItem.getBoundingClientRect().width : 320;
-    const amount = cardWidth + gap;
-    container.scrollBy({
-      left: direction === 'left' ? -amount : amount,
-      behavior: 'smooth',
-    });
+    if (!firstItem) return;
+
+    const gap = parseInt(getComputedStyle(track).gap) || 24;
+    const cardWidth = firstItem.getBoundingClientRect().width;
+    const cardsPerView = getCardsPerView();
+    const amount = (cardWidth + gap) * cardsPerView;
+
+    if (direction === 'right') {
+      if (container.scrollLeft + container.clientWidth >= track.scrollWidth) {
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: amount, behavior: 'smooth' });
+      }
+    } else {
+      if (container.scrollLeft === 0) {
+        container.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: -amount, behavior: 'smooth' });
+      }
+    }
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      Object.values(containerRefs.current).forEach((container) => {
+        if (container) container.scrollLeft = 0;
+      });
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (paquetesLoading) {
     return (
-      <div className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-kiendamas-brown"></div>
-          </div>
-        </div>
+      <div className="py-16 bg-white flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-kiendamas-brown"></div>
       </div>
     );
   }
 
   return (
-    <section className="m-0 p-0" id="paquetes">
+    <section id="paquetes" className="m-0 p-0">
       <div className="max-w-7xl mx-auto p-0">
         {categoriasOrden.map(({ nombre: categoriaNombre, sectionBg, tituloBg }) => {
           const subcategorias = paquetesAgrupados[categoriaNombre];
-          const seccionId = `categoria-${categoriaNombre.toLowerCase()}`;
           if (!subcategorias || Object.values(subcategorias).flat().length === 0) return null;
 
           return (
-            <section key={categoriaNombre} className={`w-full m-0 p-0 ${sectionBg} py-16`} id={seccionId}>
-              {/* Título de categoría */}
-              <div className="relative mb-12 -mx-4 sm:-mx-6 lg:-mx-8">
+            <section key={categoriaNombre} className={`w-full ${sectionBg} py-16`}>
+              <div className={`relative mb-12 -mx-4 sm:-mx-6 lg:-mx-8`}>
                 <div className={`${tituloBg} rounded-r-3xl pl-4 sm:pl-6 lg:pl-8 pr-12 py-4 max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930]`}>
-                  <h2
-                    className="font-raleway font-normal"
-                    style={{
-                      fontSize: '25px',
-                      color: '#646464',
-                      lineHeight: '100%',
-                      letterSpacing: '0%',
-                      verticalAlign: 'middle',
-                      fontWeight: 400,
-                      fontStyle: 'normal',
-                      marginLeft: '8px',
-                    }}
-                  >
+                  <h2 className="font-raleway font-normal text-[25px] text-[#646464] ml-2">
                     Paquetes {categoriaNombre}
                   </h2>
                 </div>
               </div>
 
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-0">
-                {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes], idx, arr) => {
-                  const carouselId = `carousel-${categoriaNombre}-${subcategoriaNombre}`;
+                {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes]) => {
                   if (!paquetes || paquetes.length === 0) return null;
+                  const carouselId = `carousel-${categoriaNombre}-${subcategoriaNombre}`;
+                  const showCarousel = paquetes.length > 1;
 
                   return (
-                    <div key={subcategoriaNombre} className="mt-4 mb-0">
-                      {/* Header subcategoría */}
+                    <div key={subcategoriaNombre} className="mt-4 mb-0 relative">
                       <div className="flex items-center justify-between mb-6 pl-8">
-                        <h3
-                          className={`text-lg font-semibold font-raleway ${categoriaNombre === 'Nacionales' ? 'text-white' : 'text-gray-600'}`}
-                        >
+                        <h3 className={`text-lg font-semibold font-raleway ${categoriaNombre === 'Nacionales' ? 'text-white' : 'text-gray-600'}`}>
                           {subcategoriaNombre.charAt(0).toUpperCase() + subcategoriaNombre.slice(1).toLowerCase()}
                         </h3>
                       </div>
 
-                      {/* Carrusel */}
-                      <div className="relative px-6 md:px-10">
-                        {paquetes.length > 3 && (
+                      <div className="relative w-full flex items-center justify-center px-0 sm:px-2 md:px-8 lg:px-16">
+                        {showCarousel && (
                           <>
                             <button
                               onClick={() => scroll(carouselId, 'left')}
-                              aria-label="Anterior"
-                              className="hidden md:flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                              className="flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
                             >
-                              <ChevronLeftIcon className="h-5 w-5" />
+                              <ChevronLeftIcon className="h-5 w-5 sm:h-4 sm:w-4" />
                             </button>
                             <button
                               onClick={() => scroll(carouselId, 'right')}
-                              aria-label="Siguiente"
-                              className="hidden md:flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                              className="flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
                             >
-                              <ChevronRightIcon className="h-5 w-5" />
+                              <ChevronRightIcon className="h-5 w-5 sm:h-4 sm:w-4" />
                             </button>
                           </>
                         )}
 
                         <div
                           id={carouselId}
-                          className="overflow-x-auto scrollbar-hide scroll-smooth"
-                          style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
+                          ref={(el) => (containerRefs.current[carouselId] = el)}
+                          className={`overflow-x-hidden w-full ${!showCarousel ? 'flex justify-center' : ''}`}
                         >
                           <div
                             data-track
-                            className="flex gap-6 py-1 "
+                            className="flex gap-6 py-1"
+                            style={{ justifyContent: !showCarousel ? 'center' : 'flex-start' }}
                           >
                             {paquetes.map((paquete) => (
                               <PackageCard
@@ -215,27 +215,15 @@ const PackagesSection = ({ selectedFilter }) => {
           );
         })}
 
-        {/* Si no hay ningún paquete en ninguna categoría */}
         {categoriasOrden.every(({ nombre }) => {
           const subcats = paquetesAgrupados[nombre];
           return !subcats || Object.values(subcats).flat().length === 0;
         }) && (
-            <div className="text-center py-12">
-              <p className="text-kiendamas-text text-lg font-raleway">No hay paquetes disponibles.</p>
-            </div>
-          )}
+          <div className="text-center py-12">
+            <p className="text-kiendamas-text text-lg font-raleway">No hay paquetes disponibles.</p>
+          </div>
+        )}
       </div>
-
-      {/* Estilos para ocultar scrollbar (webkit) */}
-      <style jsx>{`
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </section>
   );
 };
