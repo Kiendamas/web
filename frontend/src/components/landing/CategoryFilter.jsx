@@ -4,7 +4,6 @@ const CategoryFilter = ({ onFilterChange, activeFilter = 'todos' }) => {
   const [isSticky, setIsSticky] = useState(false);
 
   const categories = [
-    { id: 'todos', label: 'TODOS', color: 'bg-primary' },
     { id: 'premium', label: 'PREMIUM', color: 'bg-accent' },
     { id: 'internacionales', label: 'INTERNACIONAL', color: 'bg-secondary' },
     { id: 'nacionales', label: 'NACIONAL', color: 'bg-brown' },
@@ -24,11 +23,11 @@ const CategoryFilter = ({ onFilterChange, activeFilter = 'todos' }) => {
     if (onFilterChange) {
       onFilterChange(categoryId);
     }
-    
-    // Scroll suave hacia la sección de paquetes
-    const paquetesSection = document.getElementById('paquetes');
-    if (paquetesSection) {
-      paquetesSection.scrollIntoView({ 
+    // Scroll suave hacia la sección de la categoría
+    const sectionId = `categoria-${categoryId}`;
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ 
         behavior: 'smooth',
         block: 'start'
       });
