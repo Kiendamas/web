@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const CategoryFilter = ({ onFilterChange, activeFilter = 'todos' }) => {
+const CategoryFilter = ({ onFilterChange, activeFilter = 'todos', userMenuOpen = false }) => {
   const [isSticky, setIsSticky] = useState(false);
 
   const categories = [
@@ -36,9 +36,9 @@ const CategoryFilter = ({ onFilterChange, activeFilter = 'todos' }) => {
 
   return (
     <div 
-      className={`transition-all duration-300 z-40 ${
+      className={`transition-all duration-300 ${isSticky ? 'z-20' : 'z-30'} ${
         isSticky 
-          ? 'fixed top-16 left-0 right-0' 
+          ? `fixed top-16 left-0 right-0 ${userMenuOpen ? 'pointer-events-none' : 'pointer-events-auto'}`
           : 'absolute top-32 left-1/2 transform -translate-x-1/2'
       }`}
     >

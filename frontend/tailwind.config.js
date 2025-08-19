@@ -29,8 +29,8 @@ module.exports = {
         }
       },
       fontSize: {
-        'kiendamas-title': ['30px', { lineHeight: '100%', letterSpacing: '0%' }],
-        'title': ['30px', { lineHeight: '100%', letterSpacing: '0%' }],
+        'kiendamas-title': ['20px', { lineHeight: '100%', letterSpacing: '0%' }],
+        'title': ['20px', { lineHeight: '100%', letterSpacing: '0%' }],
       },
       letterSpacing: {
         'none': '0%',
