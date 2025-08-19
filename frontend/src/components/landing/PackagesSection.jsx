@@ -1,189 +1,234 @@
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useGetPaquetesQuery } from '../../features/paquetes/paquetesApi';
+import { useState, useEffect, useRef } from 'react';
+
+const PackageCard = ({ paquete, formatPrice, navigate }) => (
+  <div className="package-card shrink-0 bg-white shadow-md border border-[#f3f3f3] overflow-hidden p-1 w-[250px] sm:w-[250px] md:w-[280px] lg:w-[300px]">
+    <div className="w-full h-44 overflow-hidden">
+      <img
+        src={paquete.imagenes?.[0] || '/placeholder-travel.jpg'}
+        alt={paquete.nombre}
+        className="w-full h-full object-cover"
+        onError={(e) => {
+          e.currentTarget.src =
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='%23f3f4f6'/%3E%3Ctext x='128' y='128' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3EImagen no disponible%3C/text%3E%3C/svg%3E";
+        }}
+      />
+    </div>
+
+    <div className="flex flex-col px-3 py-2">
+      <div className="flex justify-between items-center mb-1">
+        <h4 className="text-base font-semibold text-kiendamas-text font-raleway truncate mr-2">
+          {paquete.nombre.charAt(0).toUpperCase() + paquete.nombre.slice(1).toLowerCase()}
+        </h4>
+        <span className="text-base font-bold text-kiendamas-text font-raleway whitespace-nowrap">
+          {formatPrice(paquete.precio)}
+        </span>
+      </div>
+
+      <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal">
+        {(() => {
+          if (!paquete.descripcion) return null;
+          const primerPunto = paquete.descripcion.indexOf(".");
+          return primerPunto !== -1
+            ? paquete.descripcion.slice(0, primerPunto + 1)
+            : paquete.descripcion;
+        })()}
+      </div>
+
+      <div className="flex justify-end mt-2">
+        <button
+          onClick={() => navigate(`/paquete/${paquete.id}`)}
+          className="border border-[#FF625E] text-gray-800 px-4 py-1 bg-white rounded-full hover:bg-[#FF625E] hover:text-white transition text-xs"
+        >
+          Más info
+        </button>
+      </div>
+    </div>
+  </div>
+);
 
 const PackagesSection = ({ selectedFilter }) => {
   const navigate = useNavigate();
   const { data: allPaquetes = [], isLoading: paquetesLoading } = useGetPaquetesQuery();
+  const containerRefs = useRef({});
 
-  // Filtrar paquetes según el filtro seleccionado
-  const filteredPaquetes = allPaquetes.filter(paquete => {
-    if (selectedFilter === 'todos') return true;
-    if (selectedFilter === 'premium') return paquete.Categorium?.nombre?.toLowerCase() === 'premium';
-    if (selectedFilter === 'nacionales') return paquete.Categorium?.nombre?.toLowerCase() === 'nacionales';
-    if (selectedFilter === 'internacionales') return paquete.Categorium?.nombre?.toLowerCase() === 'internacionales';
+  const formatPrice = (price) =>
+    new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD' }).format(price);
+
+  const filteredPaquetes = allPaquetes.filter((paquete) => {
+    const cat = paquete.Categorium?.nombre?.toLowerCase();
+    if (selectedFilter === 'premium') return cat === 'premium';
+    if (selectedFilter === 'nacionales') return cat === 'nacionales';
+    if (selectedFilter === 'internacionales') return cat === 'internacionales';
     return true;
   });
 
-  // Agrupar paquetes por categoría y subcategoría
-  const paquetesAgrupados = {};
-  
-  filteredPaquetes.forEach(paquete => {
+  const categoriasOrden = [
+    { nombre: 'Premium', sectionBg: 'bg-white', tituloBg: 'bg-kiendamas-beige' },
+    { nombre: 'Nacionales', sectionBg: 'bg-[#3071CD]', tituloBg: 'bg-white' },
+    { nombre: 'Internacionales', sectionBg: 'bg-[#F2E2CE]', tituloBg: 'bg-white' },
+  ];
+
+  const paquetesAgrupados = { Premium: {}, Nacionales: {}, Internacionales: {} };
+  filteredPaquetes.forEach((paquete) => {
     const categoriaNombre = paquete.Categorium?.nombre || 'Sin categoría';
     const subcategoriaNombre = paquete.Subcategorium?.nombre || 'Sin subcategoría';
-    
-    if (!paquetesAgrupados[categoriaNombre]) {
-      paquetesAgrupados[categoriaNombre] = {};
+    if (['Premium', 'Nacionales', 'Internacionales'].includes(categoriaNombre)) {
+      if (!paquetesAgrupados[categoriaNombre][subcategoriaNombre]) {
+        paquetesAgrupados[categoriaNombre][subcategoriaNombre] = [];
+      }
+      paquetesAgrupados[categoriaNombre][subcategoriaNombre].push(paquete);
     }
-    
-    if (!paquetesAgrupados[categoriaNombre][subcategoriaNombre]) {
-      paquetesAgrupados[categoriaNombre][subcategoriaNombre] = [];
-    }
-    
-    paquetesAgrupados[categoriaNombre][subcategoriaNombre].push(paquete);
   });
 
-  const scroll = (containerId, direction) => {
-    const container = document.getElementById(containerId);
-    if (container) {
-      const scrollAmount = 280; // Ancho de una tarjeta cuadrada + gap
-      const newPosition = direction === 'left' 
-        ? container.scrollLeft - scrollAmount
-        : container.scrollLeft + scrollAmount;
-      
-      container.scrollTo({
-        left: newPosition,
-        behavior: 'smooth'
-      });
+  const getCardsPerView = () => {
+    if (window.innerWidth >= 1024) return 3;
+    if (window.innerWidth >= 768) return 2;
+    return 1;
+  };
+
+  const scroll = (carouselId, direction) => {
+    const container = containerRefs.current[carouselId];
+    if (!container) return;
+
+    const track = container.querySelector('[data-track]');
+    if (!track) return;
+
+    const firstItem = track.querySelector('.package-card');
+    if (!firstItem) return;
+
+    const gap = parseInt(getComputedStyle(track).gap) || 24;
+    const cardWidth = firstItem.getBoundingClientRect().width;
+    const cardsPerView = getCardsPerView();
+    const amount = (cardWidth + gap) * cardsPerView;
+
+    if (direction === 'right') {
+      if (container.scrollLeft + container.clientWidth >= track.scrollWidth) {
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: amount, behavior: 'smooth' });
+      }
+    } else {
+      if (container.scrollLeft === 0) {
+        container.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: -amount, behavior: 'smooth' });
+      }
     }
   };
 
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(price);
-  };
+  useEffect(() => {
+    const handleResize = () => {
+      Object.values(containerRefs.current).forEach((container) => {
+        if (container) container.scrollLeft = 0;
+      });
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (paquetesLoading) {
     return (
-      <div className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-kiendamas-brown"></div>
-          </div>
-        </div>
+      <div className="py-16 bg-white flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-kiendamas-brown"></div>
       </div>
     );
   }
 
   return (
-    <section className="py-16 bg-white" id="paquetes">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {Object.entries(paquetesAgrupados).map(([categoriaNombre, subcategorias]) => (
-          <div key={categoriaNombre} className="mb-16">
-            {/* Título de categoría con el estilo exacto de la imagen */}
-            <div className="relative mb-8 -mx-4 sm:-mx-6 lg:-mx-8">
-              <div className="bg-kiendamas-beige rounded-r-3xl pl-4 sm:pl-6 lg:pl-8 pr-12 py-4 max-w-md">
-                <h2 className="text-3xl font-normal text-kiendamas-text font-raleway leading-none">
-                  Paquetes {categoriaNombre}
-                </h2>
-              </div>
-            </div>
+    <section id="paquetes" className="m-0 p-0">
+      <div className="max-w-7xl mx-auto p-0">
+        {categoriasOrden.map(({ nombre: categoriaNombre, sectionBg, tituloBg }) => {
+          const subcategorias = paquetesAgrupados[categoriaNombre];
+          if (!subcategorias || Object.values(subcategorias).flat().length === 0) return null;
 
-            {/* Subcategorías */}
-            {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes]) => (
-              <div key={subcategoriaNombre} className="mb-12">
-                {/* Título de subcategoría */}
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-gray-600 font-raleway pl-4">
-                    {subcategoriaNombre}
-                  </h3>
-                  
-                  {/* Controles de navegación */}
-                  {paquetes.length > 4 && (
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => scroll(`carousel-${categoriaNombre}-${subcategoriaNombre}`, 'left')}
-                        className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow text-gray-600 hover:text-primary"
-                      >
-                        <ChevronLeftIcon className="h-5 w-5" />
-                      </button>
-                      <button
-                        onClick={() => scroll(`carousel-${categoriaNombre}-${subcategoriaNombre}`, 'right')}
-                        className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow text-gray-600 hover:text-primary"
-                      >
-                        <ChevronRightIcon className="h-5 w-5" />
-                      </button>
-                    </div>
-                  )}
+          return (
+            <section
+              key={categoriaNombre}
+              id={`categoria-${categoriaNombre.toLowerCase()}`}
+              className={`w-full ${sectionBg} py-16`}
+            >
+
+              <div className={`relative mb-12 -mx-4 sm:-mx-6 lg:-mx-8`}>
+                <div className={`${tituloBg} rounded-r-3xl pl-4 sm:pl-6 lg:pl-8 pr-12 py-4 max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930]`}>
+                  <h2 className="font-raleway font-normal text-[25px] text-[#646464] ml-2">
+                    Paquetes {categoriaNombre}
+                  </h2>
                 </div>
+              </div>
 
-                {/* Carousel de paquetes con diseño cuadrado */}
-                <div className="relative">
-                  <div
-                    id={`carousel-${categoriaNombre}-${subcategoriaNombre}`}
-                    className="flex overflow-x-auto scrollbar-hide space-x-6 pb-4"
-                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                  >
-                    {paquetes.map((paquete) => (
-                      <div
-                        key={paquete.id}
-                        className="flex-none w-64 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300"
-                      >
-                        {/* Imagen cuadrada del paquete */}
-                        <div className="relative w-full h-64 overflow-hidden">
-                          <img
-                            src={paquete.imagenes?.[0] || '/placeholder-travel.jpg'}
-                            alt={paquete.nombre}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                            onError={(e) => {
-                              e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='%23f3f4f6'/%3E%3Ctext x='128' y='128' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3EImagen no disponible%3C/text%3E%3C/svg%3E";
-                            }}
-                          />
-                        </div>
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-0">
+                {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes]) => {
+                  if (!paquetes || paquetes.length === 0) return null;
+                  const carouselId = `carousel-${categoriaNombre}-${subcategoriaNombre}`;
+                  const showCarousel = paquetes.length > 1;
 
-                        {/* Contenido de la tarjeta rectangular */}
-                        <div className="p-4">
-                          {/* Nombre del paquete */}
-                          <h4 className="text-lg font-bold text-kiendamas-text mb-2 font-raleway">
-                            {paquete.nombre}
-                          </h4>
-                          
-                          {/* Precio */}
-                          <div className="mb-4">
-                            <span className="text-lg font-bold text-kiendamas-text font-raleway">
-                              {formatPrice(paquete.precio)}
-                            </span>
-                          </div>
+                  return (
+                    <div key={subcategoriaNombre} className="mt-4 mb-0 relative">
+                      <div className="flex items-center justify-between mb-6 pl-8">
+                        <h3 className={`text-lg font-semibold font-raleway ${categoriaNombre === 'Nacionales' ? 'text-white' : 'text-gray-600'}`}>
+                          {subcategoriaNombre.charAt(0).toUpperCase() + subcategoriaNombre.slice(1).toLowerCase()}
+                        </h3>
+                      </div>
 
-                          {/* Botón Más info */}
-                          <button 
-                            onClick={() => navigate(`/paquete/${paquete.id}`)}
-                            className="w-full border-2 border-kiendamas-brown text-kiendamas-brown hover:bg-kiendamas-brown rounded-full hover:text-white py-2 px-4 transition-all duration-200 font-medium font-raleway"
+                      <div className="relative w-full flex items-center justify-center px-0 sm:px-2 md:px-8 lg:px-16">
+                        {showCarousel && (
+                          <>
+                            <button
+                              onClick={() => scroll(carouselId, 'left')}
+                              className="flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                            >
+                              <ChevronLeftIcon className="h-5 w-5 sm:h-4 sm:w-4" />
+                            </button>
+                            <button
+                              onClick={() => scroll(carouselId, 'right')}
+                              className="flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                            >
+                              <ChevronRightIcon className="h-5 w-5 sm:h-4 sm:w-4" />
+                            </button>
+                          </>
+                        )}
+
+                        <div
+                          id={carouselId}
+                          ref={(el) => (containerRefs.current[carouselId] = el)}
+                          className={`overflow-x-hidden w-full ${!showCarousel ? 'flex justify-center' : ''}`}
+                        >
+                          <div
+                            data-track
+                            className="flex gap-6 py-1"
+                            style={{ justifyContent: !showCarousel ? 'center' : 'flex-start' }}
                           >
-                            Más info
-                          </button>
+                            {paquetes.map((paquete) => (
+                              <PackageCard
+                                key={paquete.id}
+                                paquete={paquete}
+                                formatPrice={formatPrice}
+                                navigate={navigate}
+                              />
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
+                    </div>
+                  );
+                })}
               </div>
-            ))}
-          </div>
-        ))}
+            </section>
+          );
+        })}
 
-        {Object.keys(paquetesAgrupados).length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-kiendamas-text text-lg font-raleway">
-              No hay paquetes disponibles para el filtro "{selectedFilter}".
-            </p>
-          </div>
-        )}
+        {categoriasOrden.every(({ nombre }) => {
+          const subcats = paquetesAgrupados[nombre];
+          return !subcats || Object.values(subcats).flat().length === 0;
+        }) && (
+            <div className="text-center py-12">
+              <p className="text-kiendamas-text text-lg font-raleway">No hay paquetes disponibles.</p>
+            </div>
+          )}
       </div>
-      
-      {/* Estilos para ocultar scrollbar */}
-      <style jsx>{`
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </section>
   );
 };

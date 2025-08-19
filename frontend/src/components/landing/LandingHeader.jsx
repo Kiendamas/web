@@ -21,16 +21,16 @@ const LandingHeader = ({ onMenuClick, onSectionClick, activeSection }) => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-30 bg-kiendamas-beige shadow-sm lg:left-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <header className="fixed top-0 left-0 right-0 z-30 bg-kiendamas-beige shadow-sm lg:left-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-12">
           {/* Botón hamburguesa solo en móviles */}
           <div className="lg:hidden">
             <button
               onClick={onMenuClick}
               className="p-2 rounded-md text-kiendamas-text hover:text-kiendamas-darkBrown hover:bg-white/20 transition-colors"
             >
-              <Bars3Icon className="h-6 w-6" />
+              <Bars3Icon className="h-2 w-2" />
             </button>
           </div>
 
@@ -54,7 +54,7 @@ const LandingHeader = ({ onMenuClick, onSectionClick, activeSection }) => {
                 onClick={() => setShowLoginMenu(!showLoginMenu)}
                 className="p-2 rounded-full text-kiendamas-text hover:text-kiendamas-darkBrown hover:bg-white/20 transition-colors"
               >
-                <UserIcon className="h-6 w-6" />
+                <UserIcon className="h-4 w-4" />
               </button>
 
               {/* Dropdown de Login */}

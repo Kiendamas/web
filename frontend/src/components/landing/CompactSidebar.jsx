@@ -46,7 +46,7 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
 
       {/* Sidebar principal que cambia según el estado */}
       <div className={`fixed left-0 top-0 h-full z-50 transition-all duration-300 ${
-        isExpanded ? 'w-80' : 'w-16'
+        isExpanded ? 'w-75' : 'w-12'
       }`}>
         <div className="bg-kiendamas-beige h-full shadow-lg">
           {!isExpanded ? (
@@ -57,7 +57,7 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
                 onClick={() => toggleExpanded(true)}
                 className="p-3 rounded-lg text-kiendamas-text hover:bg-white/30 transition-colors mb-4 border border-kiendamas-text/20"
               >
-                <Bars3Icon className="h-6 w-6" />
+                <Bars3Icon className="h-4 w-4" />
               </button>
 
               {/* Iconos de navegación */}
@@ -75,7 +75,7 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
                       }`}
                       title={item.label}
                     >
-                      <Icon className="h-5 w-5" />
+                      <Icon className="h-4 w-4" />
                     </button>
                   );
                 })}
@@ -109,7 +109,7 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
                   className="text-kiendamas-text hover:text-kiendamas-brown transition-colors p-2"
                   onClick={() => toggleExpanded(false)}
                 >
-                  <XMarkIcon className="h-6 w-6" />
+                  <XMarkIcon className="h-4 w-4" />
                 </button>
               </div>
 
@@ -128,10 +128,10 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
                             : 'text-kiendamas-text hover:bg-kiendamas-lightBeige hover:text-kiendamas-brown'
                         }`}
                       >
-                        <Icon className={`h-5 w-5 mr-3 ${
+                        <Icon className={`h-4 w-4 mr-3 ${
                           activeSection === item.id ? 'text-white' : 'text-kiendamas-brown'
                         }`} />
-                        <span className="font-medium font-raleway">
+                        <span className="font-normal font-raleway">
                           {item.label}
                         </span>
                       </button>

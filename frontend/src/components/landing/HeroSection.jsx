@@ -112,7 +112,7 @@ const HeroSection = () => {
   }
 
   return (
-    <div className="relative h-screen overflow-hidden">
+    <div className="relative h-screen overflow-hidden ">
       {/* Slides Container */}
       <div className="relative h-full">
         {slides.map((slide, index) => (
@@ -195,31 +195,20 @@ const HeroSection = () => {
         ))}
       </div>
 
-      {/* Content Overlay */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="text-center text-white px-4 max-w-4xl mx-auto">
-          <p className="text-lg sm:text-xl mb-4 opacity-90 animate-fade-in">
-            BIENVENIDOS A
-          </p>
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-slide-up">
-            KIENDAMAS
-          </h1>
-          
-          <div className="mb-8 animate-slide-up delay-200">
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-4">
-              {currentSlideData.title}
-            </h2>
-            <p className="text-lg sm:text-xl opacity-90 max-w-2xl mx-auto">
-              {currentSlideData.subtitle}
-            </p>
+      {/* Content Overlay - left-aligned, vertically centered */}
+      <div className="absolute inset-0 flex items-center">
+        <div className="flex flex-col items-start justify-center h-full pl-8 sm:pl-16 md:pl-24 lg:pl-32 xl:pl-38 text-white max-w-2xl w-full">
+          <div className="mb-8">
+            <p className="text-lg sm:text-xl font-semibold tracking-wide mb-2 animate-fade-in">BIENVENIDOS A</p>
+            <div className="h-1 w-32 sm:w-48 bg-white/80 mb-4" />
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-8 leading-tight animate-slide-up">KIENDAMAS</h1>
+            <button
+              onClick={() => handleButtonClick(currentSlideData.buttonLink)}
+              className="inline-flex items-center px-4 py-2 bg-white text-kiendamas-brown font-semibold rounded-full border-2 border-kiendamas-rosa hover:bg-kiendamas-rosa hover:text-white transition-all duration-200 transform hover:scale-105 animate-slide-up delay-300 shadow-lg"
+            >
+              {currentSlideData.buttonText}
+            </button>
           </div>
-
-          <button
-            onClick={() => handleButtonClick(currentSlideData.buttonLink)}
-            className="inline-flex items-center px-8 py-3 bg-white text-gray-900 font-semibold rounded-full hover:bg-gray-100 transition-all duration-200 transform hover:scale-105 animate-slide-up delay-300"
-          >
-            {currentSlideData.buttonText}
-          </button>
         </div>
       </div>
 
