@@ -68,7 +68,7 @@ const LandingPage = () => {
 
       {/* Contenido principal con margen responsive */}
       <main className={`transition-all duration-300 ${
-        sidebarExpanded ? 'lg:ml-64' : 'lg:ml-16'
+        sidebarExpanded ? 'lg:ml-64' : 'lg:ml-12'
       }`}>
         <HeroSection />
         <CategoryFilter 

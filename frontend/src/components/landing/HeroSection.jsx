@@ -112,7 +112,7 @@ const HeroSection = () => {
   }
 
   return (
-    <div className="relative h-screen overflow-hidden">
+    <div className="relative h-screen overflow-hidden ">
       {/* Slides Container */}
       <div className="relative h-full">
         {slides.map((slide, index) => (
@@ -197,7 +197,7 @@ const HeroSection = () => {
 
       {/* Content Overlay - left-aligned, vertically centered */}
       <div className="absolute inset-0 flex items-center">
-        <div className="flex flex-col items-start justify-center h-full pl-8 sm:pl-16 md:pl-24 lg:pl-32 xl:pl-40 text-white max-w-2xl w-full">
+        <div className="flex flex-col items-start justify-center h-full pl-8 sm:pl-16 md:pl-24 lg:pl-32 xl:pl-38 text-white max-w-2xl w-full">
           <div className="mb-8">
             <p className="text-lg sm:text-xl font-semibold tracking-wide mb-2 animate-fade-in">BIENVENIDOS A</p>
             <div className="h-1 w-32 sm:w-48 bg-white/80 mb-4" />

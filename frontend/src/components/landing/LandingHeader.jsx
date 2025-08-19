@@ -21,7 +21,7 @@ const LandingHeader = ({ onMenuClick, onSectionClick, activeSection }) => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-30 bg-kiendamas-beige shadow-sm lg:left-16">
+    <header className="fixed top-0 left-0 right-0 z-30 bg-kiendamas-beige shadow-sm lg:left-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-12">
           {/* Botón hamburguesa solo en móviles */}

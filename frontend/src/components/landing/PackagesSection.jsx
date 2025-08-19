@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useGetPaquetesQuery } from '../../features/paquetes/paquetesApi';
 import { useState, useEffect, useRef } from 'react';
@@ -145,7 +145,12 @@ const PackagesSection = ({ selectedFilter }) => {
           if (!subcategorias || Object.values(subcategorias).flat().length === 0) return null;
 
           return (
-            <section key={categoriaNombre} className={`w-full ${sectionBg} py-16`}>
+            <section
+              key={categoriaNombre}
+              id={`categoria-${categoriaNombre.toLowerCase()}`}
+              className={`w-full ${sectionBg} py-16`}
+            >
+
               <div className={`relative mb-12 -mx-4 sm:-mx-6 lg:-mx-8`}>
                 <div className={`${tituloBg} rounded-r-3xl pl-4 sm:pl-6 lg:pl-8 pr-12 py-4 max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930]`}>
                   <h2 className="font-raleway font-normal text-[25px] text-[#646464] ml-2">
@@ -219,10 +224,10 @@ const PackagesSection = ({ selectedFilter }) => {
           const subcats = paquetesAgrupados[nombre];
           return !subcats || Object.values(subcats).flat().length === 0;
         }) && (
-          <div className="text-center py-12">
-            <p className="text-kiendamas-text text-lg font-raleway">No hay paquetes disponibles.</p>
-          </div>
-        )}
+            <div className="text-center py-12">
+              <p className="text-kiendamas-text text-lg font-raleway">No hay paquetes disponibles.</p>
+            </div>
+          )}
       </div>
     </section>
   );
