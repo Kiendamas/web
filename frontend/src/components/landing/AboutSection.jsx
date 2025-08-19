@@ -9,19 +9,19 @@ const AboutSection = () => {
       id: 1,
       name: 'MARIANA',
       image: marianaImg,
-      subtitle: 'BIENVENIDOS A'
+      subtitle: 'mariana@kiendamas.com.ar'
     },
     {
       id: 2,
       name: 'DIEGO',
       image: diegoImg,
-      subtitle: 'BIENVENIDOS A'
+      subtitle: 'diego@kiendamas.com.ar'
     },
     {
       id: 3,
       name: 'VIRGINIA',
       image: virginiaImg,
-      subtitle: 'BIENVENIDOS A'
+      subtitle: 'virginia@kiendamas.com.ar'
     }
   ];
 
