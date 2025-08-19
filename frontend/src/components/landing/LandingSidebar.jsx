@@ -52,7 +52,7 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
           <div className="flex items-center justify-between px-6 py-6 bg-kiendamas-darkBrown border-b border-kiendamas-brown/30">
             <div className="flex items-center space-x-3">
               <img
-                src="/src/assets/logo.jpg"
+                src="/logo.jpg"
                 alt="Kiendamas"
                 className="h-12 w-12 rounded-full object-cover border-2 border-kiendamas-beige/30"
                 onError={(e) => {

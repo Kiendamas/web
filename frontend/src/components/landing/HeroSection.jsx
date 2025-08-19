@@ -196,21 +196,33 @@ const HeroSection = () => {
       </div>
 
       {/* Content Overlay - left-aligned, vertically centered */}
-      <div className="absolute inset-0 flex items-center">
-        <div className="flex flex-col items-start justify-center h-full pl-8 sm:pl-16 md:pl-24 lg:pl-32 xl:pl-38 text-white max-w-2xl w-full">
-          <div className="mb-8">
-            <p className="text-lg sm:text-xl font-semibold tracking-wide mb-2 animate-fade-in">BIENVENIDOS A</p>
-            <div className="h-1 w-32 sm:w-48 bg-white/80 mb-4" />
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-8 leading-tight animate-slide-up">KIENDAMAS</h1>
-            <button
-              onClick={() => handleButtonClick(currentSlideData.buttonLink)}
-              className="inline-flex items-center px-4 py-2 bg-white text-kiendamas-brown font-semibold rounded-full border-2 border-kiendamas-rosa hover:bg-kiendamas-rosa hover:text-white transition-all duration-200 transform hover:scale-105 animate-slide-up delay-300 shadow-lg"
-            >
-              {currentSlideData.buttonText}
-            </button>
-          </div>
-        </div>
-      </div>
+    <div className="absolute inset-0 flex items-center">
+  <div className="flex flex-col items-center justify-center h-full px-4 text-white max-w-2xl w-full mt-12 sm:mt-20 md:mt-28">
+    {/* Texto superior */}
+    <p className="text-lg sm:text-xl font-raleway font-bold tracking-wide  animate-fade-in text-center">
+      BIENVENIDOS A
+    </p>
+
+    {/* Línea que abarca el ancho del h1 */}
+    <div className="w-full flex justify-center">
+      <div className="h-[2px] bg-white/80 w-[50%] sm:w-[60%] md:w-[50%] lg:w-[43%]" />
+    </div>
+
+    {/* Título principal */}
+    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-raleway font-bold mb-8 leading-tight animate-slide-up text-center">
+      KIENDAMAS
+    </h1>
+
+    {/* Botón */}
+    <button
+      onClick={() => handleButtonClick(currentSlideData.buttonLink)}
+      className="inline-flex items-center px-4 py-2 bg-white text-kiendamas-brown font-semibold rounded-full border-2 border-kiendamas-rosa hover:bg-kiendamas-rosa hover:text-white transition-all duration-200 transform hover:scale-105 animate-slide-up delay-300 shadow-lg"
+    >
+      {currentSlideData.buttonText}
+    </button>
+  </div>
+</div>
+
 
       {/* Navigation Arrows */}
       <button
