@@ -153,45 +153,45 @@ const PackagesSection = ({ selectedFilter }) => {
 
                 return (
                   <div key={subcategoriaNombre} className="mt-4 mb-0 relative">
-                    <div className="flex items-center justify-between mb-6 pl-0 lg:pl-12">
-                      <h3 className={`text-base sm:text-lg lg:text-base xl:text-lg font-semibold font-raleway ${categoriaNombre === 'Nacionales' ? 'text-white' : 'text-gray-600'}`}> 
-                        {subcategoriaNombre.charAt(0).toUpperCase() + subcategoriaNombre.slice(1).toLowerCase()}
-                      </h3>
-                    </div>
-
-                    <div className="relative w-full flex items-center justify-center px-0 sm:px-2 md:px-8 lg:px-16">
-                      {showCarousel && (
-                        <>
-                          <button
-                            onClick={() => handleCarouselNav(carouselId, 'left', paquetes.length)}
-                            className="flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
-                          >
-                            <ChevronLeftIcon className="h-5 w-5 sm:h-4 sm:w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleCarouselNav(carouselId, 'right', paquetes.length)}
-                            className="flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
-                          >
-                            <ChevronRightIcon className="h-5 w-5 sm:h-4 sm:w-4" />
-                          </button>
-                        </>
-                      )}
-
-                      <div
-                        className={`w-full flex justify-center items-stretch overflow-hidden`}
-                      >
+                    <div className="flex flex-col w-full">
+                      <div className="flex items-center mb-6 pl-0 sm:pl-2 md:pl-8 lg:pl-16">
+                        <h3 className={`text-base sm:text-lg lg:text-base xl:text-lg font-semibold font-raleway ${categoriaNombre === 'Nacionales' ? 'text-white' : 'text-gray-600'}`}> 
+                          {subcategoriaNombre.charAt(0).toUpperCase() + subcategoriaNombre.slice(1).toLowerCase()}
+                        </h3>
+                      </div>
+                      <div className="relative w-full flex items-center px-0 sm:px-2 md:px-8 lg:px-16">
+                        {showCarousel && (
+                          <>
+                            <button
+                              onClick={() => handleCarouselNav(carouselId, 'left', paquetes.length)}
+                              className="flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                            >
+                              <ChevronLeftIcon className="h-5 w-5 sm:h-4 sm:w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleCarouselNav(carouselId, 'right', paquetes.length)}
+                              className="flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                            >
+                              <ChevronRightIcon className="h-5 w-5 sm:h-4 sm:w-4" />
+                            </button>
+                          </>
+                        )}
                         <div
-                          data-track
-                          className="flex gap-3 sm:gap-4 md:gap-5 lg:gap-6 py-1 w-full justify-center"
+                          className={`w-full flex items-stretch overflow-hidden ${showCarousel ? '' : 'justify-start'}`}
                         >
-                          {visiblePaquetes.map((paquete) => (
-                            <PackageCard
-                              key={paquete.id}
-                              paquete={paquete}
-                              formatPrice={formatPrice}
-                              navigate={navigate}
-                            />
-                          ))}
+                          <div
+                            data-track
+                            className={`flex gap-3 sm:gap-4 md:gap-5 lg:gap-6 py-1 w-full ${showCarousel ? 'justify-center' : 'justify-start'}`}
+                          >
+                            {visiblePaquetes.map((paquete) => (
+                              <PackageCard
+                                key={paquete.id}
+                                paquete={paquete}
+                                formatPrice={formatPrice}
+                                navigate={navigate}
+                              />
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
