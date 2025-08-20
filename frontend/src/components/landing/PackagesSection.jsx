@@ -151,15 +151,17 @@ const PackagesSection = ({ selectedFilter }) => {
                 const endIdx = Math.min(startIdx + cardsPerView, paquetes.length);
                 const visiblePaquetes = paquetes.slice(startIdx, endIdx);
 
+                // Padding izquierdo igual para subtítulo y cards, siempre
+                const leftPad = 'pl-0 sm:pl-2 md:pl-8 lg:pl-16';
                 return (
                   <div key={subcategoriaNombre} className="mt-4 mb-0 relative">
                     <div className="flex flex-col w-full">
-                      <div className="flex items-center mb-6 pl-0 sm:pl-2 md:pl-8 lg:pl-16">
+                      <div className={`flex items-center mb-6 ${leftPad}`}>
                         <h3 className={`text-base sm:text-lg lg:text-base xl:text-lg font-semibold font-raleway ${categoriaNombre === 'Nacionales' ? 'text-white' : 'text-gray-600'}`}> 
                           {subcategoriaNombre.charAt(0).toUpperCase() + subcategoriaNombre.slice(1).toLowerCase()}
                         </h3>
                       </div>
-                      <div className="relative w-full flex items-center px-0 sm:px-2 md:px-8 lg:px-16">
+                      <div className={`relative w-full flex items-center ${leftPad}`}>
                         {showCarousel && (
                           <>
                             <button
