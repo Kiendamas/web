@@ -112,8 +112,8 @@ const ReviewsSection = () => {
         {/* Header */}
         <div className="mb-10 -ml-10">
           <div className="relative mb-6">
-            <div className="bg-kiendamas-lightBeige rounded-r-3xl pl-4 sm:pl-6 pr-8 py-3 max-w-xs sm:max-w-md">
-              <h2 className="text-xl sm:text-2xl xl:text-2xl 2xl:text-3xl font-normal text-kiendamas-text font-raleway leading-none">
+            <div className="bg-kiendamas-lightBeige rounded-r-3xl pl-6 sm:pl-6 pr-8 py-3 max-w-xs sm:max-w-md">
+              <h2 className=" ml-6 text-xl sm:text-2xl xl:text-2xl 2xl:text-3xl font-normal text-kiendamas-text font-raleway leading-none">
                 Lo que dicen nuestros clientes
               </h2>
             </div>
