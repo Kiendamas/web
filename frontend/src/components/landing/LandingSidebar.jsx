@@ -9,6 +9,7 @@ import {
   PhoneIcon,
   ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
+import logo from '../../assets/logo.jpg';
 
 const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
   const navigationItems = [
@@ -52,7 +53,7 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
           <div className="flex items-center justify-between px-6 py-6 bg-kiendamas-darkBrown border-b border-kiendamas-brown/30">
             <div className="flex items-center space-x-3">
               <img
-                src="/logo.jpg"
+                src={logo}
                 alt="Kiendamas"
                 className="h-12 w-12 rounded-full object-cover border-2 border-kiendamas-beige/30"
                 onError={(e) => {
