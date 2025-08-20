@@ -27,18 +27,18 @@ const AboutSection = () => {
 
   return (
     <section className="py-16 bg-kiendamas-rosa" id="nosotros">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
         {/* Título de la sección desde el lado izquierdo */}
-        <div className="relative mb-12 -mx-4 sm:-mx-6 lg:-mx-8">
-          <div className="bg-white rounded-r-3xl pl-4 sm:pl-6 lg:pl-8 pr-12 py-4 max-w-md">
-            <h2 className="text-3xl font-normal text-kiendamas-text font-raleway leading-none">
+        <div className="relative mb-10 -ml-20">
+          <div className="bg-white  rounded-r-3xl pl-10 sm:pl-6  pr-8 py-3 max-w-xs sm:max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930]">
+            <h2 className="text-xl sm:text-2xl xl:text-2xl 2xl:text-3xl ml-8 font-normal text-kiendamas-text font-raleway leading-none">
               Nosotros
             </h2>
           </div>
         </div>
 
         {/* Grid de miembros del equipo */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl xl:max-w-4xl 2xl:max-w-5xl mx-auto">
           {teamMembers.map((member) => (
             <div
               key={member.id}

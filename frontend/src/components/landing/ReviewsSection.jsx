@@ -107,18 +107,18 @@ const ReviewsSection = () => {
   const currentReview = resenas[currentReviewIndex];
 
   return (
-    <section className="py-16 bg-gradient-to-br from-kiendamas-cream to-white" id="resenas">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 bg-gradient-to-br from-kiendamas-cream to-white w-full" id="resenas">
+      <div className="w-full px-2 sm:px-4 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="relative mb-8 -mx-4 sm:-mx-6 lg:-mx-8">
-               <div className="bg-kiendamas-lightBeige rounded-r-3xl pl-4 sm:pl-6 lg:pl-8 pr-12 py-4 max-w-md">
-              <h2 className="text-2xl font-normal text-kiendamas-text font-raleway leading-none">
+        <div className="mb-10 -ml-10">
+          <div className="relative mb-6">
+            <div className="bg-kiendamas-lightBeige rounded-r-3xl pl-4 sm:pl-6 pr-8 py-3 max-w-xs sm:max-w-md">
+              <h2 className="text-xl sm:text-2xl xl:text-2xl 2xl:text-3xl font-normal text-kiendamas-text font-raleway leading-none">
                 Lo que dicen nuestros clientes
               </h2>
             </div>
           </div>
-          <p className="text-kiendamas-brown text-lg font-raleway max-w-2xl mx-auto">
+          <p className="text-kiendamas-brown text-base sm:text-lg font-raleway max-w-2xl mx-auto">
             Conoce las experiencias reales de quienes han viajado con nosotros
           </p>
         </div>

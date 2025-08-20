@@ -57,13 +57,8 @@ const PackagesSection = ({ selectedFilter }) => {
   const formatPrice = (price) =>
     new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD' }).format(price);
 
-  const filteredPaquetes = allPaquetes.filter((paquete) => {
-    const cat = paquete.Categorium?.nombre?.toLowerCase();
-    if (selectedFilter === 'premium') return cat === 'premium';
-    if (selectedFilter === 'nacionales') return cat === 'nacionales';
-    if (selectedFilter === 'internacionales') return cat === 'internacionales';
-    return true;
-  });
+  // Mostrar siempre todos los paquetes, sin filtrar por categoría
+  const filteredPaquetes = allPaquetes;
 
   const categoriasOrden = [
     { nombre: 'Premium', sectionBg: 'bg-white', tituloBg: 'bg-kiendamas-beige' },
@@ -138,97 +133,96 @@ const PackagesSection = ({ selectedFilter }) => {
   }
 
   return (
-    <section id="paquetes" className="m-0 p-0">
-      <div className="max-w-7xl mx-auto p-0">
-        {categoriasOrden.map(({ nombre: categoriaNombre, sectionBg, tituloBg }) => {
-          const subcategorias = paquetesAgrupados[categoriaNombre];
-          if (!subcategorias || Object.values(subcategorias).flat().length === 0) return null;
+    <section id="paquetes" className="w-full m-0 p-0">
+      {/* No fondo ni padding aquí, el fondo va en cada sección de categoría */}
+      {categoriasOrden.map(({ nombre: categoriaNombre, sectionBg, tituloBg }) => {
+        const subcategorias = paquetesAgrupados[categoriaNombre];
+        if (!subcategorias || Object.values(subcategorias).flat().length === 0) return null;
 
-          return (
-            <section
-              key={categoriaNombre}
-              id={`categoria-${categoriaNombre.toLowerCase()}`}
-              className={`w-full ${sectionBg} py-16`}
-            >
-
-              <div className={`relative mb-12 -mx-4 sm:-mx-6 lg:-mx-8`}>
-                <div className={`${tituloBg} rounded-r-3xl pl-4 sm:pl-6 lg:pl-8 pr-12 py-4 max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930]`}>
-                  <h2 className="font-raleway font-normal text-[25px] text-[#646464] ml-2">
-                    Paquetes {categoriaNombre}
-                  </h2>
-                </div>
+        return (
+          <section
+            key={categoriaNombre}
+            id={`categoria-${categoriaNombre.toLowerCase()}`}
+            className={`w-full ${sectionBg} py-16`}
+          >
+            {/* Título alineado al sidebar */}
+            <div className="relative mb-10">
+              <div className={`${tituloBg} rounded-r-3xl pl-4 sm:pl-6 pr-8 py-3 max-w-xs sm:max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930]`}>
+                <h2 className="font-raleway font-normal text-xl sm:text-2xl xl:text-2xl 2xl:text-3xl text-[#646464]">
+                  Paquetes {categoriaNombre}
+                </h2>
               </div>
+            </div>
 
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-0">
-                {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes]) => {
-                  if (!paquetes || paquetes.length === 0) return null;
-                  const carouselId = `carousel-${categoriaNombre}-${subcategoriaNombre}`;
-                  const showCarousel = paquetes.length > 1;
+            {/* Contenido interno centrado y limitado en ancho */}
+            <div className="w-full max-w-7xl mx-auto px-0 sm:px-2 md:px-4 lg:px-8">
+              {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes]) => {
+                if (!paquetes || paquetes.length === 0) return null;
+                const carouselId = `carousel-${categoriaNombre}-${subcategoriaNombre}`;
+                const showCarousel = paquetes.length > 1;
 
-                  return (
-                    <div key={subcategoriaNombre} className="mt-4 mb-0 relative">
-                      <div className="flex items-center justify-between mb-6 pl-8">
-                        <h3 className={`text-lg font-semibold font-raleway ${categoriaNombre === 'Nacionales' ? 'text-white' : 'text-gray-600'}`}>
-                          {subcategoriaNombre.charAt(0).toUpperCase() + subcategoriaNombre.slice(1).toLowerCase()}
-                        </h3>
-                      </div>
+                return (
+                  <div key={subcategoriaNombre} className="mt-4 mb-0 relative">
+                    <div className="flex items-center justify-between mb-6 pl-0 lg:pl-12">
+                      <h3 className={`text-base sm:text-lg lg:text-base xl:text-lg font-semibold font-raleway ${categoriaNombre === 'Nacionales' ? 'text-white' : 'text-gray-600'}`}> 
+                        {subcategoriaNombre.charAt(0).toUpperCase() + subcategoriaNombre.slice(1).toLowerCase()}
+                      </h3>
+                    </div>
 
-                      <div className="relative w-full flex items-center justify-center px-0 sm:px-2 md:px-8 lg:px-16">
-                        {showCarousel && (
-                          <>
-                            <button
-                              onClick={() => scroll(carouselId, 'left')}
-                              className="flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
-                            >
-                              <ChevronLeftIcon className="h-5 w-5 sm:h-4 sm:w-4" />
-                            </button>
-                            <button
-                              onClick={() => scroll(carouselId, 'right')}
-                              className="flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
-                            >
-                              <ChevronRightIcon className="h-5 w-5 sm:h-4 sm:w-4" />
-                            </button>
-                          </>
-                        )}
-
-                        <div
-                          id={carouselId}
-                          ref={(el) => (containerRefs.current[carouselId] = el)}
-                          className={`overflow-x-hidden w-full ${!showCarousel ? 'flex justify-center' : ''}`}
-                        >
-                          <div
-                            data-track
-                            className="flex gap-6 py-1"
-                            style={{ justifyContent: !showCarousel ? 'center' : 'flex-start' }}
+                    <div className="relative w-full flex items-center justify-center px-0 sm:px-2 md:px-8 lg:px-16">
+                      {showCarousel && (
+                        <>
+                          <button
+                            onClick={() => scroll(carouselId, 'left')}
+                            className="flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
                           >
-                            {paquetes.map((paquete) => (
-                              <PackageCard
-                                key={paquete.id}
-                                paquete={paquete}
-                                formatPrice={formatPrice}
-                                navigate={navigate}
-                              />
-                            ))}
-                          </div>
+                            <ChevronLeftIcon className="h-5 w-5 sm:h-4 sm:w-4" />
+                          </button>
+                          <button
+                            onClick={() => scroll(carouselId, 'right')}
+                            className="flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                          >
+                            <ChevronRightIcon className="h-5 w-5 sm:h-4 sm:w-4" />
+                          </button>
+                        </>
+                      )}
+
+                      <div
+                        id={carouselId}
+                        ref={(el) => (containerRefs.current[carouselId] = el)}
+                        className={`overflow-x-hidden w-full ${!showCarousel ? 'flex justify-center' : ''}`}
+                      >
+                        <div
+                          data-track
+                          className="flex gap-6 py-1"
+                          style={{ justifyContent: !showCarousel ? 'center' : 'flex-start' }}
+                        >
+                          {paquetes.map((paquete) => (
+                            <PackageCard
+                              key={paquete.id}
+                              paquete={paquete}
+                              formatPrice={formatPrice}
+                              navigate={navigate}
+                            />
+                          ))}
                         </div>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
-
-        {categoriasOrden.every(({ nombre }) => {
-          const subcats = paquetesAgrupados[nombre];
-          return !subcats || Object.values(subcats).flat().length === 0;
-        }) && (
-            <div className="text-center py-12">
-              <p className="text-kiendamas-text text-lg font-raleway">No hay paquetes disponibles.</p>
+                  </div>
+                );
+              })}
             </div>
-          )}
-      </div>
+          </section>
+        );
+      })}
+      {categoriasOrden.every(({ nombre }) => {
+        const subcats = paquetesAgrupados[nombre];
+        return !subcats || Object.values(subcats).flat().length === 0;
+      }) && (
+        <div className="text-center py-12">
+          <p className="text-kiendamas-text text-lg font-raleway">No hay paquetes disponibles.</p>
+        </div>
+      )}
     </section>
   );
 };
