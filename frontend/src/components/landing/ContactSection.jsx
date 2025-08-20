@@ -38,12 +38,12 @@ const ContactSection = () => {
   };
 
   return (
-    <section className="py-16 bg-kiendamas-lightBeige" id="contacto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 bg-kiendamas-lightBeige w-full" id="contacto">
+      <div className="w-full px-2 sm:px-4 lg:px-8">
         {/* Título de la sección */}
-        <div className="relative mb-12 -mx-4 sm:-mx-6 lg:-mx-8">
-          <div className="bg-kiendamas-beige rounded-r-3xl pl-4 sm:pl-6 lg:pl-8 pr-12 py-4 max-w-md">
-            <h2 className="text-3xl font-normal text-kiendamas-text font-raleway leading-none">
+        <div className="relative mb-10 -ml-10">
+          <div className="bg-kiendamas-beige rounded-r-3xl pl-10 sm:pl-6  pr-8 py-3 max-w-xs sm:max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930]">
+            <h2 className="text-xl sm:text-2xl xl:text-2xl 2xl:text-3xl font-normal text-kiendamas-text font-raleway leading-none">
               Contacto
             </h2>
           </div>

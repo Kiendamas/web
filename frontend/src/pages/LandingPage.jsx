@@ -36,6 +36,19 @@ const LandingPage = () => {
 
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
+    // Scroll a la sección de la categoría correspondiente
+    let sectionId = null;
+    if (filter === 'premium') sectionId = 'categoria-premium';
+    else if (filter === 'nacionales') sectionId = 'categoria-nacionales';
+    else if (filter === 'internacionales') sectionId = 'categoria-internacionales';
+    if (sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const headerHeight = 64;
+        const elementPosition = element.offsetTop - headerHeight;
+        window.scrollTo({ top: elementPosition, behavior: 'smooth' });
+      }
+    }
   };
 
   return (
