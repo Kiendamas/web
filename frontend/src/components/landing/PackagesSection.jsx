@@ -1,3 +1,30 @@
+// Card de placeholder visual igual a la real, con mensaje "Próximamente un nuevo destino"
+const PlaceholderCard = () => (
+  <div className="package-card shrink-0 bg-white shadow-md border border-[#f3f3f3] overflow-hidden p-0 w-[85vw] max-w-xs sm:w-[180px] md:w-[210px] lg:w-[220px] xl:w-[240px] snap-center flex flex-col">
+    <div className="w-full aspect-[4/5] min-h-[140px] max-h-[220px] sm:h-32 md:h-36 lg:h-40 overflow-hidden flex items-center justify-center bg-gray-200">
+      <span className="text-gray-400 text-lg font-semibold font-raleway text-center px-2">Próximamente un nuevo destino</span>
+    </div>
+    <div className="flex flex-col flex-1 px-3 py-2 sm:px-2 sm:py-1 justify-between">
+      <div>
+        <div className="flex justify-between items-center mb-1">
+          <h4 className="text-sm font-semibold text-kiendamas-text font-raleway truncate mr-1 opacity-50">---</h4>
+          <span className="text-sm font-bold text-kiendamas-text font-raleway whitespace-nowrap opacity-50">---</span>
+        </div>
+        <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal opacity-50">
+          ¡Muy pronto más opciones!
+        </div>
+      </div>
+      <div className="flex justify-end mt-2">
+        <button
+          className="border border-[#FF625E] text-gray-400 px-3 py-1 bg-white rounded-full cursor-not-allowed opacity-50 text-xs"
+          disabled
+        >
+          Más info
+        </button>
+      </div>
+    </div>
+  </div>
+);
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useGetPaquetesQuery } from '../../features/paquetes/paquetesApi';
@@ -146,10 +173,23 @@ const PackagesSection = ({ selectedFilter }) => {
               {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes]) => {
                 if (!paquetes || paquetes.length === 0) return null;
                 const carouselId = `carousel-${categoriaNombre}-${subcategoriaNombre}`;
-                const showCarousel = paquetes.length > cardsPerView;
+                // Eliminar declaración anterior de showCarousel (si existe)
                 const startIdx = carouselIndexes[carouselId] || 0;
                 const endIdx = Math.min(startIdx + cardsPerView, paquetes.length);
-                const visiblePaquetes = paquetes.slice(startIdx, endIdx);
+                // Siempre formar el carrusel: rellenar con placeholders hasta tener al menos 3 cards
+                let allCards = [...paquetes];
+                while (allCards.length < 3) {
+                  allCards.push({ placeholder: true, key: `placeholder-${allCards.length}` });
+                }
+                const total = allCards.length;
+                const showCarousel = total >= cardsPerView;
+                const realStartIdx = carouselIndexes[carouselId] || 0;
+                const realEndIdx = Math.min(realStartIdx + cardsPerView, total);
+                const visiblePaquetes = allCards.slice(realStartIdx, realEndIdx).map((p, idx) =>
+                  p.placeholder
+                    ? <PlaceholderCard key={p.key} />
+                    : <PackageCard key={p.id} paquete={p} formatPrice={formatPrice} navigate={navigate} />
+                );
 
                 // Padding izquierdo igual para subtítulo y cards, siempre
                 const leftPad = 'pl-0 sm:pl-2 md:pl-8 lg:pl-16';
@@ -185,14 +225,7 @@ const PackagesSection = ({ selectedFilter }) => {
                             data-track
                             className={`flex gap-3 sm:gap-4 md:gap-5 lg:gap-6 py-1 w-full ${showCarousel ? 'justify-center' : 'justify-start'}`}
                           >
-                            {visiblePaquetes.map((paquete) => (
-                              <PackageCard
-                                key={paquete.id}
-                                paquete={paquete}
-                                formatPrice={formatPrice}
-                                navigate={navigate}
-                              />
-                            ))}
+                            {visiblePaquetes}
                           </div>
                         </div>
                       </div>
