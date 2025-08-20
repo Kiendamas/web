@@ -17,26 +17,26 @@ const PackageCard = ({ paquete, formatPrice, navigate }) => (
       />
     </div>
 
-  <div className="flex flex-col px-3 py-2 sm:px-2 sm:py-1 flex-1">
-      <div className="flex justify-between items-center mb-1">
-        <h4 className="text-sm font-semibold text-kiendamas-text font-raleway truncate mr-1">
-          {paquete.nombre.charAt(0).toUpperCase() + paquete.nombre.slice(1).toLowerCase()}
-        </h4>
-  <span className="text-sm font-bold text-kiendamas-text font-raleway whitespace-nowrap">
-          {formatPrice(paquete.precio)}
-        </span>
+    <div className="flex flex-col flex-1 px-3 py-2 sm:px-2 sm:py-1 justify-between">
+      <div>
+        <div className="flex justify-between items-center mb-1">
+          <h4 className="text-sm font-semibold text-kiendamas-text font-raleway truncate mr-1">
+            {paquete.nombre.charAt(0).toUpperCase() + paquete.nombre.slice(1).toLowerCase()}
+          </h4>
+          <span className="text-sm font-bold text-kiendamas-text font-raleway whitespace-nowrap">
+            {formatPrice(paquete.precio)}
+          </span>
+        </div>
+        <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal">
+          {(() => {
+            if (!paquete.descripcion) return null;
+            const primerPunto = paquete.descripcion.indexOf(".");
+            return primerPunto !== -1
+              ? paquete.descripcion.slice(0, primerPunto + 1)
+              : paquete.descripcion;
+          })()}
+        </div>
       </div>
-
-  <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal">
-        {(() => {
-          if (!paquete.descripcion) return null;
-          const primerPunto = paquete.descripcion.indexOf(".");
-          return primerPunto !== -1
-            ? paquete.descripcion.slice(0, primerPunto + 1)
-            : paquete.descripcion;
-        })()}
-      </div>
-
       <div className="flex justify-end mt-2">
         <button
           onClick={() => navigate(`/paquete/${paquete.id}`)}
