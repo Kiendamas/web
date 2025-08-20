@@ -1,15 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useGetPaquetesQuery } from '../../features/paquetes/paquetesApi';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
+// Card real
 const PackageCard = ({ paquete, formatPrice, navigate }) => (
-  <div className="package-card shrink-0 bg-white shadow-md border border-[#f3f3f3] overflow-hidden p-1 w-[250px] sm:w-[250px] md:w-[280px] lg:w-[300px]">
-    <div className="w-full h-44 overflow-hidden">
+  <div className="package-card shrink-0 bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden w-full max-w-[260px] snap-center flex flex-col">
+    <div className="w-full p-1 aspect-[4/3] overflow-hidden flex items-center justify-center bg-white">
       <img
         src={paquete.imagenes?.[0] || '/placeholder-travel.jpg'}
         alt={paquete.nombre}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover object-center"
         onError={(e) => {
           e.currentTarget.src =
             "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='%23f3f4f6'/%3E%3Ctext x='128' y='128' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3EImagen no disponible%3C/text%3E%3C/svg%3E";
@@ -17,30 +18,60 @@ const PackageCard = ({ paquete, formatPrice, navigate }) => (
       />
     </div>
 
-    <div className="flex flex-col px-3 py-2">
-      <div className="flex justify-between items-center mb-1">
-        <h4 className="text-base font-semibold text-kiendamas-text font-raleway truncate mr-2">
-          {paquete.nombre.charAt(0).toUpperCase() + paquete.nombre.slice(1).toLowerCase()}
-        </h4>
-        <span className="text-base font-bold text-kiendamas-text font-raleway whitespace-nowrap">
-          {formatPrice(paquete.precio)}
-        </span>
+    <div className="flex flex-col flex-1 px-4 py-3 justify-between">
+      <div>
+        <div className="flex justify-between items-center mb-1">
+          <h4 className="text-sm font-semibold text-kiendamas-text font-raleway truncate mr-1">
+            {paquete.nombre.charAt(0).toUpperCase() + paquete.nombre.slice(1).toLowerCase()}
+          </h4>
+          <span className="text-sm font-bold text-kiendamas-text font-raleway whitespace-nowrap">
+            {formatPrice(paquete.precio)}
+          </span>
+        </div>
+        <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal line-clamp-2 max-h-[2.5em] overflow-hidden">
+          {(() => {
+            if (!paquete.descripcion) return null;
+            const primerPunto = paquete.descripcion.indexOf(".");
+            return primerPunto !== -1
+              ? paquete.descripcion.slice(0, primerPunto + 1)
+              : paquete.descripcion;
+          })()}
+        </div>
       </div>
-
-      <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal">
-        {(() => {
-          if (!paquete.descripcion) return null;
-          const primerPunto = paquete.descripcion.indexOf(".");
-          return primerPunto !== -1
-            ? paquete.descripcion.slice(0, primerPunto + 1)
-            : paquete.descripcion;
-        })()}
-      </div>
-
       <div className="flex justify-end mt-2">
         <button
           onClick={() => navigate(`/paquete/${paquete.id}`)}
-          className="border border-[#FF625E] text-gray-800 px-4 py-1 bg-white rounded-full hover:bg-[#FF625E] hover:text-white transition text-xs"
+          className="border border-[#FF625E] text-gray-700 px-3 py-1 bg-white rounded-full hover:bg-[#FF625E] hover:text-white transition text-xs"
+        >
+          Más info
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+// Card de placeholder
+const PlaceholderCard = () => (
+  <div className="package-card shrink-0 bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden w-full max-w-[260px] snap-center flex flex-col">
+    <div className="w-full aspect-[4/3] flex items-center justify-center bg-gray-200">
+      <span className="text-gray-400 text-lg font-semibold font-raleway text-center px-2">
+        Próximamente un nuevo destino
+      </span>
+    </div>
+    <div className="flex flex-col flex-1 px-4 py-3 justify-between">
+      <div>
+        <div className="flex justify-between items-center mb-1">
+          <h4 className="text-sm font-semibold text-gray-400 font-raleway truncate mr-1">---</h4>
+          <span className="text-sm font-bold text-gray-400 font-raleway whitespace-nowrap">---</span>
+        </div>
+        <div className="text-xs text-gray-400 font-raleway leading-snug line-clamp-2 max-h-[2.5em] overflow-hidden">
+          ¡Muy pronto más opciones!
+        </div>
+      </div>
+      <div className="flex justify-end mt-2">
+        <button
+          className="border border-[#FF625E] text-gray-400 px-3 py-1 bg-white rounded-full cursor-not-allowed opacity-50 text-xs"
+          disabled
         >
           Más info
         </button>
@@ -52,12 +83,25 @@ const PackageCard = ({ paquete, formatPrice, navigate }) => (
 const PackagesSection = ({ selectedFilter }) => {
   const navigate = useNavigate();
   const { data: allPaquetes = [], isLoading: paquetesLoading } = useGetPaquetesQuery();
-  const containerRefs = useRef({});
+  const [cardsPerView, setCardsPerView] = useState(3);
+  const [carouselIndexes, setCarouselIndexes] = useState({});
+
+  // Responsive cards per view
+  const updateCardsPerView = useCallback(() => {
+    if (window.innerWidth < 640) setCardsPerView(1);
+    else if (window.innerWidth < 1024) setCardsPerView(2);
+    else setCardsPerView(3);
+  }, []);
+
+  useEffect(() => {
+    updateCardsPerView();
+    window.addEventListener('resize', updateCardsPerView);
+    return () => window.removeEventListener('resize', updateCardsPerView);
+  }, [updateCardsPerView]);
 
   const formatPrice = (price) =>
     new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD' }).format(price);
 
-  // Mostrar siempre todos los paquetes, sin filtrar por categoría
   const filteredPaquetes = allPaquetes;
 
   const categoriasOrden = [
@@ -78,51 +122,20 @@ const PackagesSection = ({ selectedFilter }) => {
     }
   });
 
-  const getCardsPerView = () => {
-    if (window.innerWidth >= 1024) return 3;
-    if (window.innerWidth >= 768) return 2;
-    return 1;
-  };
-
-  const scroll = (carouselId, direction) => {
-    const container = containerRefs.current[carouselId];
-    if (!container) return;
-
-    const track = container.querySelector('[data-track]');
-    if (!track) return;
-
-    const firstItem = track.querySelector('.package-card');
-    if (!firstItem) return;
-
-    const gap = parseInt(getComputedStyle(track).gap) || 24;
-    const cardWidth = firstItem.getBoundingClientRect().width;
-    const cardsPerView = getCardsPerView();
-    const amount = (cardWidth + gap) * cardsPerView;
-
-    if (direction === 'right') {
-      if (container.scrollLeft + container.clientWidth >= track.scrollWidth) {
-        container.scrollTo({ left: 0, behavior: 'smooth' });
+  const handleCarouselNav = (carouselId, direction, total) => {
+    setCarouselIndexes((prev) => {
+      const current = prev[carouselId] || 0;
+      let next;
+      if (direction === 'right') {
+        next = current + cardsPerView;
+        if (next >= total) next = 0;
       } else {
-        container.scrollBy({ left: amount, behavior: 'smooth' });
+        next = current - cardsPerView;
+        if (next < 0) next = Math.max(0, total - cardsPerView);
       }
-    } else {
-      if (container.scrollLeft === 0) {
-        container.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
-      } else {
-        container.scrollBy({ left: -amount, behavior: 'smooth' });
-      }
-    }
+      return { ...prev, [carouselId]: next };
+    });
   };
-
-  useEffect(() => {
-    const handleResize = () => {
-      Object.values(containerRefs.current).forEach((container) => {
-        if (container) container.scrollLeft = 0;
-      });
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   if (paquetesLoading) {
     return (
@@ -134,7 +147,6 @@ const PackagesSection = ({ selectedFilter }) => {
 
   return (
     <section id="paquetes" className="w-full m-0 p-0">
-      {/* No fondo ni padding aquí, el fondo va en cada sección de categoría */}
       {categoriasOrden.map(({ nombre: categoriaNombre, sectionBg, tituloBg }) => {
         const subcategorias = paquetesAgrupados[categoriaNombre];
         if (!subcategorias || Object.values(subcategorias).flat().length === 0) return null;
@@ -145,66 +157,87 @@ const PackagesSection = ({ selectedFilter }) => {
             id={`categoria-${categoriaNombre.toLowerCase()}`}
             className={`w-full ${sectionBg} py-16`}
           >
-            {/* Título alineado al sidebar */}
+            {/* Título principal de categoría */}
             <div className="relative mb-10">
-              <div className={`${tituloBg} rounded-r-3xl pl-4 sm:pl-6 pr-8 py-3 max-w-xs sm:max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930]`}>
-                <h2 className="font-raleway font-normal text-xl sm:text-2xl xl:text-2xl 2xl:text-3xl text-[#646464]">
+              <div
+                className={`${tituloBg} rounded-r-3xl pl-4 sm:pl-6 pr-8 py-3 max-w-xs sm:max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930]`}
+              >
+                <h2 className="font-raleway font-normal text-xl sm:text-2xl text-[#646464]">
                   Paquetes {categoriaNombre}
                 </h2>
               </div>
             </div>
 
-            {/* Contenido interno centrado y limitado en ancho */}
             <div className="w-full max-w-7xl mx-auto px-0 sm:px-2 md:px-4 lg:px-8">
               {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes]) => {
                 if (!paquetes || paquetes.length === 0) return null;
                 const carouselId = `carousel-${categoriaNombre}-${subcategoriaNombre}`;
-                const showCarousel = paquetes.length > 1;
+                const startIdx = carouselIndexes[carouselId] || 0;
+                let allCards = [...paquetes];
+                while (allCards.length < 3) {
+                  allCards.push({ placeholder: true, key: `placeholder-${allCards.length}` });
+                }
+                const total = allCards.length;
+                const showCarousel = total >= cardsPerView;
+                const realEndIdx = Math.min(startIdx + cardsPerView, total);
+                const visiblePaquetes = allCards.slice(startIdx, realEndIdx).map((p, idx) =>
+                  p.placeholder ? (
+                    <PlaceholderCard key={p.key} />
+                  ) : (
+                    <PackageCard
+                      key={p.id}
+                      paquete={p}
+                      formatPrice={formatPrice}
+                      navigate={navigate}
+                    />
+                  )
+                );
 
                 return (
-                  <div key={subcategoriaNombre} className="mt-4 mb-0 relative">
-                    <div className="flex items-center justify-between mb-6 pl-0 lg:pl-12">
-                      <h3 className={`text-base sm:text-lg lg:text-base xl:text-lg font-semibold font-raleway ${categoriaNombre === 'Nacionales' ? 'text-white' : 'text-gray-600'}`}> 
-                        {subcategoriaNombre.charAt(0).toUpperCase() + subcategoriaNombre.slice(1).toLowerCase()}
-                      </h3>
-                    </div>
-
-                    <div className="relative w-full flex items-center justify-center px-0 sm:px-2 md:px-8 lg:px-16">
-                      {showCarousel && (
-                        <>
-                          <button
-                            onClick={() => scroll(carouselId, 'left')}
-                            className="flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
-                          >
-                            <ChevronLeftIcon className="h-5 w-5 sm:h-4 sm:w-4" />
-                          </button>
-                          <button
-                            onClick={() => scroll(carouselId, 'right')}
-                            className="flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
-                          >
-                            <ChevronRightIcon className="h-5 w-5 sm:h-4 sm:w-4" />
-                          </button>
-                        </>
-                      )}
-
-                      <div
-                        id={carouselId}
-                        ref={(el) => (containerRefs.current[carouselId] = el)}
-                        className={`overflow-x-hidden w-full ${!showCarousel ? 'flex justify-center' : ''}`}
-                      >
-                        <div
-                          data-track
-                          className="flex gap-6 py-1"
-                          style={{ justifyContent: !showCarousel ? 'center' : 'flex-start' }}
+                  <div key={subcategoriaNombre} className="mt-4 mb-0">
+                    {/* Wrapper centrado para subtítulo y carrusel */}
+                    <div
+                      className="flex flex-col items-start mx-auto"
+                      style={{
+                        maxWidth: `calc(${cardsPerView} * 260px + ${(cardsPerView - 1) * 32}px)`
+                      }}
+                    >
+                      {/* Subcategoría alineada sobre la primer card */}
+                      <div className="mb-2">
+                        <h3
+                          className={`text-base sm:text-lg font-semibold font-raleway ${
+                            categoriaNombre === 'Nacionales' ? 'text-white' : 'text-kiendamas-text'
+                          }`}
+                          style={{ marginLeft: 0 }}
                         >
-                          {paquetes.map((paquete) => (
-                            <PackageCard
-                              key={paquete.id}
-                              paquete={paquete}
-                              formatPrice={formatPrice}
-                              navigate={navigate}
-                            />
-                          ))}
+                          {subcategoriaNombre.charAt(0).toUpperCase() +
+                            subcategoriaNombre.slice(1).toLowerCase()}
+                        </h3>
+                      </div>
+
+                      {/* Carrusel */}
+                      <div className="relative w-full flex items-center">
+                        {showCarousel && (
+                          <>
+                            <button
+                              onClick={() => handleCarouselNav(carouselId, 'left', paquetes.length)}
+                              className="flex items-center justify-center absolute -left-10 sm:-left-10 md:-left-12 lg:-left-14 top-1/2 -translate-y-1/2 p-1 sm:p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                            >
+                              <ChevronLeftIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                            </button>
+                            <button
+                              onClick={() => handleCarouselNav(carouselId, 'right', paquetes.length)}
+                              className="flex items-center justify-center absolute -right-10 sm:-right-10 md:-right-12 lg:-right-14 top-1/2 -translate-y-1/2 p-1 sm:p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                            >
+                              <ChevronRightIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                            </button>
+                          </>
+                        )}
+
+                        <div className={`flex items-stretch w-full ${cardsPerView === 1 ? '' : 'overflow-x-auto scrollbar-hide'}`}>
+                          <div className={`flex gap-4 sm:gap-5 md:gap-6 lg:gap-8 py-1 justify-start min-w-fit w-full ${cardsPerView === 1 ? 'flex-col' : ''}`}>
+                            {visiblePaquetes}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -215,14 +248,6 @@ const PackagesSection = ({ selectedFilter }) => {
           </section>
         );
       })}
-      {categoriasOrden.every(({ nombre }) => {
-        const subcats = paquetesAgrupados[nombre];
-        return !subcats || Object.values(subcats).flat().length === 0;
-      }) && (
-        <div className="text-center py-12">
-          <p className="text-kiendamas-text text-lg font-raleway">No hay paquetes disponibles.</p>
-        </div>
-      )}
     </section>
   );
 };
