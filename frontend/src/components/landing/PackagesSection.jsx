@@ -166,13 +166,13 @@ const PackagesSection = ({ selectedFilter }) => {
                           <>
                             <button
                               onClick={() => handleCarouselNav(carouselId, 'left', paquetes.length)}
-                              className="flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                              className="flex items-center justify-center absolute left-0 md:left-4 lg:left-6 xl:left-10 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
                             >
                               <ChevronLeftIcon className="h-5 w-5 sm:h-4 sm:w-4" />
                             </button>
                             <button
                               onClick={() => handleCarouselNav(carouselId, 'right', paquetes.length)}
-                              className="flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                              className="flex items-center justify-center absolute right-0 md:right-4 lg:right-6 xl:right-10 top-1/2 -translate-y-1/2 p-2 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
                             >
                               <ChevronRightIcon className="h-5 w-5 sm:h-4 sm:w-4" />
                             </button>
