@@ -11,6 +11,7 @@ import ContactSection from '../components/landing/ContactSection';
 import ReviewsSection from '../components/landing/ReviewsSection';
 import Footer from '../components/landing/Footer';
 import SocialMediaFixed from '../components/landing/SocialMediaFixed';
+import SocialWhatsappFixed from '../components/landing/SocialWhatsappFixed';
 
 const LandingPage = () => {
   const [activeSection, setActiveSection] = useState('inicio');
@@ -120,6 +121,7 @@ const LandingPage = () => {
 
       {/* Redes Sociales Fijas */}
       <SocialMediaFixed />
+      <SocialWhatsappFixed />
     </div>
   );
 };
