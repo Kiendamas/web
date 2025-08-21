@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MapPinIcon, PhoneIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
+import { HiOutlineMapPin, HiOutlineGlobeAlt } from 'react-icons/hi2';
+import { FaWhatsapp } from 'react-icons/fa';
 import { useCreateContactoMutation } from '../../features/contacto/contactoApi';
 
 const ContactSection = () => {
@@ -55,9 +56,9 @@ const ContactSection = () => {
             {/* Mapa */}
             <div className="bg-white rounded-2xl overflow-hidden shadow-lg">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3348.8654!2d-60.6393!3d-32.9477!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95b7ab1b5b6c5a5b%3A0x1b1b1b1b1b1b1b1b!2sRosario%2C%20Santa%20Fe%2C%20Argentina!5e0!3m2!1ses!2sar!4v1642611234567!5m2!1ses!2sar"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3348.905930348507!2d-60.66821244353273!3d-32.927083531455835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95b654ad065c3ef5%3A0x8ca54d59f7e0e56d!2sThedy%20158%2C%20S2000%20Rosario%2C%20Santa%20Fe!5e0!3m2!1ses-419!2sar!4v1755742396661!5m2!1ses-419!2sar"
                 width="100%"
-                height="300"
+                height="530"
                 style={{ border: 0 }}
                 allowFullScreen=""
                 loading="lazy"
@@ -67,40 +68,42 @@ const ContactSection = () => {
             </div>
 
             {/* Información de contacto */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {/* Nuestra Oficina */}
-              <div className="bg-kiendamas-brown text-white rounded-lg p-4 text-center">
-                <MapPinIcon className="h-6 w-6 mx-auto mb-2" />
-                <h3 className="font-bold text-sm mb-2 font-raleway">Nuestra Oficina</h3>
-                <p className="text-xs font-raleway">
+            {/* Información de contacto estilo barra */}
+            <div className="rounded-xl overflow-hidden shadow-lg">
+              {/* Fila de títulos */}
+              <div className="grid grid-cols-3 bg-kiendamas-brown text-white rounded-t-xl">
+                <div className="flex items-center justify-center gap-2 px-2 py-3 border-r border-kiendamas-beige/40">
+                  <HiOutlineMapPin size={20} color="#F6DFA9" />
+                  <span className="font-bold font-raleway text-base">Nuestra Oficina</span>
+                </div>
+                <div className="flex items-center justify-center gap-2 px-2 py-3 border-r border-kiendamas-beige/40">
+                  <FaWhatsapp size={20} color="#F6DFA9" />
+                  <span className="font-bold font-raleway text-base">Teléfono</span>
+                </div>
+                <div className="flex items-center justify-center gap-2 px-2 py-3">
+                  <HiOutlineGlobeAlt size={20} color="#F6DFA9" />
+                  <span className="font-bold font-raleway text-base">Redes</span>
+                </div>
+              </div>
+              {/* Fila de datos */}
+              <div className="grid grid-cols-3 bg-white text-kiendamas-text rounded-b-xl shadow px-2 py-2 text-sm font-semibold font-raleway">
+                <div className="flex flex-col items-center justify-center text-center">
                   Thedy 158 bis PB 04<br />
                   Puerto Norte - Rosario
-                </p>
-              </div>
-
-              {/* Teléfono */}
-              <div className="bg-kiendamas-brown text-white rounded-lg p-4 text-center">
-                <PhoneIcon className="h-6 w-6 mx-auto mb-2" />
-                <h3 className="font-bold text-sm mb-2 font-raleway">Teléfono</h3>
-                <p className="text-xs font-raleway">
+                </div>
+                <div className="flex items-center justify-center text-center">
                   +54 9 3415858303
-                </p>
-              </div>
-
-              {/* Redes */}
-              <div className="bg-kiendamas-brown text-white rounded-lg p-4 text-center">
-                <GlobeAltIcon className="h-6 w-6 mx-auto mb-2" />
-                <h3 className="font-bold text-sm mb-2 font-raleway">Redes</h3>
-                <p className="text-xs font-raleway">
+                </div>
+                <div className="flex items-center justify-center text-center">
                   kiendamas_viajes
-                </p>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Lado derecho - Formulario */}
           <div>
-            <div className="bg-white rounded-2xl p-8 shadow-lg">
+            <div className="bg-white rounded-2xl p-7 shadow-lg">
               {/* Título del formulario */}
               <div className="bg-kiendamas-brown text-white rounded-full px-6 py-2 inline-block mb-6">
                 <h3 className="font-bold text-lg font-raleway">Dejanos tu consulta</h3>
@@ -114,10 +117,10 @@ const ContactSection = () => {
               )}
 
               {/* Formulario */}
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Nombre y Apellido */}
                 <div>
-                  <label className="block text-sm font-medium text-kiendamas-text mb-2 font-raleway">
+                  <label className="block text-sm font-semibold text-kiendamas-text mb-2 font-raleway">
                     Nombre y Apellido
                   </label>
                   <input
@@ -127,13 +130,13 @@ const ContactSection = () => {
                     onChange={handleInputChange}
                     placeholder="Nombre y Apellido"
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-kiendamas-lightBeige focus:ring-2 focus:ring-kiendamas-brown focus:border-transparent font-raleway"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-kiendamas-beige focus:ring-2 focus:ring-kiendamas-brown focus:border-transparent font-normal font-raleway"
                   />
                 </div>
 
                 {/* Email */}
                 <div>
-                  <label className="block text-sm font-medium text-kiendamas-text mb-2 font-raleway">
+                  <label className="block text-sm font-semibold text-kiendamas-text mb-2 font-raleway">
                     Mail
                   </label>
                   <input
@@ -143,13 +146,13 @@ const ContactSection = () => {
                     onChange={handleInputChange}
                     placeholder="Mail"
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-kiendamas-lightBeige focus:ring-2 focus:ring-kiendamas-brown focus:border-transparent font-raleway"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-kiendamas-beige focus:ring-2 focus:ring-kiendamas-brown focus:border-transparent font-raleway"
                   />
                 </div>
 
                 {/* Teléfono */}
                 <div>
-                  <label className="block text-sm font-medium text-kiendamas-text mb-2 font-raleway">
+                  <label className="block text-sm font-semibold text-kiendamas-text mb-2 font-raleway">
                     Teléfono
                   </label>
                   <input
@@ -158,13 +161,13 @@ const ContactSection = () => {
                     value={formData.telefono}
                     onChange={handleInputChange}
                     placeholder="Teléfono"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-kiendamas-lightBeige focus:ring-2 focus:ring-kiendamas-brown focus:border-transparent font-raleway"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-kiendamas-beige focus:ring-2 focus:ring-kiendamas-brown focus:border-transparent font-raleway"
                   />
                 </div>
 
                 {/* Mensaje */}
                 <div>
-                  <label className="block text-sm font-medium text-kiendamas-text mb-2 font-raleway">
+                  <label className="block text-sm font-semibold text-kiendamas-text mb-2 font-raleway">
                     Tu Mensaje
                   </label>
                   <textarea
@@ -174,7 +177,7 @@ const ContactSection = () => {
                     placeholder="Texto"
                     required
                     rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-kiendamas-lightBeige focus:ring-2 focus:ring-kiendamas-brown focus:border-transparent font-raleway resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-kiendamas-beige focus:ring-2 focus:ring-kiendamas-brown focus:border-transparent font-raleway resize-none"
                   ></textarea>
                 </div>
 
@@ -182,7 +185,7 @@ const ContactSection = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="bg-kiendamas-brown hover:bg-kiendamas-darkBrown text-white font-bold py-3 px-8 rounded-full transition-colors duration-200 font-raleway disabled:opacity-50"
+                  className="bg-kiendamas-brown hover:bg-kiendamas-darkBrown text-white font-bold py-2 px-8 rounded-full transition-colors duration-200 font-raleway disabled:opacity-50 justify-items-center"
                 >
                   {isLoading ? 'Enviando...' : 'Enviar'}
                 </button>

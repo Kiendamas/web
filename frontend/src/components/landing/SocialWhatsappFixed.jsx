@@ -2,7 +2,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 
 const SocialWhatsappFixed = () => (
   <a
-    href="https://wa.me/5491112345678"
+    href="https://wa.me/5493415858303"
     target="_blank"
     rel="noopener noreferrer"
     className="fixed left-3 bottom-8 z-50 flex items-center justify-center w-14 h-14 rounded-full border-2 border-white bg-kiendamas-darkBrown shadow-lg transition hover:scale-110"
