@@ -118,14 +118,11 @@ const ReviewsSection = () => {
               </h2>
             </div>
           </div>
-          <p className="text-kiendamas-brown text-base sm:text-lg font-raleway max-w-2xl mx-auto">
-            Conoce las experiencias reales de quienes han viajado con nosotros
-          </p>
         </div>
 
         {/* Reviews Carousel */}
         <div className="relative max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 relative overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-xl p-4 md:p-8 relative overflow-hidden">
             {/* Decorative elements */}
             <div className="absolute top-4 left-4 text-6xl text-kiendamas-beige font-serif">"</div>
             <div className="absolute bottom-4 right-4 text-6xl text-kiendamas-beige font-serif rotate-180">"</div>
