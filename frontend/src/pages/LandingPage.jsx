@@ -1,16 +1,18 @@
-import { useState, useEffect } from "react";
-import LandingHeader from "../components/landing/LandingHeader";
-import LandingSidebar from "../components/landing/LandingSidebar";
-import CompactSidebar from "../components/landing/CompactSidebar";
-import HeroSection from "../components/landing/HeroSection";
-import CategoryFilter from "../components/landing/CategoryFilter";
-import ServicesSection from "../components/landing/ServicesSection";
-import PackagesSection from "../components/landing/PackagesSection";
-import AboutSection from "../components/landing/AboutSection";
-import ContactSection from "../components/landing/ContactSection";
-import ReviewsSection from "../components/landing/ReviewsSection";
-import Footer from "../components/landing/Footer";
-import SocialMediaFixed from "../components/landing/SocialMediaFixed";
+import { useState, useEffect } from 'react';
+import LandingHeader from '../components/landing/LandingHeader';
+import LandingSidebar from '../components/landing/LandingSidebar';
+import CompactSidebar from '../components/landing/CompactSidebar';
+import HeroSection from '../components/landing/HeroSection';
+import CategoryFilter from '../components/landing/CategoryFilter';
+import ServicesSection from '../components/landing/ServicesSection';
+import PackagesSection from '../components/landing/PackagesSection';
+import AboutSection from '../components/landing/AboutSection';
+import ContactSection from '../components/landing/ContactSection';
+import ReviewsSection from '../components/landing/ReviewsSection';
+import Footer from '../components/landing/Footer';
+import SocialMediaFixed from '../components/landing/SocialMediaFixed';
+import SocialWhatsappFixed from '../components/landing/SocialWhatsappFixed';
+
 
 const LandingPage = () => {
   const [activeSection, setActiveSection] = useState("inicio");
@@ -123,6 +125,7 @@ const LandingPage = () => {
 
       {/* Redes Sociales Fijas */}
       <SocialMediaFixed />
+      <SocialWhatsappFixed />
     </div>
   );
 };
