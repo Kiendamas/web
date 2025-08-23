@@ -324,19 +324,20 @@ const PaquetesManager = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Descripción *
+                  Descripción *  (usa punto para separar renglones)
                 </label>
                 <textarea
                   value={formData.descripcion}
                   onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Ejemplo: Primer punto (15 Dias y 14 Noches). Segundo punto ( se muestra debajo de 15 dias 14 noches). "
                   required
                 />
               </div>
 
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Campo Variable (usa punto para separar renglones)
+                Que incluye?  (usa punto para separar renglones)
               </label>
               <textarea
                 value={formData.campoVariable}

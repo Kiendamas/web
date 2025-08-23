@@ -5,16 +5,21 @@ import { useState, useEffect, useCallback } from 'react';
 
 // Card real
 const PackageCard = ({ paquete, formatPrice, navigate }) => {
-  // Mostrar hasta el segundo punto
-  let descripcionCorta = paquete.descripcion;
-  if (descripcionCorta) {
-    const puntos = [...descripcionCorta.matchAll(/\./g)].map(m => m.index);
-    if (puntos.length >= 2) {
-      descripcionCorta = descripcionCorta.slice(0, puntos[1] + 1);
-    } else if (puntos.length === 1) {
-      descripcionCorta = descripcionCorta.slice(0, puntos[0] + 1);
+  // Mostrar hasta el primer y segundo punto, cada uno en un renglón
+  let renglon1 = '', renglon2 = '';
+  if (paquete.descripcion) {
+    const puntos = [...paquete.descripcion.matchAll(/\./g)].map(m => m.index);
+    if (puntos.length >= 1) {
+      renglon1 = paquete.descripcion.slice(0, puntos[0] + 1).trim();
+      if (puntos.length >= 2) {
+        renglon2 = paquete.descripcion.slice(puntos[0] + 1, puntos[1] + 1).trim();
+      }
+    } else {
+      renglon1 = paquete.descripcion.trim();
     }
   }
+  // Capitalizar el inicio de cada renglón
+  const capitalize = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
   const moneda = paquete.moneda || 'ARS';
   return (
     <div className="package-card shrink-0 bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden w-full max-w-[260px] snap-center flex flex-col">
@@ -38,11 +43,12 @@ const PackageCard = ({ paquete, formatPrice, navigate }) => {
             </h4>
             <span className="text-sm font-bold text-kiendamas-text font-raleway whitespace-nowrap">
               {formatPrice(paquete.precio, moneda)}{' '}
-              <span className="text-xs text-gray-500 font-normal">{moneda}</span>
+             
             </span>
           </div>
           <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal line-clamp-2 max-h-[2.5em] overflow-hidden">
-            {descripcionCorta}
+            {capitalize(renglon1)}
+            {renglon2 && <><br />{capitalize(renglon2)}</>}
           </div>
         </div>
         <div className="flex justify-end mt-2">
