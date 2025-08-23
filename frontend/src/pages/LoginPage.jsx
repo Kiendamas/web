@@ -111,12 +111,7 @@ const LoginPage = () => {
         </form>
 
         {/* Botón Google */}
-        <button
-          onClick={handleGoogleLogin}
-          className="w-full bg-white border-2 border-kiendamas-brown text-gray-800 py-3 rounded-full font-semibold shadow-md hover:bg-gray-50 transition"
-        >
-          Iniciar Sesión con Google
-        </button>
+       
 
         {/* Continuar sin login */}
         <button

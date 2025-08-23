@@ -2,53 +2,68 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useGetPaquetesQuery } from '../../features/paquetes/paquetesApi';
 import { useState, useEffect, useCallback } from 'react';
+import CategoryTitleAnimated from './CategoryTitleAnimated';
 
 // Card real
-const PackageCard = ({ paquete, formatPrice, navigate }) => (
-  <div className="package-card shrink-0 bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden w-full max-w-[260px] snap-center flex flex-col">
-    <div className="w-full p-1 aspect-[4/3] overflow-hidden flex items-center justify-center bg-white">
-      <img
-        src={paquete.imagenes?.[0] || '/placeholder-travel.jpg'}
-        alt={paquete.nombre}
-        className="w-full h-full object-cover object-center"
-        onError={(e) => {
-          e.currentTarget.src =
-            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='%23f3f4f6'/%3E%3Ctext x='128' y='128' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3EImagen no disponible%3C/text%3E%3C/svg%3E";
-        }}
-      />
-    </div>
+const PackageCard = ({ paquete, formatPrice, navigate }) => {
+  // Mostrar hasta el primer y segundo punto, cada uno en un renglón
+  let renglon1 = '', renglon2 = '';
+  if (paquete.descripcion) {
+    const puntos = [...paquete.descripcion.matchAll(/\./g)].map(m => m.index);
+    if (puntos.length >= 1) {
+      renglon1 = paquete.descripcion.slice(0, puntos[0] + 1).trim();
+      if (puntos.length >= 2) {
+        renglon2 = paquete.descripcion.slice(puntos[0] + 1, puntos[1] + 1).trim();
+      }
+    } else {
+      renglon1 = paquete.descripcion.trim();
+    }
+  }
+  // Capitalizar el inicio de cada renglón
+  const capitalize = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+  const moneda = paquete.moneda || 'ARS';
+  return (
+    <div className="package-card shrink-0 bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden w-full max-w-[260px] snap-center flex flex-col">
+      <div className="w-full p-1 aspect-[4/3] overflow-hidden flex items-center justify-center bg-white">
+        <img
+          src={paquete.imagenes?.[0] || '/placeholder-travel.jpg'}
+          alt={paquete.nombre}
+          className="w-full h-full object-cover object-center"
+          onError={(e) => {
+            e.currentTarget.src =
+              "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='%23f3f4f6'/%3E%3Ctext x='128' y='128' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3EImagen no disponible%3C/text%3E%3C/svg%3E";
+          }}
+        />
+      </div>
 
-    <div className="flex flex-col flex-1 px-4 py-3 justify-between">
-      <div>
-        <div className="flex justify-between items-center mb-1">
-          <h4 className="text-sm font-semibold text-kiendamas-text font-raleway truncate mr-1">
-            {paquete.nombre.charAt(0).toUpperCase() + paquete.nombre.slice(1).toLowerCase()}
-          </h4>
-          <span className="text-sm font-bold text-kiendamas-text font-raleway whitespace-nowrap">
-            {formatPrice(paquete.precio)}
-          </span>
+      <div className="flex flex-col flex-1 px-4 py-3 justify-between">
+        <div>
+          <div className="flex justify-between items-center mb-1">
+            <h4 className="text-sm font-semibold text-kiendamas-text font-raleway truncate mr-1">
+              {paquete.nombre.charAt(0).toUpperCase() + paquete.nombre.slice(1).toLowerCase()}
+            </h4>
+            <span className="text-sm font-bold text-kiendamas-text font-raleway whitespace-nowrap">
+              {formatPrice(paquete.precio, moneda)}{' '}
+             
+            </span>
+          </div>
+          <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal line-clamp-2 max-h-[2.5em] overflow-hidden">
+            {capitalize(renglon1)}
+            {renglon2 && <><br />{capitalize(renglon2)}</>}
+          </div>
         </div>
-        <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal line-clamp-2 max-h-[2.5em] overflow-hidden">
-          {(() => {
-            if (!paquete.descripcion) return null;
-            const primerPunto = paquete.descripcion.indexOf(".");
-            return primerPunto !== -1
-              ? paquete.descripcion.slice(0, primerPunto + 1)
-              : paquete.descripcion;
-          })()}
+        <div className="flex justify-end mt-2">
+          <button
+            onClick={() => navigate(`/paquete/${paquete.id}`)}
+            className="border border-[#FF625E] text-gray-700 px-3 py-1 bg-white rounded-full hover:bg-[#FF625E] hover:text-white transition text-xs"
+          >
+            Más info
+          </button>
         </div>
-      </div>
-      <div className="flex justify-end mt-2">
-        <button
-          onClick={() => navigate(`/paquete/${paquete.id}`)}
-          className="border border-[#FF625E] text-gray-700 px-3 py-1 bg-white rounded-full hover:bg-[#FF625E] hover:text-white transition text-xs"
-        >
-          Más info
-        </button>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // Card de placeholder
 const PlaceholderCard = () => (
@@ -86,11 +101,13 @@ const PackagesSection = ({ selectedFilter }) => {
   const [cardsPerView, setCardsPerView] = useState(3);
   const [carouselIndexes, setCarouselIndexes] = useState({});
 
-  // Responsive cards per view
+  // Responsive cards per view (ahora soporta 4 y 5 en pantallas grandes)
   const updateCardsPerView = useCallback(() => {
     if (window.innerWidth < 640) setCardsPerView(1);
     else if (window.innerWidth < 1024) setCardsPerView(2);
-    else setCardsPerView(3);
+    else if (window.innerWidth < 1440) setCardsPerView(3);
+    else if (window.innerWidth < 1800) setCardsPerView(4);
+    else setCardsPerView(5);
   }, []);
 
   useEffect(() => {
@@ -99,15 +116,15 @@ const PackagesSection = ({ selectedFilter }) => {
     return () => window.removeEventListener('resize', updateCardsPerView);
   }, [updateCardsPerView]);
 
-  const formatPrice = (price) =>
-    new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD' }).format(price);
+  const formatPrice = (price, moneda = 'USD') =>
+    new Intl.NumberFormat('es-AR', { style: 'currency', currency: moneda }).format(price);
 
   const filteredPaquetes = allPaquetes;
 
   const categoriasOrden = [
     { nombre: 'Premium', sectionBg: 'bg-white', tituloBg: 'bg-kiendamas-beige' },
-    { nombre: 'Nacionales', sectionBg: 'bg-[#3071CD]', tituloBg: 'bg-white' },
-    { nombre: 'Internacionales', sectionBg: 'bg-[#F2E2CE]', tituloBg: 'bg-white' },
+    { nombre: 'Nacionales', sectionBg: 'bg-white', tituloBg: 'bg-kiendamas-beige' },
+    { nombre: 'Internacionales', sectionBg: 'bg-white', tituloBg: 'bg-kiendamas-beige' },
   ];
 
   const paquetesAgrupados = { Premium: {}, Nacionales: {}, Internacionales: {} };
@@ -158,15 +175,12 @@ const PackagesSection = ({ selectedFilter }) => {
             className={`w-full ${sectionBg} py-16`}
           >
             {/* Título principal de categoría */}
-            <div className="relative mb-10">
-              <div
-                className={`${tituloBg} rounded-r-3xl pl-4 sm:pl-6 pr-8 py-3 max-w-xs sm:max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930]`}
-              >
-                <h2 className="font-raleway font-normal text-xl sm:text-2xl text-[#646464]">
-                  Paquetes {categoriaNombre}
-                </h2>
-              </div>
-            </div>
+
+
+            <CategoryTitleAnimated
+              tituloBg={tituloBg}
+              categoriaNombre={categoriaNombre}
+            />
 
             <div className="w-full max-w-7xl mx-auto px-0 sm:px-2 md:px-4 lg:px-8">
               {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes]) => {
@@ -247,9 +261,10 @@ const PackagesSection = ({ selectedFilter }) => {
             </div>
           </section>
         );
+
       })}
     </section>
   );
-};
+}
 
 export default PackagesSection;

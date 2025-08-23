@@ -31,7 +31,7 @@ const PaquetesManager = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
-
+  const [moneda, setMoneda] = useState('ARS');
   const { data: paquetes = [], isLoading } = useGetPaquetesQuery();
   const { data: categorias = [] } = useGetCategoriasQuery();
   const { data: subcategorias = [] } = useGetSubcategoriasQuery();
@@ -88,7 +88,7 @@ const PaquetesManager = () => {
   const handleImageChange = (e) => {
     const files = [...e.target.files];
     setSelectedImages(files);
-    
+
     // Crear previews
     const previews = files.map(file => URL.createObjectURL(file));
     setPreviewImages(prev => [...prev, ...previews]);
@@ -103,7 +103,7 @@ const PaquetesManager = () => {
       const newSelectedImages = [...selectedImages];
       newSelectedImages.splice(index, 1);
       setSelectedImages(newSelectedImages);
-      
+
       const newPreviewImages = [...previewImages];
       newPreviewImages.splice(index, 1);
       setPreviewImages(newPreviewImages);
@@ -112,12 +112,13 @@ const PaquetesManager = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const formDataToSend = new FormData();
     Object.keys(formData).forEach(key => {
       formDataToSend.append(key, formData[key]);
     });
-    
+    formDataToSend.append('moneda', moneda);
+
     selectedImages.forEach((image) => {
       formDataToSend.append('imagenes', image);
     });
@@ -198,7 +199,8 @@ const PaquetesManager = () => {
               </p>
               <div className="flex justify-between items-center mb-3">
                 <span className="text-2xl font-bold text-green-600">
-                  ${paquete.precio}
+                  {moneda === 'USD' ? 'US$' : '$'}{paquete.precio}
+                  <span className="ml-1 text-base text-gray-500">{moneda === 'USD' ? 'USD' : 'ARS'}</span>
                 </span>
                 <span className="text-sm text-gray-500">
                   ID: {paquete.id}
@@ -206,7 +208,7 @@ const PaquetesManager = () => {
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex space-x-2">
-                  <button 
+                  <button
                     onClick={() => handleOpenModal(paquete)}
                     className="p-2 text-blue-600 hover:bg-blue-50 rounded"
                   >
@@ -255,10 +257,7 @@ const PaquetesManager = () => {
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Precio *
-                  </label>
+                <div className="flex items-center space-x-2">
                   <input
                     type="number"
                     value={formData.precio}
@@ -266,6 +265,14 @@ const PaquetesManager = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
+                  <select
+                    value={moneda}
+                    onChange={e => setMoneda(e.target.value)}
+                    className="px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="ARS">$ ARS</option>
+                    <option value="USD">US$ USD</option>
+                  </select>
                 </div>
               </div>
 
@@ -317,28 +324,30 @@ const PaquetesManager = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Descripción *
+                  Descripción *  (usa punto para separar renglones)
                 </label>
                 <textarea
                   value={formData.descripcion}
                   onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Ejemplo: Primer punto (15 Dias y 14 Noches). Segundo punto ( se muestra debajo de 15 dias 14 noches). "
                   required
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Campo Variable
-                </label>
-                <input
-                  type="text"
-                  value={formData.campoVariable}
-                  onChange={(e) => setFormData({ ...formData, campoVariable: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Información adicional..."
-                />
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Que incluye?  (usa punto para separar renglones)
+              </label>
+              <textarea
+                value={formData.campoVariable}
+                onChange={e => setFormData({ ...formData, campoVariable: e.target.value })}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                placeholder="Ejemplo: Primer punto. Segundo punto. Tercer punto."
+              />
+              <div className="mt-1 text-xs text-gray-500">
+                Escribe los renglones separados por punto (.). Al mostrar, cada línea inicia con un punto.
               </div>
 
               <div>
@@ -352,7 +361,7 @@ const PaquetesManager = () => {
                   onChange={handleImageChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                
+
                 {/* Preview de imágenes existentes */}
                 {existingImages.length > 0 && (
                   <div className="mt-3">
@@ -420,8 +429,8 @@ const PaquetesManager = () => {
                   {isCreating || isUpdating
                     ? 'Guardando...'
                     : editingPaquete
-                    ? 'Actualizar Paquete'
-                    : 'Crear Paquete'
+                      ? 'Actualizar Paquete'
+                      : 'Crear Paquete'
                   }
                 </Button>
               </div>

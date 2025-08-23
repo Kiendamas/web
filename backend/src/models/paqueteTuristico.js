@@ -24,8 +24,16 @@ PaqueteTuristico.init({
     allowNull: false,
   },
   campoVariable: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true,
+  },
+  moneda: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'ARS',
+    validate: {
+      isIn: [['ARS', 'USD']]
+    }
   },
   imagenes: {
     type: DataTypes.JSON, // Array de URLs (Cloudinary)

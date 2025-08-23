@@ -130,6 +130,7 @@ export const create = async (req, res, next) => {
     const paqueteData = {
       ...req.body,
       imagenes: imagenesUrls,
+      moneda: req.body.moneda || 'ARS',
     };
     const paquete = await PaqueteTuristico.create(paqueteData);
     res.status(201).json(paquete);
@@ -165,6 +166,7 @@ export const update = async (req, res, next) => {
     await paquete.update({
       ...req.body,
       imagenes: imagenesUrls,
+      moneda: req.body.moneda || paquete.moneda || 'ARS',
     });
     
     res.json(paquete);

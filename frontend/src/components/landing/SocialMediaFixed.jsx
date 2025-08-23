@@ -42,7 +42,37 @@ const SocialMediaFixed = () => (
   </div>
 );
 
+
 export default SocialMediaFixed;
+
+// CSS para responsive y hover (agrega esto en tu CSS global o en el archivo correspondiente):
+/*
+@media (max-width: 768px) {
+  .social-media-fixed {
+    top: auto !important;
+    bottom: 12px !important;
+    right: 0 !important;
+    width: 36px !important;
+    height: auto !important;
+    padding: 6px 4px !important;
+    border-radius: 12px 0 0 12px !important;
+    gap: 6px !important;
+  }
+  .social-media-fixed a img {
+    width: 14px !important;
+    height: 14px !important;
+  }
+}
+
+.social-media-fixed a img {
+  transition: transform 0.22s cubic-bezier(0.4, 1.4, 0.6, 1.1), box-shadow 0.22s;
+}
+.social-media-fixed a:hover img {
+  transform: scale(1.28) rotate(-6deg);
+  box-shadow: 0 4px 16px 0 #fff3, 0 0 0 2px #fff6;
+  z-index: 2;
+}
+*/
 
 // CSS para responsive (agrega esto en tu CSS global o en el archivo correspondiente):
 /*
