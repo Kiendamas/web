@@ -10,13 +10,13 @@ async function startServer() {
     // Testear conexión
     await testConnection();
     
-    // Sincronizar modelos con force (esto borrará todos los datos)
-    await syncModels(true); // force = true para resetear DB
+    // Sincronizar modelos sin force (alter: true para preservar datos)
+    await syncModels(false); // force = false para no borrar datos
     
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`🌍 Environment: ${env}`);
-      console.log(`🗑️ Database reset complete`);
+      console.log(`� Database synchronized (data preserved)`);
     });
   } catch (error) {
     console.error('❌ Error starting server:', error);
