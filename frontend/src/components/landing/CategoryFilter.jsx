@@ -4,9 +4,9 @@ const CategoryFilter = ({ onFilterChange, activeFilter = 'premium', userMenuOpen
   const [isSticky, setIsSticky] = useState(false);
 
   const categories = [
-    { id: 'premium', label: 'Premium', bg: 'bg-[#8B5E3C]', activeText: 'text-white', inactiveText: 'text-white' },
-    { id: 'internacionales', label: 'Internacional', bg: 'bg-gray-200', activeText: 'text-dark', inactiveText: 'text-dark' },
-    { id: 'nacionales', label: 'Nacional', bg: 'bg-white', activeText: 'text-dark', inactiveText: 'text-dark' },
+    { id: 'premium', label: 'Premium' },
+    { id: 'internacionales', label: 'Internacional' },
+    { id: 'nacionales', label: 'Nacional' },
   ];
 
   useEffect(() => {
@@ -59,8 +59,10 @@ const CategoryFilter = ({ onFilterChange, activeFilter = 'premium', userMenuOpen
               <button
                 key={category.id}
                 onClick={() => handleFilterClick(category.id)}
-                className={`flex-1 px-4 py-3 text-xs sm:text-sm font-medium transition-all duration-200 relative font-raleway 
-                  ${isActive ? `${category.bg} ${category.activeText} shadow-md` : `${category.bg} ${category.inactiveText}`}
+                className={`flex-1 px-4 py-3 text-xs sm:text-sm font-medium transition-all duration-200 relative font-raleway
+                  ${isActive
+                    ? 'bg-[#8B5E3C] text-white shadow-md'
+                    : 'text-kiendamas-text hover:bg-kiendamas-cream/50 hover:text-kiendamas-darkBrown hover:shadow-sm'}
                   ${index === 0 ? 'rounded-l-full' : index === categories.length - 1 ? 'rounded-r-full' : ''}`}
               >
                 {category.label}

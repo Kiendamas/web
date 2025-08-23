@@ -24,7 +24,7 @@ PaqueteTuristico.init({
     allowNull: false,
   },
   campoVariable: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true,
   },
   imagenes: {
