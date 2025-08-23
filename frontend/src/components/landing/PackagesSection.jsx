@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useGetPaquetesQuery } from '../../features/paquetes/paquetesApi';
 import { useState, useEffect, useCallback } from 'react';
+import CategoryTitleAnimated from './CategoryTitleAnimated';
 
 // Card real
 const PackageCard = ({ paquete, formatPrice, navigate }) => {
@@ -100,11 +101,13 @@ const PackagesSection = ({ selectedFilter }) => {
   const [cardsPerView, setCardsPerView] = useState(3);
   const [carouselIndexes, setCarouselIndexes] = useState({});
 
-  // Responsive cards per view
+  // Responsive cards per view (ahora soporta 4 y 5 en pantallas grandes)
   const updateCardsPerView = useCallback(() => {
     if (window.innerWidth < 640) setCardsPerView(1);
     else if (window.innerWidth < 1024) setCardsPerView(2);
-    else setCardsPerView(3);
+    else if (window.innerWidth < 1440) setCardsPerView(3);
+    else if (window.innerWidth < 1800) setCardsPerView(4);
+    else setCardsPerView(5);
   }, []);
 
   useEffect(() => {
@@ -120,8 +123,8 @@ const PackagesSection = ({ selectedFilter }) => {
 
   const categoriasOrden = [
     { nombre: 'Premium', sectionBg: 'bg-white', tituloBg: 'bg-kiendamas-beige' },
-    { nombre: 'Nacionales', sectionBg: 'bg-[#3071CD]', tituloBg: 'bg-white' },
-    { nombre: 'Internacionales', sectionBg: 'bg-[#F2E2CE]', tituloBg: 'bg-white' },
+    { nombre: 'Nacionales', sectionBg: 'bg-white', tituloBg: 'bg-kiendamas-beige' },
+    { nombre: 'Internacionales', sectionBg: 'bg-white', tituloBg: 'bg-kiendamas-beige' },
   ];
 
   const paquetesAgrupados = { Premium: {}, Nacionales: {}, Internacionales: {} };
@@ -172,15 +175,12 @@ const PackagesSection = ({ selectedFilter }) => {
             className={`w-full ${sectionBg} py-16`}
           >
             {/* Título principal de categoría */}
-            <div className="relative mb-10">
-              <div
-                className={`${tituloBg} rounded-r-3xl pl-4 sm:pl-6 pr-8 py-3 max-w-xs sm:max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930]`}
-              >
-                <h2 className="font-raleway font-normal text-xl sm:text-2xl text-[#646464]">
-                  Paquetes {categoriaNombre}
-                </h2>
-              </div>
-            </div>
+
+
+            <CategoryTitleAnimated
+              tituloBg={tituloBg}
+              categoriaNombre={categoriaNombre}
+            />
 
             <div className="w-full max-w-7xl mx-auto px-0 sm:px-2 md:px-4 lg:px-8">
               {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes]) => {
@@ -261,9 +261,10 @@ const PackagesSection = ({ selectedFilter }) => {
             </div>
           </section>
         );
+
       })}
     </section>
   );
-};
+}
 
 export default PackagesSection;
