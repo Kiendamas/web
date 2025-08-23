@@ -4,51 +4,59 @@ import { useGetPaquetesQuery } from '../../features/paquetes/paquetesApi';
 import { useState, useEffect, useCallback } from 'react';
 
 // Card real
-const PackageCard = ({ paquete, formatPrice, navigate }) => (
-  <div className="package-card shrink-0 bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden w-full max-w-[260px] snap-center flex flex-col">
-    <div className="w-full p-1 aspect-[4/3] overflow-hidden flex items-center justify-center bg-white">
-      <img
-        src={paquete.imagenes?.[0] || '/placeholder-travel.jpg'}
-        alt={paquete.nombre}
-        className="w-full h-full object-cover object-center"
-        onError={(e) => {
-          e.currentTarget.src =
-            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='%23f3f4f6'/%3E%3Ctext x='128' y='128' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3EImagen no disponible%3C/text%3E%3C/svg%3E";
-        }}
-      />
-    </div>
+const PackageCard = ({ paquete, formatPrice, navigate }) => {
+  // Mostrar hasta el segundo punto
+  let descripcionCorta = paquete.descripcion;
+  if (descripcionCorta) {
+    const puntos = [...descripcionCorta.matchAll(/\./g)].map(m => m.index);
+    if (puntos.length >= 2) {
+      descripcionCorta = descripcionCorta.slice(0, puntos[1] + 1);
+    } else if (puntos.length === 1) {
+      descripcionCorta = descripcionCorta.slice(0, puntos[0] + 1);
+    }
+  }
+  const moneda = paquete.moneda || 'ARS';
+  return (
+    <div className="package-card shrink-0 bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden w-full max-w-[260px] snap-center flex flex-col">
+      <div className="w-full p-1 aspect-[4/3] overflow-hidden flex items-center justify-center bg-white">
+        <img
+          src={paquete.imagenes?.[0] || '/placeholder-travel.jpg'}
+          alt={paquete.nombre}
+          className="w-full h-full object-cover object-center"
+          onError={(e) => {
+            e.currentTarget.src =
+              "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='%23f3f4f6'/%3E%3Ctext x='128' y='128' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3EImagen no disponible%3C/text%3E%3C/svg%3E";
+          }}
+        />
+      </div>
 
-    <div className="flex flex-col flex-1 px-4 py-3 justify-between">
-      <div>
-        <div className="flex justify-between items-center mb-1">
-          <h4 className="text-sm font-semibold text-kiendamas-text font-raleway truncate mr-1">
-            {paquete.nombre.charAt(0).toUpperCase() + paquete.nombre.slice(1).toLowerCase()}
-          </h4>
-          <span className="text-sm font-bold text-kiendamas-text font-raleway whitespace-nowrap">
-            {formatPrice(paquete.precio)}
-          </span>
+      <div className="flex flex-col flex-1 px-4 py-3 justify-between">
+        <div>
+          <div className="flex justify-between items-center mb-1">
+            <h4 className="text-sm font-semibold text-kiendamas-text font-raleway truncate mr-1">
+              {paquete.nombre.charAt(0).toUpperCase() + paquete.nombre.slice(1).toLowerCase()}
+            </h4>
+            <span className="text-sm font-bold text-kiendamas-text font-raleway whitespace-nowrap">
+              {formatPrice(paquete.precio, moneda)}{' '}
+              <span className="text-xs text-gray-500 font-normal">{moneda}</span>
+            </span>
+          </div>
+          <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal line-clamp-2 max-h-[2.5em] overflow-hidden">
+            {descripcionCorta}
+          </div>
         </div>
-        <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal line-clamp-2 max-h-[2.5em] overflow-hidden">
-          {(() => {
-            if (!paquete.descripcion) return null;
-            const primerPunto = paquete.descripcion.indexOf(".");
-            return primerPunto !== -1
-              ? paquete.descripcion.slice(0, primerPunto + 1)
-              : paquete.descripcion;
-          })()}
+        <div className="flex justify-end mt-2">
+          <button
+            onClick={() => navigate(`/paquete/${paquete.id}`)}
+            className="border border-[#FF625E] text-gray-700 px-3 py-1 bg-white rounded-full hover:bg-[#FF625E] hover:text-white transition text-xs"
+          >
+            Más info
+          </button>
         </div>
-      </div>
-      <div className="flex justify-end mt-2">
-        <button
-          onClick={() => navigate(`/paquete/${paquete.id}`)}
-          className="border border-[#FF625E] text-gray-700 px-3 py-1 bg-white rounded-full hover:bg-[#FF625E] hover:text-white transition text-xs"
-        >
-          Más info
-        </button>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // Card de placeholder
 const PlaceholderCard = () => (
@@ -99,8 +107,8 @@ const PackagesSection = ({ selectedFilter }) => {
     return () => window.removeEventListener('resize', updateCardsPerView);
   }, [updateCardsPerView]);
 
-  const formatPrice = (price) =>
-    new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'USD' }).format(price);
+  const formatPrice = (price, moneda = 'USD') =>
+    new Intl.NumberFormat('es-AR', { style: 'currency', currency: moneda }).format(price);
 
   const filteredPaquetes = allPaquetes;
 
