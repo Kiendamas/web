@@ -95,21 +95,20 @@ const PaqueteDetallesPage = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="flex flex-col lg:flex-row">
-            {/* Sección de imagen - Tamaño fijo más compacto */}
-            <div className="lg:w-2/5">
-              <div className="relative h-80 lg:h-96">
+            {/* Sección de imagen - Ocupa la mitad izquierda, sin recorte */}
+            <div className="lg:w-1/2 w-full flex items-center justify-center bg-white">
+              <div className="relative w-full h-64 lg:h-[32rem] flex items-center justify-center">
                 {paquete.imagenes && paquete.imagenes.length > 0 ? (
                   <>
                     <img
                       src={paquete.imagenes[currentImageIndex]}
                       alt={`${paquete.nombre} - Imagen ${currentImageIndex + 1}`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain rounded-lg"
+                      style={{ maxHeight: '100%', maxWidth: '100%' }}
                       onError={(e) => {
                         e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f3f4f6'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='16'%3EImagen no disponible%3C/text%3E%3C/svg%3E";
                       }}
                     />
-                    
-                    {/* Controles de navegación de imagen */}
                     {paquete.imagenes.length > 1 && (
                       <>
                         <button
@@ -124,8 +123,6 @@ const PaqueteDetallesPage = () => {
                         >
                           <ChevronRightIcon className="h-4 w-4 text-gray-700" />
                         </button>
-                        
-                        {/* Indicadores de imagen */}
                         <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1.5">
                           {paquete.imagenes.map((_, index) => (
                             <button
@@ -141,7 +138,7 @@ const PaqueteDetallesPage = () => {
                     )}
                   </>
                 ) : (
-                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center rounded-lg">
                     <span className="text-gray-500">No hay imágenes disponibles</span>
                   </div>
                 )}
@@ -149,7 +146,7 @@ const PaqueteDetallesPage = () => {
             </div>
 
             {/* Sección de contenido */}
-            <div className="lg:w-3/5 p-6">
+            <div className="lg:w-1/2 w-full p-6 flex flex-col justify-between">
               {/* Pestañas */}
               <div className="mb-4">
                 <div className="flex border-b border-gray-200">
@@ -179,8 +176,22 @@ const PaqueteDetallesPage = () => {
               {/* Contenido de las pestañas */}
               <div className="min-h-[250px] mb-6">
                 {activeTab === 'descripcion' && (
-                  <div className="text-gray-700 leading-relaxed font-raleway text-sm">
-                    {paquete.descripcion || 'Sin descripción disponible.'}
+                  <div className="text-gray-700 leading-relaxed font-raleway text-sm break-words flex flex-col">
+                    {/* Mostrar cada punto en un renglón, mayúscula inicial. Si no hay punto, solo un renglón que hace wrap */}
+                    {paquete.descripcion
+                      ? (() => {
+                          const frases = paquete.descripcion.split('.').filter(f => f.trim().length > 0);
+                          if (frases.length === 0) {
+                            return <span>{paquete.descripcion.trim().charAt(0).toUpperCase() + paquete.descripcion.trim().slice(1)}</span>;
+                          } else {
+                            return frases.map((frase, idx, arr) => (
+                              <span key={idx} style={{ marginBottom: idx < arr.length - 1 ? 2 : 0, wordBreak: 'break-word' }}>
+                                {frase.trim().charAt(0).toUpperCase() + frase.trim().slice(1)}{idx < arr.length - 1 ? '.' : ''}
+                              </span>
+                            ));
+                          }
+                        })()
+                      : 'Sin descripción disponible.'}
                   </div>
                 )}
                 
@@ -192,16 +203,21 @@ const PaqueteDetallesPage = () => {
                         DESCRIPCIÓN
                       </h3>
                     </div>
-                    
                     {/* Contenido de qué incluye */}
-                    <div className="text-gray-700 leading-relaxed font-raleway text-sm">
+                    <div className="text-gray-700 leading-relaxed font-raleway text-sm flex flex-col">
                       {paquete.campoVariable ? (
-                        <div 
-                          className="whitespace-pre-line space-y-1"
-                          dangerouslySetInnerHTML={{ 
-                            __html: paquete.campoVariable.replace(/\n/g, '<br>') 
-                          }} 
-                        />
+                        (() => {
+                          const frases = paquete.campoVariable.split('.').filter(f => f.trim().length > 0);
+                          if (frases.length === 0) {
+                            return <span>{paquete.campoVariable.trim().charAt(0).toUpperCase() + paquete.campoVariable.trim().slice(1)}</span>;
+                          } else {
+                            return frases.map((frase, idx, arr) => (
+                              <span key={idx} style={{ marginBottom: idx < arr.length - 1 ? 2 : 0, wordBreak: 'break-word' }}>
+                                {frase.trim().charAt(0).toUpperCase() + frase.trim().slice(1)}{idx < arr.length - 1 ? '.' : ''}
+                              </span>
+                            ));
+                          }
+                        })()
                       ) : (
                         'No hay información sobre qué incluye este paquete.'
                       )}
@@ -231,6 +247,13 @@ const PaqueteDetallesPage = () => {
                 )}
               </div>
 
+              {/* Precio debajo de la descripción */}
+              <div className="mb-4">
+                <span className="inline-block text-lg font-bold text-green-700 bg-green-50 rounded px-3 py-1 mt-2">
+                  {new Intl.NumberFormat('es-AR', { style: 'currency', currency: paquete.moneda || 'ARS' }).format(paquete.precio)}
+                  <span className="ml-2 text-base text-gray-500">{paquete.moneda || 'ARS'}</span>
+                </span>
+              </div>
               {/* Botón de contratar */}
               <button
                 onClick={handleWhatsAppContact}
