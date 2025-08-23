@@ -39,7 +39,7 @@ export async function testConnection() {
 }
 
 // Helper para sincronizar modelos
-export async function syncModels(force = false) {
+export async function syncModels(force = true) {
   try {
     await sequelize.sync({ force });
     console.log('✅ Modelos sincronizados');
