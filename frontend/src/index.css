@@ -1,3 +1,63 @@
+/* SocialMediaFixed hover effect */
+.social-media-fixed a img {
+  transition: transform 0.22s cubic-bezier(0.4, 1.4, 0.6, 1.1), box-shadow 0.22s;
+}
+.social-media-fixed a:hover img {
+  transform: scale(1.28) rotate(-6deg);
+  box-shadow: 0 4px 16px 0 #F2E2CE, 0 0 0 2px rgb(240, 225, 186);
+  z-index: 2;
+}
+/* Sombra animada para el botón de WhatsApp */
+@keyframes shadow-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 #25d36680, 0 0 0 0 #25d36640, 0 0 0 0 #25d366;
+  }
+  30% {
+    box-shadow: 0 0 24px 8px #25d366cc, 0 0 32px 16px #25d36699, 0 0 48px 24px #25d36666;
+  }
+  60% {
+    box-shadow: 0 0 40px 16px #25d366ff, 0 0 64px 32px #25d36699, 0 0 96px 48px #25d36644;
+  }
+  100% {
+    box-shadow: 0 0 0 0 #25d36680, 0 0 0 0 #25d36640, 0 0 0 0 #25d366;
+  }
+}
+.animate-shadow-glow {
+  animation: shadow-glow 1.6s infinite;
+}
+/* Animación personalizada para el botón de WhatsApp */
+@keyframes bounce-custom {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.12);
+  }
+  20% {
+    transform: scale(0.95);
+  }
+  30% {
+    transform: scale(1.08);
+  }
+  40% {
+    transform: scale(0.97);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  60% {
+    transform: scale(0.98);
+  }
+  70% {
+    transform: scale(1.06);
+  }
+  80% {
+    transform: scale(1);
+  }
+}
+.animate-bounce-custom {
+  animation: bounce-custom 1.6s infinite;
+}
 /* El hover ahora se maneja con clases de Tailwind en el componente */
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800;900&display=swap');
 @tailwind base;
