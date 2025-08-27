@@ -21,7 +21,7 @@ PaqueteTuristico.init({
   },
   precio: {
     type: DataTypes.FLOAT,
-    allowNull: false,
+    allowNull: true,
   },
   campoVariable: {
     type: DataTypes.TEXT,
@@ -29,8 +29,8 @@ PaqueteTuristico.init({
   },
   moneda: {
     type: DataTypes.STRING,
-    allowNull: false,
-    defaultValue: 'ARS',
+    allowNull: true,
+  // defaultValue: 'ARS',
     validate: {
       isIn: [['ARS', 'USD']]
     }

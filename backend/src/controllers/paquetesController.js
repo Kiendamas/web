@@ -127,10 +127,20 @@ export const create = async (req, res, next) => {
       const results = await Promise.all(uploadPromises);
       imagenesUrls = results.map(r => r.secure_url);
     }
+    let moneda = req.body.moneda;
+    if (Array.isArray(moneda)) {
+      moneda = moneda[0];
+    }
+    if (typeof moneda === 'string' && moneda.trim() === '') {
+      moneda = null;
+    }
+    if (moneda && !['ARS', 'USD'].includes(moneda)) {
+      moneda = null;
+    }
     const paqueteData = {
       ...req.body,
       imagenes: imagenesUrls,
-      moneda: req.body.moneda || 'ARS',
+      moneda,
     };
     const paquete = await PaqueteTuristico.create(paqueteData);
     res.status(201).json(paquete);
@@ -163,17 +173,17 @@ export const update = async (req, res, next) => {
       imagenesUrls = imagenesUrls.concat(results.map(r => r.secure_url));
     }
     
-    // Forzar moneda válida
+    // Forzar moneda válida o null
     let moneda = req.body.moneda;
     if (Array.isArray(moneda)) {
       moneda = moneda[0];
     }
     console.log('[UPDATE PAQUETE] Moneda recibida en body:', req.body.moneda);
-    if (!moneda || (typeof moneda === 'string' && moneda.trim() === '')) {
-      moneda = paquete.moneda || 'ARS';
+    if (typeof moneda === 'string' && moneda.trim() === '') {
+      moneda = null;
     }
-    if (!['ARS', 'USD'].includes(moneda)) {
-      moneda = 'ARS';
+    if (moneda && !['ARS', 'USD'].includes(moneda)) {
+      moneda = null;
     }
     await paquete.update({
       ...req.body,
