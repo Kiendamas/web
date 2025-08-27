@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import CategoryTitleAnimated from './CategoryTitleAnimated';
 
 // Card real
-const PackageCard = ({ paquete, formatPrice, navigate }) => {
+const PackageCard = ({ paquete, formatPrice, navigate, subcategoria }) => {
   // Mostrar hasta el primer y segundo punto, cada uno en un renglón
   let renglon1 = '', renglon2 = '';
   if (paquete.descripcion) {
@@ -35,7 +35,14 @@ const PackageCard = ({ paquete, formatPrice, navigate }) => {
           }}
         />
       </div>
-
+      {/* Etiqueta de subcategoría */}
+      {subcategoria && (
+        <div className="flex justify-center -mt-3 mb-1 z-10">
+          <span className="inline-block px-3 py-1 rounded-full bg-[#FF625E] text-white text-xs font-semibold shadow font-raleway">
+            {subcategoria.charAt(0).toUpperCase() + subcategoria.slice(1).toLowerCase()}
+          </span>
+        </div>
+      )}
       <div className="flex flex-col flex-1 px-4 py-3 justify-between">
         <div>
           <div className="flex justify-between items-center mb-1">
@@ -70,6 +77,12 @@ const PlaceholderCard = () => (
     <div className="w-full p-1 aspect-[4/3] overflow-hidden flex items-center justify-center bg-gray-200">
       <span className="text-gray-400 text-lg font-semibold font-raleway text-center px-2">
         Próximamente un nuevo destino
+      </span>
+    </div>
+    {/* Etiqueta de subcategoría para placeholder */}
+    <div className="flex justify-center -mt-3 mb-1 z-10">
+      <span className="inline-block px-3 py-1 rounded-full bg-[#FF625E] text-white text-xs font-semibold shadow font-raleway">
+        Kiendamas
       </span>
     </div>
     <div className="flex flex-col flex-1 px-4 py-3 justify-between">
@@ -225,6 +238,7 @@ const PackagesSection = ({ selectedFilter }) => {
                       paquete={p}
                       formatPrice={formatPrice}
                       navigate={navigate}
+                      subcategoria={subcategoriaNombre}
                     />
                   )
                 );
@@ -248,16 +262,7 @@ const PackagesSection = ({ selectedFilter }) => {
                       width: '100%'
                     }}
                   >
-                    {/* Subcategoría alineada sobre la primer card */}
-                    <div className="mb-2">
-                      <h3
-                        className="text-base sm:text-lg font-semibold font-raleway text-kiendamas-text"
-                        style={{ marginLeft: 0 }}
-                      >
-                        {subcategoriaNombre.charAt(0).toUpperCase() +
-                          subcategoriaNombre.slice(1).toLowerCase()}
-                      </h3>
-                    </div>
+
 
                     {/* Carrusel compacto, sin scroll ni snap */}
                     {mobile ? (
