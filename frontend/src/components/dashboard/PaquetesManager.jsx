@@ -31,7 +31,6 @@ const PaquetesManager = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
-  const [moneda, setMoneda] = useState('ARS');
   const { data: paquetes = [], isLoading } = useGetPaquetesQuery();
   const { data: categorias = [] } = useGetCategoriasQuery();
   const { data: subcategorias = [] } = useGetSubcategoriasQuery();
@@ -49,6 +48,7 @@ const PaquetesManager = () => {
         categoriaId: paquete.categoriaId || '',
         subcategoriaId: paquete.subcategoriaId || '',
         campoVariable: paquete.campoVariable || '',
+        moneda: paquete.moneda || 'ARS',
       });
       setExistingImages(paquete.imagenes || []);
       setPreviewImages([]);
@@ -61,6 +61,7 @@ const PaquetesManager = () => {
         categoriaId: '',
         subcategoriaId: '',
         campoVariable: '',
+        moneda: 'ARS',
       });
       setExistingImages([]);
       setPreviewImages([]);
@@ -117,7 +118,7 @@ const PaquetesManager = () => {
     Object.keys(formData).forEach(key => {
       formDataToSend.append(key, formData[key]);
     });
-    formDataToSend.append('moneda', moneda);
+  formDataToSend.append('moneda', formData.moneda);
 
     selectedImages.forEach((image) => {
       formDataToSend.append('imagenes', image);
@@ -199,8 +200,8 @@ const PaquetesManager = () => {
               </p>
               <div className="flex justify-between items-center mb-3">
                 <span className="text-2xl font-bold text-green-600">
-                  {moneda === 'USD' ? 'US$' : '$'}{paquete.precio}
-                  <span className="ml-1 text-base text-gray-500">{moneda === 'USD' ? 'USD' : 'ARS'}</span>
+                  {paquete.moneda === 'USD' ? 'US$' : '$'}{paquete.precio}
+                  <span className="ml-1 text-base text-gray-500">{paquete.moneda === 'USD' ? 'USD' : 'ARS'}</span>
                 </span>
                 <span className="text-sm text-gray-500">
                   ID: {paquete.id}
@@ -266,8 +267,8 @@ const PaquetesManager = () => {
                     required
                   />
                   <select
-                    value={moneda}
-                    onChange={e => setMoneda(e.target.value)}
+                    value={formData.moneda === 'USD' ? 'USD' : 'ARS'}
+                    onChange={e => setFormData({ ...formData, moneda: e.target.value === 'USD' ? 'USD' : 'ARS' })}
                     className="px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="ARS">$ ARS</option>
@@ -343,7 +344,7 @@ const PaquetesManager = () => {
                 value={formData.campoVariable}
                 onChange={e => setFormData({ ...formData, campoVariable: e.target.value })}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Ejemplo: Primer punto. Segundo punto. Tercer punto."
               />
               <div className="mt-1 text-xs text-gray-500">

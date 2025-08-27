@@ -163,11 +163,24 @@ export const update = async (req, res, next) => {
       imagenesUrls = imagenesUrls.concat(results.map(r => r.secure_url));
     }
     
+    // Forzar moneda válida
+    let moneda = req.body.moneda;
+    if (Array.isArray(moneda)) {
+      moneda = moneda[0];
+    }
+    console.log('[UPDATE PAQUETE] Moneda recibida en body:', req.body.moneda);
+    if (!moneda || (typeof moneda === 'string' && moneda.trim() === '')) {
+      moneda = paquete.moneda || 'ARS';
+    }
+    if (!['ARS', 'USD'].includes(moneda)) {
+      moneda = 'ARS';
+    }
     await paquete.update({
       ...req.body,
       imagenes: imagenesUrls,
-      moneda: req.body.moneda || paquete.moneda || 'ARS',
+      moneda,
     });
+    console.log('[UPDATE PAQUETE] Moneda guardada en modelo:', paquete.moneda, '| Nueva:', moneda);
     
     res.json(paquete);
   } catch (err) {
