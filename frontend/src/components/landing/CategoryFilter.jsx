@@ -60,7 +60,7 @@ const CategoryFilter = ({ onFilterChange, activeFilter = null, userMenuOpen = fa
       }`}
     >
   <div className="w-full max-w-5xl mx-auto px-2 sm:px-6 py-2">
-        <div className="flex bg-white rounded-full shadow-lg overflow-hidden border border-gray-200">
+        <div className="flex bg-white rounded-full shadow-2xl overflow-hidden border border-kiendamas-text/20">
           {isLoading ? (
             <div className="flex-1 text-center py-3 text-xs text-gray-400">Cargando...</div>
           ) : (
