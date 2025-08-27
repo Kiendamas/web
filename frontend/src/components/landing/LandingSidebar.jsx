@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   XMarkIcon,
   HomeIcon,
@@ -10,6 +10,8 @@ import {
   ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 import logo from '../../assets/logo.jpg';
+import ServiciosModal from './ServiciosModal';
+import MediosPagoModal from './MediosPagoModal';
 
 const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
   const navigationItems = [
@@ -19,7 +21,11 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
     { id: 'nosotros', label: 'NOSOTROS', icon: UsersIcon },
     { id: 'resenas', label: 'RESEÑAS', icon: ChatBubbleLeftRightIcon },
     { id: 'contacto', label: 'CONTACTO', icon: PhoneIcon },
+    { id: 'mediospago', label: 'MEDIOS DE PAGO', icon: StarIcon },
   ];
+
+  const [showServiciosModal, setShowServiciosModal] = useState(false);
+  const [showMediosPagoModal, setShowMediosPagoModal] = useState(false);
 
   // Prevenir scroll del body cuando el sidebar está abierto
   useEffect(() => {
@@ -83,12 +89,54 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
             <nav className="space-y-3">
               {navigationItems.map((item) => {
                 const Icon = item.icon;
+                if (item.id === 'servicios') {
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowServiciosModal(true);
+                      }}
+                      className={`w-full flex items-center px-4 py-4 text-left rounded-xl transition-all duration-200 group ${
+                        activeSection === item.id
+                          ? 'bg-kiendamas-cream text-kiendamas-darkBrown shadow-sm border-l-4 border-kiendamas-gold'
+                          : 'text-kiendamas-text hover:bg-kiendamas-cream/50 hover:text-kiendamas-darkBrown hover:shadow-sm'
+                      }`}
+                    >
+                      <Icon className={`h-6 w-6 mr-4 transition-colors ${
+                        activeSection === item.id 
+                          ? 'text-kiendamas-gold' 
+                          : 'text-kiendamas-text group-hover:text-kiendamas-gold'
+                      }`} />
+                      <span className="font-raleway font-semibold text-sm tracking-wide">
+                        {item.label}
+                      </span>
+                    </button>
+                  );
+                }
+                if (item.id === 'mediospago') {
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowMediosPagoModal(true);
+                      }}
+                      className={`w-full flex items-center px-4 py-4 text-left rounded-xl transition-all duration-200 group text-kiendamas-text hover:bg-kiendamas-cream/50 hover:text-kiendamas-darkBrown hover:shadow-sm`}
+                    >
+                      <Icon className="h-6 w-6 mr-4 transition-colors text-kiendamas-gold" />
+                      <span className="font-raleway font-semibold text-sm tracking-wide">
+                        {item.label}
+                      </span>
+                    </button>
+                  );
+                }
                 return (
                   <button
                     key={item.id}
                     onClick={() => {
                       onSectionClick(item.id);
-                      onClose(); // Cerrar sidebar al hacer click
+                      onClose();
                     }}
                     className={`w-full flex items-center px-4 py-4 text-left rounded-xl transition-all duration-200 group ${
                       activeSection === item.id
@@ -129,6 +177,8 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
           </div>
         </div>
       </div>
+  <ServiciosModal open={showServiciosModal} onClose={() => setShowServiciosModal(false)} />
+  <MediosPagoModal open={showMediosPagoModal} onClose={() => setShowMediosPagoModal(false)} />
     </>
   );
 };

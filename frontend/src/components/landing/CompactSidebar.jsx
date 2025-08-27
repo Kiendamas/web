@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import ServiciosModal from './ServiciosModal';
+import MediosPagoModal from './MediosPagoModal';
 import {
   Bars3Icon,
   XMarkIcon,
@@ -21,9 +23,21 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
     { id: 'nosotros', label: 'NOSOTROS', icon: UsersIcon },
     { id: 'resenas', label: 'RESEÑAS', icon: ChatBubbleLeftRightIcon },
     { id: 'contacto', label: 'CONTACTO', icon: PhoneIcon },
+    { id: 'mediospago', label: 'MEDIOS DE PAGO', icon: StarIcon },
   ];
 
+  const [showServiciosModal, setShowServiciosModal] = useState(false);
+  const [showMediosPagoModal, setShowMediosPagoModal] = useState(false);
+
   const handleSectionClick = (sectionId) => {
+    if (sectionId === 'servicios') {
+      setShowServiciosModal(true);
+      return;
+    }
+    if (sectionId === 'mediospago') {
+      setShowMediosPagoModal(true);
+      return;
+    }
     onSectionClick(sectionId);
     setIsExpanded(false);
     if (onExpandChange) onExpandChange(false);
@@ -64,6 +78,40 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
               <div className="flex flex-col space-y-3">
                 {navigationItems.map((item) => {
                   const Icon = item.icon;
+                  if (item.id === 'servicios') {
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowServiciosModal(true);
+                        }}
+                        className={`p-3 rounded-lg transition-all duration-200 ${
+                          activeSection === item.id
+                            ? 'bg-kiendamas-brown text-white'
+                            : 'text-kiendamas-text hover:bg-kiendamas-lightBeige hover:text-kiendamas-brown'
+                        }`}
+                        title={item.label}
+                      >
+                        <Icon className="h-4 w-4" />
+                      </button>
+                    );
+                  }
+                  if (item.id === 'mediospago') {
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowMediosPagoModal(true);
+                        }}
+                        className={`p-3 rounded-lg transition-all duration-200 text-kiendamas-text hover:bg-kiendamas-lightBeige hover:text-kiendamas-brown`}
+                        title={item.label}
+                      >
+                        <Icon className="h-4 w-4 text-kiendamas-gold" />
+                      </button>
+                    );
+                  }
                   return (
                     <button
                       key={item.id}
@@ -118,6 +166,46 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
                 <nav className="space-y-2">
                   {navigationItems.map((item) => {
                     const Icon = item.icon;
+                    if (item.id === 'servicios') {
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowServiciosModal(true);
+                          }}
+                          className={`w-full flex items-center px-4 py-3 text-left rounded-lg transition-all duration-200 ${
+                            activeSection === item.id
+                              ? 'bg-kiendamas-brown text-white'
+                              : 'text-kiendamas-text hover:bg-kiendamas-lightBeige hover:text-kiendamas-brown'
+                          }`}
+                        >
+                          <Icon className={`h-4 w-4 mr-3 ${
+                            activeSection === item.id ? 'text-white' : 'text-kiendamas-brown'
+                          }`} />
+                          <span className="font-normal font-raleway">
+                            {item.label}
+                          </span>
+                        </button>
+                      );
+                    }
+                    if (item.id === 'mediospago') {
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowMediosPagoModal(true);
+                          }}
+                          className={`w-full flex items-center px-4 py-3 text-left rounded-lg transition-all duration-200 text-kiendamas-text hover:bg-kiendamas-lightBeige hover:text-kiendamas-brown`}
+                        >
+                          <Icon className={`h-4 w-4 mr-3 text-kiendamas-gold`} />
+                          <span className="font-normal font-raleway">
+                            {item.label}
+                          </span>
+                        </button>
+                      );
+                    }
                     return (
                       <button
                         key={item.id}
@@ -157,6 +245,8 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
           )}
         </div>
       </div>
+  <ServiciosModal open={showServiciosModal} onClose={() => setShowServiciosModal(false)} />
+  <MediosPagoModal open={showMediosPagoModal} onClose={() => setShowMediosPagoModal(false)} />
     </>
   );
 };
