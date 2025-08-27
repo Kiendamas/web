@@ -3,6 +3,7 @@ import LandingHeader from '../components/landing/LandingHeader';
 import LandingSidebar from '../components/landing/LandingSidebar';
 import CompactSidebar from '../components/landing/CompactSidebar';
 import HeroSection from '../components/landing/HeroSection';
+import TagHighlightSection from '../components/landing/TagHighlightSection';
 import CategoryFilter from '../components/landing/CategoryFilter';
 import ServicesSection from '../components/landing/ServicesSection';
 import PackagesSection from '../components/landing/PackagesSection';
@@ -84,12 +85,15 @@ const LandingPage = () => {
       {/* Contenido principal con margen responsive */}
 
 
-      <main className={`transition-all duration-300 ${
-        sidebarExpanded ? 'lg:ml-64' : 'lg:ml-12'
-      }`}>
+      <main className={`transition-all duration-300 ${sidebarExpanded ? 'lg:ml-64' : 'lg:ml-12'
+        }`}>
 
         <HeroSection />
+
+
+        <TagHighlightSection />
         <CategoryFilter
+
           onFilterChange={handleFilterChange}
           activeFilter={activeFilter}
         />

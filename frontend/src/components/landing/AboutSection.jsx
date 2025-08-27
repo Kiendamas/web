@@ -26,7 +26,7 @@ const AboutSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-kiendamas-rosa" id="nosotros">
+    <section className="py-16 bg-kiendamas-brown" id="nosotros">
        <div className="w-full px-2 sm:px-4 lg:px-8">
         {/* Título de la sección desde el lado izquierdo */}
         <div className="relative mb-10 -ml-20">

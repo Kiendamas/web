@@ -127,10 +127,31 @@ export const create = async (req, res, next) => {
       const results = await Promise.all(uploadPromises);
       imagenesUrls = results.map(r => r.secure_url);
     }
+    let moneda = req.body.moneda;
+    if (Array.isArray(moneda)) {
+      moneda = moneda[0];
+    }
+    if (typeof moneda === 'string' && moneda.trim() === '') {
+      moneda = null;
+    }
+    if (moneda && !['ARS', 'USD'].includes(moneda)) {
+      moneda = null;
+    }
+    // Parsear tags si viene como string
+    let tags = req.body.tags;
+    if (typeof tags === 'string') {
+      try {
+        tags = JSON.parse(tags);
+      } catch {
+        tags = [];
+      }
+    }
+    if (!Array.isArray(tags)) tags = [];
     const paqueteData = {
       ...req.body,
       imagenes: imagenesUrls,
-      moneda: req.body.moneda || 'ARS',
+      moneda,
+      tags,
     };
     const paquete = await PaqueteTuristico.create(paqueteData);
     res.status(201).json(paquete);
@@ -163,11 +184,35 @@ export const update = async (req, res, next) => {
       imagenesUrls = imagenesUrls.concat(results.map(r => r.secure_url));
     }
     
+    // Forzar moneda válida o null
+    let moneda = req.body.moneda;
+    if (Array.isArray(moneda)) {
+      moneda = moneda[0];
+    }
+    console.log('[UPDATE PAQUETE] Moneda recibida en body:', req.body.moneda);
+    if (typeof moneda === 'string' && moneda.trim() === '') {
+      moneda = null;
+    }
+    if (moneda && !['ARS', 'USD'].includes(moneda)) {
+      moneda = null;
+    }
+    // Parsear tags si viene como string
+    let tags = req.body.tags;
+    if (typeof tags === 'string') {
+      try {
+        tags = JSON.parse(tags);
+      } catch {
+        tags = [];
+      }
+    }
+    if (!Array.isArray(tags)) tags = [];
     await paquete.update({
       ...req.body,
       imagenes: imagenesUrls,
-      moneda: req.body.moneda || paquete.moneda || 'ARS',
+      moneda,
+      tags,
     });
+    console.log('[UPDATE PAQUETE] Moneda guardada en modelo:', paquete.moneda, '| Nueva:', moneda);
     
     res.json(paquete);
   } catch (err) {

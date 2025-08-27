@@ -20,18 +20,19 @@ import Loading from '../ui/Loading';
 const PaquetesManager = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPaquete, setEditingPaquete] = useState(null);
-  const [formData, setFormData] = useState({
-    nombre: '',
-    descripcion: '',
-    precio: '',
-    categoriaId: '',
-    subcategoriaId: '',
-    campoVariable: '',
-  });
+    const [formData, setFormData] = useState({
+      nombre: '',
+      descripcion: '',
+      precio: '', // opcional
+      campoVariable: '',
+      moneda: '', // opcional
+      categoriaId: '',
+      subcategoriaId: '',
+  tags: '',
+    });
   const [selectedImages, setSelectedImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
-  const [moneda, setMoneda] = useState('ARS');
   const { data: paquetes = [], isLoading } = useGetPaquetesQuery();
   const { data: categorias = [] } = useGetCategoriasQuery();
   const { data: subcategorias = [] } = useGetSubcategoriasQuery();
@@ -45,10 +46,12 @@ const PaquetesManager = () => {
       setFormData({
         nombre: paquete.nombre || '',
         descripcion: paquete.descripcion || '',
-        precio: paquete.precio || '',
+        precio: (paquete.precio === null || paquete.precio === undefined) ? '' : paquete.precio,
         categoriaId: paquete.categoriaId || '',
         subcategoriaId: paquete.subcategoriaId || '',
         campoVariable: paquete.campoVariable || '',
+        moneda: paquete.moneda || '',
+        tags: Array.isArray(paquete.tags) ? paquete.tags.join(', ') : (paquete.tags || ''),
       });
       setExistingImages(paquete.imagenes || []);
       setPreviewImages([]);
@@ -61,6 +64,7 @@ const PaquetesManager = () => {
         categoriaId: '',
         subcategoriaId: '',
         campoVariable: '',
+    moneda: '',
       });
       setExistingImages([]);
       setPreviewImages([]);
@@ -79,6 +83,8 @@ const PaquetesManager = () => {
       categoriaId: '',
       subcategoriaId: '',
       campoVariable: '',
+      moneda: '',
+      tags: '',
     });
     setSelectedImages([]);
     setPreviewImages([]);
@@ -114,10 +120,38 @@ const PaquetesManager = () => {
     e.preventDefault();
 
     const formDataToSend = new FormData();
+    // Solo agregar los campos realmente válidos y no duplicar precio/moneda
     Object.keys(formData).forEach(key => {
-      formDataToSend.append(key, formData[key]);
+      if (key === 'precio') {
+        if (formData.precio !== '' && formData.precio !== null && formData.precio !== undefined) {
+          formDataToSend.append('precio', formData.precio);
+        }
+      } else if (key === 'moneda') {
+        if (formData.moneda !== '' && formData.moneda !== null && formData.moneda !== undefined) {
+          formDataToSend.append('moneda', formData.moneda);
+        }
+      } else if (key === 'tags') {
+        // Convertir string a array (separado por comas, limpiar espacios)
+        if (formData.tags && formData.tags.trim() !== '') {
+          const tagsArr = formData.tags.split(',').map(t => t.trim()).filter(Boolean);
+          formDataToSend.append('tags', JSON.stringify(tagsArr));
+        }
+      } else {
+        formDataToSend.append(key, formData[key]);
+      }
     });
-    formDataToSend.append('moneda', moneda);
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tags (separadas por coma)
+                </label>
+                <input
+                  type="text"
+                  value={formData.tags}
+                  onChange={e => setFormData({ ...formData, tags: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="oferta, destacado, promo, etc"
+                />
+              </div>
 
     selectedImages.forEach((image) => {
       formDataToSend.append('imagenes', image);
@@ -199,8 +233,16 @@ const PaquetesManager = () => {
               </p>
               <div className="flex justify-between items-center mb-3">
                 <span className="text-2xl font-bold text-green-600">
-                  {moneda === 'USD' ? 'US$' : '$'}{paquete.precio}
-                  <span className="ml-1 text-base text-gray-500">{moneda === 'USD' ? 'USD' : 'ARS'}</span>
+                  {paquete.precio !== null && paquete.precio !== undefined && paquete.precio !== '' && Number(paquete.precio) > 0 ? (
+                    <>
+                      {paquete.moneda === 'USD' ? 'US$' : paquete.moneda === 'ARS' ? '$' : ''}{paquete.precio}
+                      {paquete.moneda ? (
+                        <span className="ml-1 text-base text-gray-500">{paquete.moneda}</span>
+                      ) : null}
+                    </>
+                  ) : (
+                    <span className="text-base text-gray-400">Sin precio</span>
+                  )}
                 </span>
                 <span className="text-sm text-gray-500">
                   ID: {paquete.id}
@@ -260,14 +302,21 @@ const PaquetesManager = () => {
                 <div className="flex items-center space-x-2">
                   <input
                     type="number"
-                    value={formData.precio}
-                    onChange={(e) => setFormData({ ...formData, precio: e.target.value })}
+                    value={formData.precio === null || formData.precio === undefined ? '' : formData.precio}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === '' || value === null) {
+                        setFormData({ ...formData, precio: '', moneda: '' });
+                      } else {
+                        setFormData({ ...formData, precio: value });
+                      }
+                    }}
+                    placeholder="0"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
                   />
                   <select
-                    value={moneda}
-                    onChange={e => setMoneda(e.target.value)}
+                    value={formData.moneda || ''}
+                    onChange={e => setFormData({ ...formData, moneda: e.target.value })}
                     className="px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="ARS">$ ARS</option>
@@ -343,11 +392,24 @@ const PaquetesManager = () => {
                 value={formData.campoVariable}
                 onChange={e => setFormData({ ...formData, campoVariable: e.target.value })}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Ejemplo: Primer punto. Segundo punto. Tercer punto."
               />
               <div className="mt-1 text-xs text-gray-500">
                 Escribe los renglones separados por punto (.). Al mostrar, cada línea inicia con un punto.
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tags (separadas por coma)
+                </label>
+                <input
+                  type="text"
+                  value={formData.tags}
+                  onChange={e => setFormData({ ...formData, tags: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="oferta, destacado, promo, etc"
+                />
               </div>
 
               <div>

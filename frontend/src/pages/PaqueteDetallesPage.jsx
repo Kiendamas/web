@@ -250,8 +250,14 @@ const PaqueteDetallesPage = () => {
               {/* Precio debajo de la descripción */}
               <div className="mb-4">
                 <span className="inline-block text-lg font-bold text-green-700 bg-green-50 rounded px-3 py-1 mt-2">
-                  {new Intl.NumberFormat('es-AR', { style: 'currency', currency: paquete.moneda || 'ARS' }).format(paquete.precio)}
-                  <span className="ml-2 text-base text-gray-500">{paquete.moneda || 'ARS'}</span>
+                  {paquete.precio !== null && paquete.precio !== undefined && paquete.precio !== '' && Number(paquete.precio) > 0
+                    ? (
+                        <>
+                          {new Intl.NumberFormat('es-AR', { style: 'currency', currency: paquete.moneda || 'ARS' }).format(paquete.precio)}
+                          <span className="ml-2 text-base text-gray-500">{paquete.moneda || 'ARS'}</span>
+                        </>
+                      )
+                    : 'Consultar Precio'}
                 </span>
               </div>
               {/* Botón de contratar */}

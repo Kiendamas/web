@@ -19,7 +19,7 @@ const Sidebar = () => {
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: location.pathname === '/dashboard' },
     ...(isAdmin ? [
       { name: 'Usuarios', href: '/users', icon: UsersIcon, current: location.pathname === '/users' },
-      { name: 'Configuración', href: '/settings', icon: CogIcon, current: location.pathname === '/settings' },
+      { name: 'Web', href: '/', icon: CogIcon, current: location.pathname === '/' },
     ] : []),
   ];
 
@@ -57,7 +57,7 @@ const Sidebar = () => {
       )}
 
       {/* Desktop sidebar */}
-      <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-white border-r border-gray-200 z-30">
+      <div className="hidden md:flex md:w-58 md:flex-col md:fixed md:inset-y-0 bg-white border-r border-gray-200 z-30">
         <SidebarContent 
           navigation={navigation} 
           user={user} 
