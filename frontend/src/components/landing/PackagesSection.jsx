@@ -50,7 +50,9 @@ const PackageCard = ({ paquete, formatPrice, navigate, subcategoria }) => {
               {paquete.nombre.charAt(0).toUpperCase() + paquete.nombre.slice(1).toLowerCase()}
             </h4>
             <span className="text-sm font-bold text-kiendamas-text font-raleway whitespace-nowrap">
-              {formatPrice(paquete.precio, moneda)}{' '}
+              {paquete.precio !== null && paquete.precio !== undefined && paquete.precio !== '' && Number(paquete.precio) > 0
+                ? formatPrice(paquete.precio, moneda)
+                : 'Consultar'}{' '}
             </span>
           </div>
           <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal line-clamp-2 min-h-[2.5em] max-h-[2.5em] overflow-hidden">
