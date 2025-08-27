@@ -28,7 +28,7 @@ const PaquetesManager = () => {
       moneda: '', // opcional
       categoriaId: '',
       subcategoriaId: '',
-      tags: '',
+  tags: '',
     });
   const [selectedImages, setSelectedImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
@@ -51,6 +51,7 @@ const PaquetesManager = () => {
         subcategoriaId: paquete.subcategoriaId || '',
         campoVariable: paquete.campoVariable || '',
         moneda: paquete.moneda || '',
+        tags: Array.isArray(paquete.tags) ? paquete.tags.join(', ') : (paquete.tags || ''),
       });
       setExistingImages(paquete.imagenes || []);
       setPreviewImages([]);
@@ -82,6 +83,8 @@ const PaquetesManager = () => {
       categoriaId: '',
       subcategoriaId: '',
       campoVariable: '',
+      moneda: '',
+      tags: '',
     });
     setSelectedImages([]);
     setPreviewImages([]);
@@ -123,16 +126,32 @@ const PaquetesManager = () => {
         if (formData.precio !== '' && formData.precio !== null && formData.precio !== undefined) {
           formDataToSend.append('precio', formData.precio);
         }
-        // Si está vacío, no lo agregamos
       } else if (key === 'moneda') {
         if (formData.moneda !== '' && formData.moneda !== null && formData.moneda !== undefined) {
           formDataToSend.append('moneda', formData.moneda);
         }
-        // Si está vacío, no lo agregamos
+      } else if (key === 'tags') {
+        // Convertir string a array (separado por comas, limpiar espacios)
+        if (formData.tags && formData.tags.trim() !== '') {
+          const tagsArr = formData.tags.split(',').map(t => t.trim()).filter(Boolean);
+          formDataToSend.append('tags', JSON.stringify(tagsArr));
+        }
       } else {
         formDataToSend.append(key, formData[key]);
       }
     });
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tags (separadas por coma)
+                </label>
+                <input
+                  type="text"
+                  value={formData.tags}
+                  onChange={e => setFormData({ ...formData, tags: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="oferta, destacado, promo, etc"
+                />
+              </div>
 
     selectedImages.forEach((image) => {
       formDataToSend.append('imagenes', image);
@@ -378,6 +397,19 @@ const PaquetesManager = () => {
               />
               <div className="mt-1 text-xs text-gray-500">
                 Escribe los renglones separados por punto (.). Al mostrar, cada línea inicia con un punto.
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tags (separadas por coma)
+                </label>
+                <input
+                  type="text"
+                  value={formData.tags}
+                  onChange={e => setFormData({ ...formData, tags: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="oferta, destacado, promo, etc"
+                />
               </div>
 
               <div>

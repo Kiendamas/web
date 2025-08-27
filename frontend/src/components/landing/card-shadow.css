@@ -1,0 +1,7 @@
+.card-shadow {
+  box-shadow: 0 4px 24px 0 #4B2E19, 0 0 0 4px #4B2E1933;
+  
+}
+.tag-shadow {
+  filter: drop-shadow(0 2px 6px #4B2E19);
+}

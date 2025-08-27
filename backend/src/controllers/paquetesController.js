@@ -137,10 +137,21 @@ export const create = async (req, res, next) => {
     if (moneda && !['ARS', 'USD'].includes(moneda)) {
       moneda = null;
     }
+    // Parsear tags si viene como string
+    let tags = req.body.tags;
+    if (typeof tags === 'string') {
+      try {
+        tags = JSON.parse(tags);
+      } catch {
+        tags = [];
+      }
+    }
+    if (!Array.isArray(tags)) tags = [];
     const paqueteData = {
       ...req.body,
       imagenes: imagenesUrls,
       moneda,
+      tags,
     };
     const paquete = await PaqueteTuristico.create(paqueteData);
     res.status(201).json(paquete);
@@ -185,10 +196,21 @@ export const update = async (req, res, next) => {
     if (moneda && !['ARS', 'USD'].includes(moneda)) {
       moneda = null;
     }
+    // Parsear tags si viene como string
+    let tags = req.body.tags;
+    if (typeof tags === 'string') {
+      try {
+        tags = JSON.parse(tags);
+      } catch {
+        tags = [];
+      }
+    }
+    if (!Array.isArray(tags)) tags = [];
     await paquete.update({
       ...req.body,
       imagenes: imagenesUrls,
       moneda,
+      tags,
     });
     console.log('[UPDATE PAQUETE] Moneda guardada en modelo:', paquete.moneda, '| Nueva:', moneda);
     
