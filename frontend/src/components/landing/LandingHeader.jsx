@@ -28,9 +28,9 @@ const LandingHeader = ({ onMenuClick, onSectionClick, activeSection }) => {
           <div className="lg:hidden">
             <button
               onClick={onMenuClick}
-              className="p-2 rounded-md text-kiendamas-text hover:text-kiendamas-darkBrown hover:bg-white/20 transition-colors"
+              className="p-3 rounded-md text-kiendamas-text hover:text-kiendamas-darkBrown hover:bg-white/20 transition-colors"
             >
-              <Bars3Icon className="h-2 w-2" />
+              <Bars3Icon className="h-6 w-6" />
             </button>
           </div>
 
