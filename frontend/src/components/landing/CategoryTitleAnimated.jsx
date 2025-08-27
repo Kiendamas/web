@@ -22,8 +22,8 @@ function CategoryTitleAnimated({ tituloBg, categoriaNombre }) {
     <div className="relative mb-10">
       <div
         ref={ref}
-        className={`${tituloBg} rounded-r-3xl pl-4 sm:pl-6 pr-8 py-3 max-w-xs sm:max-w-md shadow-[0_4px_24px_0_#89898930] border border-[#89898930] ${visible ? 'animate-slide-in-left' : 'opacity-0'}`}
-        style={{ overflow: 'hidden', transition: 'opacity 0.3s' }}
+        className={`${tituloBg} rounded-r-3xl pl-4 sm:pl-6 pr-8 py-3 max-w-xs sm:max-w-md border border-[#89898930] ${visible ? 'animate-slide-in-left' : 'opacity-0'}`}
+  style={{ overflow: 'hidden', transition: 'opacity 0.3s', boxShadow: '0 12px 32px -4px rgba(75,46,25,0.32)' }}
       >
         <h2 className="font-raleway font-normal text-xl sm:text-2xl text-[#646464]">
           Paquetes {categoriaNombre}
