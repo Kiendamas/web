@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useGetPaquetesQuery } from '../../features/paquetes/paquetesApi';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import CategoryTitleAnimated from './CategoryTitleAnimated';
 
 // Card real
@@ -23,7 +23,7 @@ const PackageCard = ({ paquete, formatPrice, navigate }) => {
   const capitalize = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
   const moneda = paquete.moneda || 'ARS';
   return (
-    <div className="package-card shrink-0 bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden w-full max-w-[260px] snap-center flex flex-col">
+    <div className="package-card shrink-0 bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden w-full max-w-[260px] flex flex-col">
       <div className="w-full p-1 aspect-[4/3] overflow-hidden flex items-center justify-center bg-white">
         <img
           src={paquete.imagenes?.[0] || '/placeholder-travel.jpg'}
@@ -44,10 +44,9 @@ const PackageCard = ({ paquete, formatPrice, navigate }) => {
             </h4>
             <span className="text-sm font-bold text-kiendamas-text font-raleway whitespace-nowrap">
               {formatPrice(paquete.precio, moneda)}{' '}
-             
             </span>
           </div>
-          <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal line-clamp-2 max-h-[2.5em] overflow-hidden">
+          <div className="text-xs text-kiendamas-text font-raleway leading-snug break-words whitespace-normal line-clamp-2 min-h-[2.5em] max-h-[2.5em] overflow-hidden">
             {capitalize(renglon1)}
             {renglon2 && <><br />{capitalize(renglon2)}</>}
           </div>
@@ -67,8 +66,8 @@ const PackageCard = ({ paquete, formatPrice, navigate }) => {
 
 // Card de placeholder
 const PlaceholderCard = () => (
-  <div className="package-card shrink-0 bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden w-full max-w-[260px] snap-center flex flex-col">
-    <div className="w-full aspect-[4/3] flex items-center justify-center bg-gray-200">
+  <div className="package-card shrink-0 bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden w-full max-w-[260px] flex flex-col">
+    <div className="w-full p-1 aspect-[4/3] overflow-hidden flex items-center justify-center bg-gray-200">
       <span className="text-gray-400 text-lg font-semibold font-raleway text-center px-2">
         Próximamente un nuevo destino
       </span>
@@ -79,7 +78,7 @@ const PlaceholderCard = () => (
           <h4 className="text-sm font-semibold text-gray-400 font-raleway truncate mr-1">---</h4>
           <span className="text-sm font-bold text-gray-400 font-raleway whitespace-nowrap">---</span>
         </div>
-        <div className="text-xs text-gray-400 font-raleway leading-snug line-clamp-2 max-h-[2.5em] overflow-hidden">
+        <div className="text-xs text-gray-400 font-raleway leading-snug break-words whitespace-normal line-clamp-2 min-h-[2.5em] max-h-[2.5em] overflow-hidden">
           ¡Muy pronto más opciones!
         </div>
       </div>
@@ -96,19 +95,36 @@ const PlaceholderCard = () => (
 );
 
 
+
 const PackagesSection = ({ selectedFilter }) => {
   const navigate = useNavigate();
   const { data: allPaquetes = [], isLoading: paquetesLoading } = useGetPaquetesQuery();
   const [cardsPerView, setCardsPerView] = useState(3);
   const [carouselIndexes, setCarouselIndexes] = useState({});
+  const carruselRef = useRef(null);
 
-  // Responsive cards per view (ahora soporta 4 y 5 en pantallas grandes)
+  // Calcula cuántas cards caben según el ancho disponible y breakpoints, con tope máximo
   const updateCardsPerView = useCallback(() => {
-    if (window.innerWidth < 640) setCardsPerView(1);
-    else if (window.innerWidth < 1024) setCardsPerView(2);
-    else if (window.innerWidth < 1440) setCardsPerView(3);
-    else if (window.innerWidth < 1800) setCardsPerView(4);
-    else setCardsPerView(5);
+    const CARD_WIDTH = 240; // px
+    const GAP = 8; // px
+    const FLECHA_SPACE = 56 * 2; // px, 56px por lado para flechas
+    let width = window.innerWidth;
+    if (carruselRef.current) {
+      width = carruselRef.current.offsetWidth;
+    } else {
+      const mainContainer = document.getElementById('paquetes-main-container');
+      if (mainContainer) width = mainContainer.offsetWidth * 0.9;
+    }
+    // En móvil, solo 1 card
+    if (width < 640) {
+      setCardsPerView(1);
+      return;
+    }
+    // Reservar espacio para flechas
+    const usableWidth = width - FLECHA_SPACE;
+    let n = Math.floor((usableWidth + GAP) / (CARD_WIDTH + GAP));
+    if (n < 1) n = 1;
+    setCardsPerView(n);
   }, []);
 
   useEffect(() => {
@@ -138,6 +154,7 @@ const PackagesSection = ({ selectedFilter }) => {
     categoriasMap[categoriaId].subcategorias[subcategoriaNombre].push(paquete);
   });
 
+  // Carousel navigation, always show only full cards
   const handleCarouselNav = (carouselId, direction, total) => {
     setCarouselIndexes((prev) => {
       const current = prev[carouselId] || 0;
@@ -152,7 +169,6 @@ const PackagesSection = ({ selectedFilter }) => {
       return { ...prev, [carouselId]: next };
     });
   };
-
 
   if (paquetesLoading) {
     return (
@@ -176,38 +192,60 @@ const PackagesSection = ({ selectedFilter }) => {
             categoriaNombre={categoria.nombre}
           />
 
-          <div className="w-full max-w-7xl mx-auto px-0 sm:px-2 md:px-4 lg:px-8">
+          <div id="paquetes-main-container" className="w-full">
             {Object.entries(categoria.subcategorias).map(([subcategoriaNombre, paquetes]) => {
               if (!paquetes || paquetes.length === 0) return null;
               const carouselId = `carousel-${categoriaId}-${subcategoriaNombre}`;
               const startIdx = carouselIndexes[carouselId] || 0;
+
+              // Siempre mostrar cardsPerView cards, rellenando con placeholders a izquierda y derecha para centrar
               let allCards = [...paquetes];
-              while (allCards.length < 3) {
-                allCards.push({ placeholder: true, key: `placeholder-${allCards.length}` });
+              let placeholdersToAdd = 0;
+              if (allCards.length < cardsPerView) {
+                placeholdersToAdd = cardsPerView - allCards.length;
               }
+              // Para centrar: mitad de placeholders a la izquierda, mitad a la derecha
+              let leftPlaceholders = Math.floor(placeholdersToAdd / 2);
+              let rightPlaceholders = placeholdersToAdd - leftPlaceholders;
+              let visiblePaquetes = [];
+              for (let i = 0; i < leftPlaceholders; i++) {
+                visiblePaquetes.push(<PlaceholderCard key={`ph-left-${i}`} />);
+              }
+              // Carrusel infinito: armar el slice visible ciclando el array
               const total = allCards.length;
-              const showCarousel = total >= cardsPerView;
-              const realEndIdx = Math.min(startIdx + cardsPerView, total);
-              const visiblePaquetes = allCards.slice(startIdx, realEndIdx).map((p, idx) =>
-                p.placeholder ? (
-                  <PlaceholderCard key={p.key} />
-                ) : (
-                  <PackageCard
-                    key={p.id}
-                    paquete={p}
-                    formatPrice={formatPrice}
-                    navigate={navigate}
-                  />
-                )
-              );
+              for (let i = 0; i < Math.min(cardsPerView, total); i++) {
+                const idx = (startIdx + i) % total;
+                const p = allCards[idx];
+                visiblePaquetes.push(
+                  p.placeholder ? (
+                    <PlaceholderCard key={p.key + '-' + idx} />
+                  ) : (
+                    <PackageCard
+                      key={p.id + '-' + idx}
+                      paquete={p}
+                      formatPrice={formatPrice}
+                      navigate={navigate}
+                    />
+                  )
+                );
+              }
+              for (let i = 0; i < rightPlaceholders; i++) {
+                visiblePaquetes.push(<PlaceholderCard key={`ph-right-${i}`} />);
+              }
+              const showCarousel = total > cardsPerView || allCards.length === cardsPerView;
+
+              // Card width fijo y gap fijo para todas las pantallas (excepto móvil)
+              const cardWidth = 240;
+              const mobile = cardsPerView === 1;
 
               return (
                 <div key={subcategoriaNombre} className="mt-4 mb-0">
                   {/* Wrapper centrado para subtítulo y carrusel */}
                   <div
-                    className="flex flex-col items-start mx-auto"
+                    className="flex flex-col"
                     style={{
-                      maxWidth: `calc(${cardsPerView} * 260px + ${(cardsPerView - 1) * 32}px)`
+                      maxWidth: '100%',
+                      width: '100%'
                     }}
                   >
                     {/* Subcategoría alineada sobre la primer card */}
@@ -221,31 +259,80 @@ const PackagesSection = ({ selectedFilter }) => {
                       </h3>
                     </div>
 
-                    {/* Carrusel */}
-                    <div className="relative w-full flex items-center">
-                      {showCarousel && (
-                        <>
-                          <button
-                            onClick={() => handleCarouselNav(carouselId, 'left', paquetes.length)}
-                            className="flex items-center justify-center absolute -left-10 sm:-left-10 md:-left-12 lg:-left-14 top-1/2 -translate-y-1/2 p-1 sm:p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
-                          >
-                            <ChevronLeftIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                          </button>
-                          <button
-                            onClick={() => handleCarouselNav(carouselId, 'right', paquetes.length)}
-                            className="flex items-center justify-center absolute -right-10 sm:-right-10 md:-right-12 lg:-right-14 top-1/2 -translate-y-1/2 p-1 sm:p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
-                          >
-                            <ChevronRightIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                          </button>
-                        </>
-                      )}
-
-                      <div className={`flex items-stretch w-full ${cardsPerView === 1 ? '' : 'overflow-x-auto scrollbar-hide'}`}>
-                        <div className={`flex gap-4 sm:gap-5 md:gap-6 lg:gap-8 py-1 justify-start min-w-fit w-full ${cardsPerView === 1 ? 'flex-col' : ''}`}>
-                          {visiblePaquetes}
+                    {/* Carrusel compacto, sin scroll ni snap */}
+                    {mobile ? (
+                      <div className="w-full flex flex-row justify-center items-center py-1">
+                        <div className="flex flex-row items-center justify-between gap-2 w-full max-w-xs mx-auto">
+                          {showCarousel && (
+                            <button
+                              onClick={() => handleCarouselNav(carouselId, 'left', paquetes.length)}
+                              className="flex items-center justify-center p-0.5 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown h-7 w-7"
+                              style={{ minWidth: 0, minHeight: 0 }}
+                            >
+                              <ChevronLeftIcon className="h-4 w-4" />
+                            </button>
+                          )}
+                          {visiblePaquetes.map((card, idx) => (
+                            <div
+                              key={card.key || card.props?.paquete?.id || idx}
+                              className="w-full"
+                              style={{ minWidth: 0, maxWidth: '100%' }}
+                            >
+                              {card}
+                            </div>
+                          ))}
+                          {showCarousel && (
+                            <button
+                              onClick={() => handleCarouselNav(carouselId, 'right', paquetes.length)}
+                              className="flex items-center justify-center p-0.5 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown h-7 w-7"
+                              style={{ minWidth: 0, minHeight: 0 }}
+                            >
+                              <ChevronRightIcon className="h-4 w-4" />
+                            </button>
+                          )}
                         </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="relative w-full flex items-center">
+                        <div className="w-full flex justify-center py-1">
+                          <div className="relative flex items-center w-full max-w-[1480px] min-w-[320px] mx-auto">
+                            {/* Flechas absolutas sobre los bordes laterales del área de las cards */}
+                            {showCarousel && (
+                              <>
+                                <button
+                                  onClick={() => handleCarouselNav(carouselId, 'left', paquetes.length)}
+                                  className="flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 p-0.5 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10 h-7 w-7 sm:h-8 sm:w-8"
+                                  style={{ minWidth: 0, minHeight: 0 }}
+                                >
+                                  <ChevronLeftIcon className="h-4 w-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleCarouselNav(carouselId, 'right', paquetes.length)}
+                                  className="flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 p-0.5 sm:p-1 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10 h-7 w-7 sm:h-8 sm:w-8"
+                                  style={{ minWidth: 0, minHeight: 0 }}
+                                >
+                                  <ChevronRightIcon className="h-4 w-4" />
+                                </button>
+                              </>
+                            )}
+                            {/* Fila de cards sin gap entre ellas, centrada y con ancho máximo */}
+                            <div
+                              ref={carruselRef}
+                              className="flex w-full justify-center gap-2 px-8 md:px-10 lg:px-12 xl:px-16"
+                            >
+                              {visiblePaquetes.map((card, idx) => (
+                                <div
+                                  key={card.key || card.props?.paquete?.id || idx}
+                                  style={{ flex: `0 0 ${cardWidth}px`, minWidth: `${cardWidth}px`, maxWidth: `${cardWidth}px` }}
+                                >
+                                  {card}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -255,6 +342,6 @@ const PackagesSection = ({ selectedFilter }) => {
       ))}
     </section>
   );
-}
+};
 
 export default PackagesSection;
