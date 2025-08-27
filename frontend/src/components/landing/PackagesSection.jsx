@@ -95,6 +95,7 @@ const PlaceholderCard = () => (
   </div>
 );
 
+
 const PackagesSection = ({ selectedFilter }) => {
   const navigate = useNavigate();
   const { data: allPaquetes = [], isLoading: paquetesLoading } = useGetPaquetesQuery();
@@ -119,24 +120,22 @@ const PackagesSection = ({ selectedFilter }) => {
   const formatPrice = (price, moneda = 'USD') =>
     new Intl.NumberFormat('es-AR', { style: 'currency', currency: moneda }).format(price);
 
-  const filteredPaquetes = allPaquetes;
-
-  const categoriasOrden = [
-    { nombre: 'Premium', sectionBg: 'bg-white', tituloBg: 'bg-kiendamas-beige' },
-    { nombre: 'Nacionales', sectionBg: 'bg-white', tituloBg: 'bg-kiendamas-beige' },
-    { nombre: 'Internacionales', sectionBg: 'bg-white', tituloBg: 'bg-kiendamas-beige' },
-  ];
-
-  const paquetesAgrupados = { Premium: {}, Nacionales: {}, Internacionales: {} };
-  filteredPaquetes.forEach((paquete) => {
+  // Agrupar paquetes por categoría y subcategoría
+  const categoriasMap = {};
+  allPaquetes.forEach((paquete) => {
+    const categoriaId = paquete.Categorium?.id?.toString() || 'sin-categoria';
     const categoriaNombre = paquete.Categorium?.nombre || 'Sin categoría';
     const subcategoriaNombre = paquete.Subcategorium?.nombre || 'Sin subcategoría';
-    if (['Premium', 'Nacionales', 'Internacionales'].includes(categoriaNombre)) {
-      if (!paquetesAgrupados[categoriaNombre][subcategoriaNombre]) {
-        paquetesAgrupados[categoriaNombre][subcategoriaNombre] = [];
-      }
-      paquetesAgrupados[categoriaNombre][subcategoriaNombre].push(paquete);
+    if (!categoriasMap[categoriaId]) {
+      categoriasMap[categoriaId] = {
+        nombre: categoriaNombre,
+        subcategorias: {}
+      };
     }
+    if (!categoriasMap[categoriaId].subcategorias[subcategoriaNombre]) {
+      categoriasMap[categoriaId].subcategorias[subcategoriaNombre] = [];
+    }
+    categoriasMap[categoriaId].subcategorias[subcategoriaNombre].push(paquete);
   });
 
   const handleCarouselNav = (carouselId, direction, total) => {
@@ -154,6 +153,7 @@ const PackagesSection = ({ selectedFilter }) => {
     });
   };
 
+
   if (paquetesLoading) {
     return (
       <div className="py-16 bg-white flex justify-center items-center">
@@ -164,105 +164,95 @@ const PackagesSection = ({ selectedFilter }) => {
 
   return (
     <section id="paquetes" className="w-full m-0 p-0">
-      {categoriasOrden.map(({ nombre: categoriaNombre, sectionBg, tituloBg }) => {
-        const subcategorias = paquetesAgrupados[categoriaNombre];
-        if (!subcategorias || Object.values(subcategorias).flat().length === 0) return null;
+      {Object.entries(categoriasMap).map(([categoriaId, categoria]) => (
+        <section
+          key={categoriaId}
+          id={`categoria-${categoriaId}`}
+          className="w-full bg-white py-16"
+        >
+          {/* Título principal de categoría */}
+          <CategoryTitleAnimated
+            tituloBg="bg-kiendamas-beige"
+            categoriaNombre={categoria.nombre}
+          />
 
-        return (
-          <section
-            key={categoriaNombre}
-            id={`categoria-${categoriaNombre.toLowerCase()}`}
-            className={`w-full ${sectionBg} py-16`}
-          >
-            {/* Título principal de categoría */}
+          <div className="w-full max-w-7xl mx-auto px-0 sm:px-2 md:px-4 lg:px-8">
+            {Object.entries(categoria.subcategorias).map(([subcategoriaNombre, paquetes]) => {
+              if (!paquetes || paquetes.length === 0) return null;
+              const carouselId = `carousel-${categoriaId}-${subcategoriaNombre}`;
+              const startIdx = carouselIndexes[carouselId] || 0;
+              let allCards = [...paquetes];
+              while (allCards.length < 3) {
+                allCards.push({ placeholder: true, key: `placeholder-${allCards.length}` });
+              }
+              const total = allCards.length;
+              const showCarousel = total >= cardsPerView;
+              const realEndIdx = Math.min(startIdx + cardsPerView, total);
+              const visiblePaquetes = allCards.slice(startIdx, realEndIdx).map((p, idx) =>
+                p.placeholder ? (
+                  <PlaceholderCard key={p.key} />
+                ) : (
+                  <PackageCard
+                    key={p.id}
+                    paquete={p}
+                    formatPrice={formatPrice}
+                    navigate={navigate}
+                  />
+                )
+              );
 
+              return (
+                <div key={subcategoriaNombre} className="mt-4 mb-0">
+                  {/* Wrapper centrado para subtítulo y carrusel */}
+                  <div
+                    className="flex flex-col items-start mx-auto"
+                    style={{
+                      maxWidth: `calc(${cardsPerView} * 260px + ${(cardsPerView - 1) * 32}px)`
+                    }}
+                  >
+                    {/* Subcategoría alineada sobre la primer card */}
+                    <div className="mb-2">
+                      <h3
+                        className="text-base sm:text-lg font-semibold font-raleway text-kiendamas-text"
+                        style={{ marginLeft: 0 }}
+                      >
+                        {subcategoriaNombre.charAt(0).toUpperCase() +
+                          subcategoriaNombre.slice(1).toLowerCase()}
+                      </h3>
+                    </div>
 
-            <CategoryTitleAnimated
-              tituloBg={tituloBg}
-              categoriaNombre={categoriaNombre}
-            />
+                    {/* Carrusel */}
+                    <div className="relative w-full flex items-center">
+                      {showCarousel && (
+                        <>
+                          <button
+                            onClick={() => handleCarouselNav(carouselId, 'left', paquetes.length)}
+                            className="flex items-center justify-center absolute -left-10 sm:-left-10 md:-left-12 lg:-left-14 top-1/2 -translate-y-1/2 p-1 sm:p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                          >
+                            <ChevronLeftIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                          </button>
+                          <button
+                            onClick={() => handleCarouselNav(carouselId, 'right', paquetes.length)}
+                            className="flex items-center justify-center absolute -right-10 sm:-right-10 md:-right-12 lg:-right-14 top-1/2 -translate-y-1/2 p-1 sm:p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
+                          >
+                            <ChevronRightIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                          </button>
+                        </>
+                      )}
 
-            <div className="w-full max-w-7xl mx-auto px-0 sm:px-2 md:px-4 lg:px-8">
-              {Object.entries(subcategorias).map(([subcategoriaNombre, paquetes]) => {
-                if (!paquetes || paquetes.length === 0) return null;
-                const carouselId = `carousel-${categoriaNombre}-${subcategoriaNombre}`;
-                const startIdx = carouselIndexes[carouselId] || 0;
-                let allCards = [...paquetes];
-                while (allCards.length < 3) {
-                  allCards.push({ placeholder: true, key: `placeholder-${allCards.length}` });
-                }
-                const total = allCards.length;
-                const showCarousel = total >= cardsPerView;
-                const realEndIdx = Math.min(startIdx + cardsPerView, total);
-                const visiblePaquetes = allCards.slice(startIdx, realEndIdx).map((p, idx) =>
-                  p.placeholder ? (
-                    <PlaceholderCard key={p.key} />
-                  ) : (
-                    <PackageCard
-                      key={p.id}
-                      paquete={p}
-                      formatPrice={formatPrice}
-                      navigate={navigate}
-                    />
-                  )
-                );
-
-                return (
-                  <div key={subcategoriaNombre} className="mt-4 mb-0">
-                    {/* Wrapper centrado para subtítulo y carrusel */}
-                    <div
-                      className="flex flex-col items-start mx-auto"
-                      style={{
-                        maxWidth: `calc(${cardsPerView} * 260px + ${(cardsPerView - 1) * 32}px)`
-                      }}
-                    >
-                      {/* Subcategoría alineada sobre la primer card */}
-                      <div className="mb-2">
-                        <h3
-                          className={`text-base sm:text-lg font-semibold font-raleway ${
-                            categoriaNombre === 'Nacionales' ? 'text-white' : 'text-kiendamas-text'
-                          }`}
-                          style={{ marginLeft: 0 }}
-                        >
-                          {subcategoriaNombre.charAt(0).toUpperCase() +
-                            subcategoriaNombre.slice(1).toLowerCase()}
-                        </h3>
-                      </div>
-
-                      {/* Carrusel */}
-                      <div className="relative w-full flex items-center">
-                        {showCarousel && (
-                          <>
-                            <button
-                              onClick={() => handleCarouselNav(carouselId, 'left', paquetes.length)}
-                              className="flex items-center justify-center absolute -left-10 sm:-left-10 md:-left-12 lg:-left-14 top-1/2 -translate-y-1/2 p-1 sm:p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
-                            >
-                              <ChevronLeftIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                            </button>
-                            <button
-                              onClick={() => handleCarouselNav(carouselId, 'right', paquetes.length)}
-                              className="flex items-center justify-center absolute -right-10 sm:-right-10 md:-right-12 lg:-right-14 top-1/2 -translate-y-1/2 p-1 sm:p-2 bg-white border border-gray-300 rounded-full shadow hover:shadow-md transition text-kiendamas-light-brown z-10"
-                            >
-                              <ChevronRightIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-                            </button>
-                          </>
-                        )}
-
-                        <div className={`flex items-stretch w-full ${cardsPerView === 1 ? '' : 'overflow-x-auto scrollbar-hide'}`}>
-                          <div className={`flex gap-4 sm:gap-5 md:gap-6 lg:gap-8 py-1 justify-start min-w-fit w-full ${cardsPerView === 1 ? 'flex-col' : ''}`}>
-                            {visiblePaquetes}
-                          </div>
+                      <div className={`flex items-stretch w-full ${cardsPerView === 1 ? '' : 'overflow-x-auto scrollbar-hide'}`}>
+                        <div className={`flex gap-4 sm:gap-5 md:gap-6 lg:gap-8 py-1 justify-start min-w-fit w-full ${cardsPerView === 1 ? 'flex-col' : ''}`}>
+                          {visiblePaquetes}
                         </div>
                       </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          </section>
-        );
-
-      })}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      ))}
     </section>
   );
 }
