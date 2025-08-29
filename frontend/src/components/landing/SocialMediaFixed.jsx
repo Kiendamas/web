@@ -8,36 +8,37 @@ const iconList = [
 
 const SocialMediaFixed = () => (
   <div
-    style={{
-      position: 'fixed',
-      top: '314px',
-      right: 0,
-      width: 48,
-      height: 140,
-      background: '#FF625E',
-      opacity: 1,
-      padding: '10px 10px',
-      gap: 8,
-      borderTopLeftRadius: 18,
-      borderBottomLeftRadius: 18,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      zIndex: 1000,
-      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-    }}
-    className="social-media-fixed"
+    className="social-media-fixed-custom bg-kiendamas-coral "
+    style={{ width: 40, padding: '8px 6px', borderTopLeftRadius: 14, borderBottomLeftRadius: 14 }}
   >
     {iconList.map((icon) => (
-      <a
+      <div
         key={icon.alt}
-        href={icon.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ marginBottom: 10, display: 'flex' }}
+        className="group flex items-center mb-2 last:mb-0 relative "
+        style={{ minHeight: 28, cursor: 'pointer' }}
       >
-        <img src={icon.src} alt={icon.alt} style={{ width: 26, height: 26 }} />
-      </a>
+        <span
+          className="absolute right-10 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-300 bg-kiendamas-beige text-kiendamas-darkest font-semibold px-2 py-1 rounded shadow text-xs select-none"
+          style={{whiteSpace:'nowrap', zIndex: 10}}
+        >
+          {icon.alt}
+        </span>
+        <a
+          href={icon.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          tabIndex={0}
+          aria-label={icon.alt}
+          className="flex items-center"
+          style={{ zIndex: 20 }}
+        >
+          <img
+            src={icon.src}
+            alt={icon.alt}
+            className="w-6 h-6 rounded-full shadow bg-kiendamas-beige transition-transform duration-300 group-hover:-translate-x-2 group-hover:scale-110 hover:ring-2 hover:ring-kiendamas-gold"
+          />
+        </a>
+      </div>
     ))}
   </div>
 );

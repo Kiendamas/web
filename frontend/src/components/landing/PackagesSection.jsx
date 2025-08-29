@@ -76,10 +76,11 @@ const PackageCard = ({ paquete, formatPrice, navigate, subcategoria }) => {
 // Card de placeholder
 const PlaceholderCard = () => (
   <div className="package-card shrink-0 bg-white shadow-lg border border-gray-200 rounded-lg overflow-hidden w-full max-w-[260px] flex flex-col">
-    <div className="w-full p-1 aspect-[4/3] overflow-hidden flex items-center justify-center bg-gray-200">
-      <span className="text-gray-400 text-lg font-semibold font-raleway text-center px-2">
-        Próximamente un nuevo destino
-      </span>
+    <div
+      className="w-full p-1 aspect-[4/3] overflow-hidden flex items-center justify-center bg-gray-200 relative"
+      style={{ backgroundImage: 'url(/logo.jpg)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
+    >
+      
     </div>
     {/* Etiqueta de subcategoría para placeholder */}
     <div className="flex justify-center -mt-3 mb-1 z-10">
