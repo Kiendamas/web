@@ -139,7 +139,7 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
                   <img
                     src={logo}
                     alt="Kiendamas"
-                    className="h-10 w-10 rounded-full object-cover"
+                    className="h-12 w-12 rounded-full object-cover border-2 border-kiendamas-beige/30"
                     onError={(e) => {
                       e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23B8860B'/%3E%3Ctext x='20' y='25' text-anchor='middle' fill='white' font-family='Arial' font-size='16' font-weight='bold'%3EK%3C/text%3E%3C/svg%3E";
                     }}
