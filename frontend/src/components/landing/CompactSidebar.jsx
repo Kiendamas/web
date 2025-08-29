@@ -79,53 +79,73 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
               <div className="flex flex-col space-y-3">
                 {navigationItems.map((item) => {
                   const Icon = item.icon;
+                  // Wrapper para animar el label
+                  const baseBtn = (btnProps, iconClass, labelClass, labelBg, labelTextClass) => (
+                    <div className="group flex items-center relative">
+                      <button {...btnProps}>
+                        <Icon className={iconClass} />
+                      </button>
+                      <span
+                        className={`absolute left-12 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-300 ${labelBg} ${labelTextClass} ${labelClass}`}
+                        style={{whiteSpace:'nowrap', zIndex: 10}}
+                      >
+                        {item.label}
+                      </span>
+                    </div>
+                  );
                   if (item.id === 'servicios') {
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={(e) => {
+                    return baseBtn(
+                      {
+                        key: item.id,
+                        onClick: (e) => {
                           e.stopPropagation();
                           setShowServiciosModal(true);
-                        }}
-                        className={`p-3 rounded-lg transition-all duration-200 ${
+                        },
+                        className: `p-3 rounded-lg transition-all duration-200 ${
                           activeSection === item.id
                             ? 'bg-kiendamas-brown text-white'
                             : 'text-kiendamas-text hover:bg-kiendamas-lightBeige hover:text-kiendamas-brown'
-                        }`}
-                        title={item.label}
-                      >
-                        <Icon className="h-4 w-4" />
-                      </button>
+                        }`,
+                        title: item.label
+                      },
+                      'h-4 w-4',
+                      'px-2 py-1 rounded shadow text-xs font-semibold',
+                      'bg-kiendamas-beige',
+                      'text-kiendamas-darkest'
                     );
                   }
                   if (item.id === 'mediospago') {
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={(e) => {
+                    return baseBtn(
+                      {
+                        key: item.id,
+                        onClick: (e) => {
                           e.stopPropagation();
                           setShowMediosPagoModal(true);
-                        }}
-                        className={`p-3 rounded-lg transition-all duration-200 text-kiendamas-text hover:bg-kiendamas-lightBeige hover:text-kiendamas-brown`}
-                        title={item.label}
-                      >
-                        <Icon className="h-4 w-4 text-kiendamas-gold" />
-                      </button>
+                        },
+                        className: `p-3 rounded-lg transition-all duration-200 text-kiendamas-text hover:bg-kiendamas-lightBeige hover:text-kiendamas-brown`,
+                        title: item.label
+                      },
+                      'h-4 w-4 text-kiendamas-gold',
+                      'px-2 py-1 rounded shadow text-xs font-semibold',
+                      'bg-kiendamas-beige',
+                      'text-kiendamas-darkest'
                     );
                   }
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => handleSectionClick(item.id)}
-                      className={`p-3 rounded-lg transition-all duration-200 ${
+                  return baseBtn(
+                    {
+                      key: item.id,
+                      onClick: () => handleSectionClick(item.id),
+                      className: `p-3 rounded-lg transition-all duration-200 ${
                         activeSection === item.id
                           ? 'bg-kiendamas-brown text-white'
                           : 'text-kiendamas-text hover:bg-kiendamas-lightBeige hover:text-kiendamas-brown'
-                      }`}
-                      title={item.label}
-                    >
-                      <Icon className="h-4 w-4" />
-                    </button>
+                      }`,
+                      title: item.label
+                    },
+                    'h-4 w-4',
+                    'px-2 py-1 rounded shadow text-xs font-semibold',
+                    'bg-kiendamas-beige',
+                    'text-kiendamas-darkest'
                   );
                 })}
               </div>
