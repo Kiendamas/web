@@ -176,31 +176,40 @@ const PaqueteDetallesPage = () => {
               {/* Contenido de las pestañas */}
               <div className="min-h-[250px] mb-6">
                 {activeTab === 'descripcion' && (
-                  <div className="text-gray-700 leading-relaxed font-raleway text-sm break-words flex flex-col">
-                    {/* Mostrar cada punto en un renglón, mayúscula inicial. Si no hay punto, solo un renglón que hace wrap */}
-                    {paquete.descripcion
-                      ? (() => {
-                          const frases = paquete.descripcion.split('.').filter(f => f.trim().length > 0);
-                          if (frases.length === 0) {
-                            return <span>{paquete.descripcion.trim().charAt(0).toUpperCase() + paquete.descripcion.trim().slice(1)}</span>;
-                          } else {
-                            return frases.map((frase, idx, arr) => (
-                              <span key={idx} style={{ marginBottom: idx < arr.length - 1 ? 2 : 0, wordBreak: 'break-word' }}>
-                                {frase.trim().charAt(0).toUpperCase() + frase.trim().slice(1)}{idx < arr.length - 1 ? '.' : ''}
-                              </span>
-                            ));
-                          }
-                        })()
-                      : 'Sin descripción disponible.'}
+                  <div className="space-y-4">
+                    {/* Título de sección */}
+                    <div className="bg-kiendamas-beige p-3 rounded">
+                      <h3 className="font-bold text-kiendamas-text text-sm font-raleway uppercase tracking-wide">
+                        DETALLES DEL PAQUETE
+                      </h3>
+                    </div>
+                    <div className="text-gray-700 leading-relaxed font-raleway text-sm break-words flex flex-col">
+                      {/* Mostrar cada punto en un renglón, mayúscula inicial. Si no hay punto, solo un renglón que hace wrap */}
+                      {paquete.descripcion
+                        ? (() => {
+                            const frases = paquete.descripcion.split('.').filter(f => f.trim().length > 0);
+                            if (frases.length === 0) {
+                              return <span>{paquete.descripcion.trim().charAt(0).toUpperCase() + paquete.descripcion.trim().slice(1)}</span>;
+                            } else {
+                              return frases.map((frase, idx, arr) => (
+                                <span key={idx} style={{ wordBreak: 'break-word' }}>
+                                  {frase.trim().charAt(0).toUpperCase() + frase.trim().slice(1)}{idx < arr.length - 1 ? '.' : ''}
+                                  {idx < arr.length - 1 && <br />}
+                                </span>
+                              ));
+                            }
+                          })()
+                        : 'Sin descripción disponible.'}
+                    </div>
                   </div>
                 )}
-                
+
                 {activeTab === 'incluye' && (
                   <div className="space-y-4">
                     {/* Título de sección como en la imagen */}
                     <div className="bg-kiendamas-beige p-3 rounded">
                       <h3 className="font-bold text-kiendamas-text text-sm font-raleway uppercase tracking-wide">
-                        DESCRIPCIÓN
+                        LO QUE INCLUYE ESTE PAQUETE
                       </h3>
                     </div>
                     {/* Contenido de qué incluye */}
@@ -212,8 +221,9 @@ const PaqueteDetallesPage = () => {
                             return <span>{paquete.campoVariable.trim().charAt(0).toUpperCase() + paquete.campoVariable.trim().slice(1)}</span>;
                           } else {
                             return frases.map((frase, idx, arr) => (
-                              <span key={idx} style={{ marginBottom: idx < arr.length - 1 ? 2 : 0, wordBreak: 'break-word' }}>
+                              <span key={idx} style={{ wordBreak: 'break-word' }}>
                                 {frase.trim().charAt(0).toUpperCase() + frase.trim().slice(1)}{idx < arr.length - 1 ? '.' : ''}
+                                {idx < arr.length - 1 && <br />}
                               </span>
                             ));
                           }
