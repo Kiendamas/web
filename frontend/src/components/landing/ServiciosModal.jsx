@@ -1,20 +1,20 @@
 import {
-  UserGroupIcon,
-  GlobeAltIcon,
   ShieldCheckIcon,
   SparklesIcon,
   MapIcon,
-  TruckIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
+import { LiaTaxiSolid } from 'react-icons/lia';
+import { LuPlane } from 'react-icons/lu';
+import { BsPeople } from 'react-icons/bs';
 
 const servicios = [
-  { icon: GlobeAltIcon, title: 'VIAJES A MEDIDA' },
-  { icon: UserGroupIcon, title: 'PAQUETES GRUPALES' },
+  { icon: LuPlane, title: 'VIAJES A MEDIDA' },
+  { icon: BsPeople, title: 'PAQUETES GRUPALES' },
   { icon: ShieldCheckIcon, title: 'SEGUROS' },
   { icon: SparklesIcon, title: 'EXPERIENCIAS TEMÁTICAS' },
   { icon: MapIcon, title: 'EXCURSIONES' },
-  { icon: TruckIcon, title: 'TRASLADOS' },
+  { icon: LiaTaxiSolid, title: 'TRASLADOS' },
 ];
 
 const ServiciosModal = ({ open, onClose }) => {

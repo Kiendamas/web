@@ -1,3 +1,65 @@
+/* Redes sociales flotantes custom */
+.social-media-fixed-custom {
+  position: fixed;
+  top: 80px;
+  right: 0;
+  width: 44px;
+  background: #805429; /* kiendamas-darkBrown */
+  opacity: 1;
+  padding: 8px 6px;
+  gap: 8px;
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.social-media-fixed-custom a {
+  margin-bottom: 8px;
+}
+.social-media-fixed-custom a:last-child {
+  margin-bottom: 0;
+}
+.social-media-fixed-custom img {
+  transition: transform 0.3s cubic-bezier(.4,1.4,.6,1.1), box-shadow 0.22s;
+}
+.social-media-fixed-custom a:hover img,
+.social-media-fixed-custom a:focus img {
+  box-shadow: 0 4px 16px 0 #F2E2CE, 0 0 0 2px #E6AF32;
+  z-index: 2;
+}
+.social-media-fixed-custom a span {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(8px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.social-media-fixed-custom a:hover span,
+.social-media-fixed-custom a:focus span {
+  opacity: 1;
+  transform: translateX(0);
+}
+@media (max-width: 768px) {
+  .social-media-fixed-custom {
+    top: auto !important;
+    bottom: 12px !important;
+    right: 0 !important;
+    width: 32px !important;
+    height: auto !important;
+    padding: 4px 2px !important;
+    border-radius: 12px 0 0 12px !important;
+    gap: 4px !important;
+  }
+  .social-media-fixed-custom a img {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  .social-media-fixed-custom a span {
+    display: none;
+  }
+}
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;

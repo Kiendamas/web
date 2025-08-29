@@ -60,19 +60,19 @@ const CategoryFilter = ({ onFilterChange, activeFilter = null, userMenuOpen = fa
       }`}
     >
   <div className="w-full max-w-5xl mx-auto px-2 sm:px-6 py-2">
-        <div className="flex bg-white rounded-full shadow-2xl overflow-hidden border border-kiendamas-text/20">
+  <div className={`flex bg-white shadow-2xl overflow-hidden border border-kiendamas-text/20 ${isSticky ? 'rounded-full' : 'rounded-full'}`}>
           {isLoading ? (
             <div className="flex-1 text-center py-3 text-xs text-gray-400">Cargando...</div>
           ) : (
             <>
               {/* Mostrar solo el desplegable si hay más de 3 categorías, en todas las vistas */}
-              <div className={`w-full flex justify-center ${isSticky ? 'gap-0 sm:gap-0' : 'gap-0.5 sm:gap-1'} max-w-full overflow-x-auto px-0 sm:px-1 ${isSticky ? 'sm:rounded-full' : ''}`}>
+              <div className={`w-full flex justify-center ${isSticky ? 'gap-0 sm:gap-0' : 'gap-0.5 sm:gap-1'} max-w-full overflow-x-auto px-0 sm:px-1`}>
                 {/* Si hay más de 3 categorías, mostrar 'Todos' y 3 categorías, si no, solo las categorías */}
                 {categories.length > 4 ? (
                   <>
-                    <div className={`relative min-w-[70px] max-w-[100px] w-full sm:min-w-[90px] sm:max-w-[140px] sm:w-full ${isSticky ? 'sm:grow sm:basis-0' : ''} ${isSticky ? 'rounded-l-full' : ''} ${activeFilter === null ? 'bg-[#8B5E3C] text-white' : ''}`}>
+                    <div className={`relative min-w-[70px] max-w-[100px] w-full sm:min-w-[90px] sm:max-w-[140px] sm:w-full ${isSticky ? 'sm:grow sm:basis-0' : ''} rounded-l-full ${activeFilter === null ? 'bg-[#8B5E3C] text-white' : ''}`}>
                       <select
-                        className={`py-1.5 text-[11px] font-medium rounded-l-full border border-gray-300 outline-none shadow w-full sm:py-3 sm:text-sm
+                        className={`py-1.5 text-[11px] font-medium rounded-l-full  outline-none shadow w-full sm:py-3 sm:text-sm
                           ${activeFilter === null ? 'bg-[#8B5E3C] text-white' : 'bg-white text-kiendamas-text hover:bg-kiendamas-cream/50 hover:text-kiendamas-darkBrown'}`}
                         onChange={e => handleFilterClick(e.target.value)}
                         value={categories[0].id}
@@ -92,7 +92,6 @@ const CategoryFilter = ({ onFilterChange, activeFilter = null, userMenuOpen = fa
                       const isLast = index === arr.length - 1;
                       // Cuando sticky, el último se estira hasta el borde
                       const stickyGrow = isSticky && isLast ? 'sm:grow sm:basis-0' : '';
-                      const stickyRound = isSticky && isLast ? 'rounded-none rounded-r-full' : '';
                       return (
                         <button
                           key={category.id}
@@ -101,9 +100,8 @@ const CategoryFilter = ({ onFilterChange, activeFilter = null, userMenuOpen = fa
                             sm:py-3 sm:text-sm
                             ${stickyGrow}
                             ${isActive
-                              ? `bg-[#8B5E3C] text-white shadow-md ${stickyRound}`
-                              : 'text-kiendamas-text hover:bg-kiendamas-cream/50 hover:text-kiendamas-darkBrown hover:shadow-sm'}
-                            ${!isActive && isLast ? 'rounded-r-full' : ''}`}
+                              ? `bg-[#8B5E3C] text-white shadow-md` : 'text-kiendamas-text hover:bg-kiendamas-cream/50 hover:text-kiendamas-darkBrown hover:shadow-sm'}
+                            ${isLast ? 'rounded-r-full' : ''}`}
                           style={{
                             minWidth: '70px',
                             maxWidth: '100px',
@@ -130,7 +128,6 @@ const CategoryFilter = ({ onFilterChange, activeFilter = null, userMenuOpen = fa
                     const isLast = index === arr.length - 1;
                     // Cuando sticky, el primero y el último se estiran hasta el borde
                     const stickyGrow = isSticky && (isFirst || isLast) ? 'sm:grow sm:basis-0' : '';
-                    const stickyRound = isSticky && isFirst ? 'rounded-none rounded-l-full' : isSticky && isLast ? 'rounded-none rounded-r-full' : '';
                     return (
                       <button
                         key={category.id}
@@ -139,10 +136,9 @@ const CategoryFilter = ({ onFilterChange, activeFilter = null, userMenuOpen = fa
                           sm:py-3 sm:text-sm
                           ${stickyGrow}
                           ${isActive
-                            ? `bg-[#8B5E3C] text-white shadow-md ${stickyRound}`
-                            : 'text-kiendamas-text hover:bg-kiendamas-cream/50 hover:text-kiendamas-darkBrown hover:shadow-sm'}
-                          ${!isActive && isLast ? 'rounded-r-full' : ''}
-                          ${!isActive && isFirst ? 'rounded-none' : ''}`}
+                            ? `bg-[#8B5E3C] text-white shadow-md` : 'text-kiendamas-text hover:bg-kiendamas-cream/50 hover:text-kiendamas-darkBrown hover:shadow-sm'}
+                          ${isFirst ? 'rounded-l-full' : ''}
+                          ${isLast ? 'rounded-r-full' : ''}`}
                         style={{
                           minWidth: '70px',
                           maxWidth: '100px',
