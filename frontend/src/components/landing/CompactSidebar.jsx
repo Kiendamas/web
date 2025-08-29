@@ -12,6 +12,7 @@ import {
   PhoneIcon,
   ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
+import logo from '../../assets/kiendamas.png'
 
 const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -136,7 +137,7 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
               <div className="flex items-center justify-between px-4 py-6 border-b border-kiendamas-brown/20">
                 <div className="flex items-center space-x-3">
                   <img
-                    src="/src/assets/logo.jpg"
+                    src={logo}
                     alt="Kiendamas"
                     className="h-10 w-10 rounded-full object-cover"
                     onError={(e) => {
