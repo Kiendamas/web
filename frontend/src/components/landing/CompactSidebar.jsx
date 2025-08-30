@@ -105,7 +105,7 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
                             ? 'bg-kiendamas-brown text-white'
                             : 'text-kiendamas-text hover:bg-kiendamas-lightBeige hover:text-kiendamas-brown'
                         }`,
-                        title: item.label
+                        // title eliminado para evitar tooltip nativo
                       },
                       'h-4 w-4',
                       'px-2 py-1 rounded shadow text-xs font-semibold',
@@ -122,7 +122,7 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
                           setShowMediosPagoModal(true);
                         },
                         className: `p-3 rounded-lg transition-all duration-200 text-kiendamas-text hover:bg-kiendamas-lightBeige hover:text-kiendamas-brown`,
-                        title: item.label
+                        // title eliminado para evitar tooltip nativo
                       },
                       'h-4 w-4 text-kiendamas-gold',
                       'px-2 py-1 rounded shadow text-xs font-semibold',
@@ -139,7 +139,7 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
                           ? 'bg-kiendamas-brown text-white'
                           : 'text-kiendamas-text hover:bg-kiendamas-lightBeige hover:text-kiendamas-brown'
                       }`,
-                      title: item.label
+                      // title eliminado para evitar tooltip nativo
                     },
                     'h-4 w-4',
                     'px-2 py-1 rounded shadow text-xs font-semibold',
