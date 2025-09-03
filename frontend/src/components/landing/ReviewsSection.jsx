@@ -42,21 +42,25 @@ const ReviewsSection = () => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
 
+    // Siempre renderizar exactamente 5 estrellas
     for (let i = 1; i <= 5; i++) {
       if (i <= fullStars) {
+        // Estrella llena (pintada)
         stars.push(
           <StarIcon key={i} className="h-5 w-5 text-yellow-400 fill-current" />
         );
       } else if (i === fullStars + 1 && hasHalfStar) {
+        // Media estrella
         stars.push(
           <div key={i} className="relative h-5 w-5">
-            <StarOutlineIcon className="h-5 w-5 text-yellow-400 absolute" />
+            <StarOutlineIcon className="h-5 w-5 text-gray-300 absolute" />
             <StarIcon className="h-5 w-5 text-yellow-400 fill-current absolute" style={{ clipPath: 'inset(0 50% 0 0)' }} />
           </div>
         );
       } else {
+        // Estrella vacía (sin pintar)
         stars.push(
-          <StarOutlineIcon key={i} className="h-5 w-5 text-yellow-400" />
+          <StarOutlineIcon key={i} className="h-5 w-5 text-gray-300" />
         );
       }
     }
@@ -70,6 +74,13 @@ const ReviewsSection = () => {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const formatReviewText = (text) => {
+    if (!text) return '';
+    // Convertir todo a minúscula y luego capitalizar la primera letra
+    const formattedText = text.toLowerCase();
+    return formattedText.charAt(0).toUpperCase() + formattedText.slice(1);
   };
 
   if (isLoading) {
@@ -131,12 +142,12 @@ const ReviewsSection = () => {
             <div className="relative z-10 text-center">
               {/* Stars */}
               <div className="flex justify-center items-center mb-6">
-                {renderStars(currentReview.calificacion)}
+                {renderStars(currentReview.rating)}
               </div>
               
               {/* Review Text */}
               <blockquote className="text-lg md:text-xl text-gray-700 font-raleway leading-relaxed mb-8 min-h-[120px] flex items-center justify-center">
-                <p className="italic">"{currentReview.comentario}"</p>
+                <p className="italic">"{formatReviewText(currentReview.comentario)}"</p>
               </blockquote>
               
               {/* Author Info */}
