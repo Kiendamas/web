@@ -55,7 +55,7 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
       }`}>
         <div className="flex h-full flex-col overflow-y-auto">
           {/* Header del Sidebar */}
-          <div className="flex items-center justify-between px-6 py-6 bg-kiendamas-darkBrown border-b border-kiendamas-brown/30">
+          <div className="flex items-center mt-10 justify-between px-6 py-6 bg-kiendamas-darkBrown border-b border-kiendamas-brown/30">
             <div className="flex items-center space-x-3">
               <img
                 src="/logo.jpg"

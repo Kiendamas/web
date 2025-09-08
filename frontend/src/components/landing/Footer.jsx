@@ -1,6 +1,4 @@
 import { HeartIcon } from '@heroicons/react/24/outline';
-import logonegroinno from '../../assets/logonegroinno.png';
-import Logoparaweb3 from '../../assets/Logoparaweb3.png';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -140,36 +138,15 @@ const Footer = () => {
               </div>
 
               {/* Logos de propaganda/certificaciones */}
-              <div className="flex flex-wrap gap-3 mt-12">
-                <a
-                  href="https://www.innoweb.com.ar/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white/10 px-3 py-1 rounded flex items-center justify-center"
-                  style={{ height: '64px' }}
-                >
-                  <img
-                    src={logonegroinno}
-                    alt="Innoweb logo"
-                    className="h-24 w-auto"
-                    style={{ maxHeight: '48px' }}
-                  />
-                </a>
-                <a
-                  href="https://www.instagram.com/dgneaguilera/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white/10 px-3 py-1 rounded flex items-center justify-center"
-                  style={{ height: '64px' }}
-                >
-                  <img
-                    src={Logoparaweb3}
-                    alt="Natalia logo"
-                    className="h-48 w-auto"
-                    style={{ maxHeight: '64px' }}
-                  />
-                </a>
-               
+              <div className="flex flex-wrap gap-3">
+                <div className="bg-white/10 px-3 py-1 rounded text-xs font-raleway">
+                  NATI 
+                </div>
+                <div className="bg-white/10 px-3 py-1 rounded text-xs font-raleway">
+                  INNOWEB                </div>
+                <div className="bg-white/10 px-3 py-1 rounded text-xs font-raleway">
+                  PROPAGANDA
+                </div>
               </div>
             </div>
           </div>
