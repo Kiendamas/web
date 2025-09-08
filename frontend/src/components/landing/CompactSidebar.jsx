@@ -54,13 +54,13 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
       {/* Overlay cuando está expandido */}
       {isExpanded && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-25 z-40"
+          className="fixed inset-0 bg-black bg-opacity-25 z-[9998]"
           onClick={() => toggleExpanded(false)}
         />
       )}
 
       {/* Sidebar principal que cambia según el estado */}
-      <div className={`fixed left-0 top-0 h-full z-50 transition-all duration-300 ${
+      <div className={`fixed left-0 top-0 h-full z-[9999] transition-all duration-300 ${
         isExpanded ? 'w-75' : 'w-12'
       }`}>
         <div className="bg-kiendamas-beige h-full shadow-lg">
@@ -76,7 +76,7 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
               </button>
 
               {/* Iconos de navegación */}
-              <div className="flex flex-col space-y-3">
+              <div className="flex flex-col space-y-3 ">
                 {navigationItems.map((item) => {
                   const Icon = item.icon;
                   // Wrapper para animar el label
@@ -154,7 +154,7 @@ const CompactSidebar = ({ onSectionClick, activeSection, onExpandChange }) => {
             // Vista expandida - panel completo
             <div className="flex h-full flex-col overflow-y-auto">
               {/* Header del panel expandido */}
-              <div className="flex items-center justify-between px-4 py-6 border-b border-kiendamas-brown/20">
+              <div className="flex items-center justify-between px-4 py-6 border-b border-kiendamas-brown/20 ">
                 <div className="flex items-center space-x-3">
                   <img
                     src={logo}
