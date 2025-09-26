@@ -1,8 +1,8 @@
 import React from 'react';
 import AboutHistoriaButton from './AboutHistoriaButton';
-import marianaImg from '../../assets/MARIANA.png';
-import diegoImg from '../../assets/DIEGO.png';
-import virginiaImg from '../../assets/VIRGINIA.png';
+import marianaImg from '../../assets/mariana.jpeg';
+import diegoImg from '../../assets/diego.jpeg';
+import virginiaImg from '../../assets/virginia.jpeg';
 
 const AboutSection = () => {
   const teamMembers = [
@@ -10,19 +10,19 @@ const AboutSection = () => {
       id: 1,
       name: 'MARIANA',
       image: marianaImg,
-      subtitle: 'mariana@kiendamas.com.ar'
+      subtitle: 'mariana.kiendamas@gmail.com'
     },
     {
       id: 2,
       name: 'DIEGO',
       image: diegoImg,
-      subtitle: 'diego@kiendamas.com.ar'
+      subtitle: 'diego.kiendamas@gmail.com'
     },
     {
       id: 3,
       name: 'VIRGINIA',
       image: virginiaImg,
-      subtitle: 'virginia@kiendamas.com.ar'
+      subtitle: 'virginia.kiendamas@gmail.com'
     }
   ];
 
@@ -48,11 +48,11 @@ const AboutSection = () => {
                 className="flex flex-col items-center"
               >
                 {/* Card con imagen */}
-                <div className="bg-white rounded-3xl p-6 mb-6 shadow-lg hover:shadow-xl transition-shadow duration-300 w-64 h-64 flex items-center justify-center">
+                <div className=" rounded-3xl p-6 mb-6 shadow-lg hover:shadow-xl transition-shadow duration-300 w-64 h-64 flex items-center justify-center">
                   <img
                     src={member.image}
                     alt={member.name}
-                    className="w-40 h-40 object-contain"
+                    className="w-full h-full object-cover rounded-2xl"
                     onError={(e) => {
                       e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Crect width='160' height='160' fill='%23f3f4f6'/%3E%3Ctext x='80' y='80' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='12'%3E" + member.name + "%3C/text%3E%3C/svg%3E";
                     }}
