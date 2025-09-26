@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Static files example (uncomment if needed)
-// app.use('/images', express.static(path.join(process.cwd(), 'images')));
+
 
 // Multer solo se usa en rutas específicas (ejemplo en /upload y paquetesRoutes)
 
