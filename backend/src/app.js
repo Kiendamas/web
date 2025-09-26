@@ -29,10 +29,6 @@ const upload = multer({ dest: 'uploads/' });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files example (uncomment if needed)
-
-
-// Multer solo se usa en rutas específicas (ejemplo en /upload y paquetesRoutes)
 
 // CORS configuration
 app.use(cors({
