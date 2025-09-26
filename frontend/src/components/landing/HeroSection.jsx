@@ -14,7 +14,7 @@ const HeroSection = () => {
   const { currentSlide, isVideoPlaying } = useSelector(state => state.heroSlides);
   const { data: heroSlides = [], isLoading, error } = useGetHeroSlidesQuery();
 
-  // Slides de ejemplo por defecto si no hay datos del backend
+  
   const defaultSlides = [
     {
       id: 1,
