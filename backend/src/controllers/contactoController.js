@@ -6,7 +6,7 @@ export const create = async (req, res, next) => {
     const contacto = await Contacto.create(req.body);
     // Enviar email con nodemailer
     await sendMail({
-      to: process.env.MAIL_USER,
+      to: 'consultas.kiendamas@gmail.com',
       subject: 'Nuevo mensaje de contacto',
       text: `Nombre: ${contacto.nombre}\nEmail: ${contacto.email}\nMensaje: ${contacto.mensaje}`,
     });
