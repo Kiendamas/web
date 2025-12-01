@@ -14,12 +14,38 @@ const HeroSection = () => {
   const { currentSlide, isVideoPlaying } = useSelector(state => state.heroSlides);
   const { data: heroSlides = [], isLoading, error } = useGetHeroSlidesQuery();
 
-  
+
+  // Slides de ejemplo por defecto si no hay datos del backend
+  // Helper para optimizar URLs de Cloudinary
+  const optimizeCloudinaryUrl = (url, width = 1920) => {
+    if (!url) return url;
+    
+    // Si es una URL de Cloudinary, agregar transformaciones
+    if (url.includes('cloudinary.com')) {
+      // Insertar transformaciones después de /upload/
+      return url.replace('/upload/', `/upload/q_auto:good,f_auto,w_${width},c_limit/`);
+    }
+    
+    // Si es Unsplash, optimizar parámetros
+    if (url.includes('unsplash.com')) {
+      // Usar parámetros más eficientes
+      const urlObj = new URL(url);
+      urlObj.searchParams.set('auto', 'format');
+      urlObj.searchParams.set('fit', 'crop');
+      urlObj.searchParams.set('w', width.toString());
+      urlObj.searchParams.set('q', '75'); // Calidad 75% es suficiente
+      return urlObj.toString();
+    }
+    
+    return url;
+  };
+
+
   const defaultSlides = [
     {
       id: 1,
       mediaType: 'image',
-      mediaUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+      mediaUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=75',
       title: 'Descubre Peru',
       subtitle: 'Aventuras inolvidables te esperan',
       buttonText: 'Más info',
@@ -28,7 +54,7 @@ const HeroSection = () => {
     {
       id: 2,
       mediaType: 'image',
-      mediaUrl: 'https://images.unsplash.com/photo-1531572753322-ad063cecc140?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2076&q=80',
+      mediaUrl: 'https://images.unsplash.com/photo-1531572753322-ad063cecc140?auto=format&fit=crop&w=1920&q=75',
       title: 'Machu Picchu',
       subtitle: 'La ciudadela perdida de los Incas',
       buttonText: 'Explorar',
@@ -123,20 +149,34 @@ const HeroSection = () => {
             }`}
           >
             {slide.mediaType === 'image' ? (
-              <div
-                className="h-full bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url(${slide.mediaUrl})` }}
-              />
+              <>
+                {/* Preload para la imagen actual */}
+                {index === currentSlide && (
+                  <link 
+                    rel="preload" 
+                    as="image" 
+                    href={optimizeCloudinaryUrl(slide.mediaUrl, 1920)} 
+                  />
+                )}
+                <div
+                  className="h-full bg-cover bg-center bg-no-repeat"
+                  style={{ 
+                    backgroundImage: `url(${optimizeCloudinaryUrl(slide.mediaUrl, 1920)})`,
+                    // Lazy loading para slides no visibles
+                    loading: index === currentSlide ? 'eager' : 'lazy'
+                  }}
+                />
+              </>
             ) : (
               <div className="relative h-full">
                 <video
                   className="h-full w-full object-cover"
-                  src={slide.mediaUrl}
+                  src={optimizeCloudinaryUrl(slide.mediaUrl, 1920)}
                   autoPlay
                   muted
                   loop
                   playsInline
-                  preload="metadata"
+                  preload={index === currentSlide ? "auto" : "none"}
                   onLoadedData={() => {
                     if (index === currentSlide) {
                       dispatch(setVideoPlaying(true));
@@ -157,9 +197,10 @@ const HeroSection = () => {
                     {/* Intentar mostrar poster si existe */}
                     {slide.posterUrl && (
                       <img 
-                        src={slide.posterUrl}
+                        src={optimizeCloudinaryUrl(slide.posterUrl, 1920)}
                         alt="Video preview"
                         className="h-full w-full object-cover absolute inset-0"
+                        loading="lazy"
                         onError={(e) => {
                           e.target.style.display = 'none';
                         }}
@@ -169,7 +210,7 @@ const HeroSection = () => {
                     {/* Video preview (primer frame) */}
                     <video
                       className="h-full w-full object-cover absolute inset-0"
-                      src={slide.mediaUrl}
+                      src={optimizeCloudinaryUrl(slide.mediaUrl, 1920)}
                       preload="metadata"
                       muted
                       style={{ display: slide.posterUrl ? 'none' : 'block' }}
