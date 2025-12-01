@@ -14,7 +14,6 @@ const HeroSection = () => {
   const { currentSlide, isVideoPlaying } = useSelector(state => state.heroSlides);
   const { data: heroSlides = [], isLoading, error } = useGetHeroSlidesQuery();
 
-
   // Slides de ejemplo por defecto si no hay datos del backend
   // Helper para optimizar URLs de Cloudinary
   const optimizeCloudinaryUrl = (url, width = 1920) => {
@@ -39,7 +38,6 @@ const HeroSection = () => {
     
     return url;
   };
-
 
   const defaultSlides = [
     {
