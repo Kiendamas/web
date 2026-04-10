@@ -92,7 +92,7 @@ const ContactSection = () => {
                   Puerto Norte - Rosario
                 </div>
                 <div className="flex items-center justify-center text-center">
-                  +54 9 3415858303
+                  +54 9 341 2 613097 
                 </div>
                 <div className="flex items-center justify-center text-center">
                   kiendamas_viajes
