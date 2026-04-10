@@ -50,7 +50,7 @@ const PaqueteDetallesPage = () => {
 
   const handleWhatsAppContact = () => {
     const message = `Hola! Me interesa el paquete "${paquete.nombre}" por ${formatPrice(paquete.precio)}. ¿Podrían darme más información?`;
-    const phoneNumber = "5493512345678"; // Reemplazar con el número real de WhatsApp
+    const phoneNumber = "5493412613097"; // Reemplazar con el número real de WhatsApp
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
