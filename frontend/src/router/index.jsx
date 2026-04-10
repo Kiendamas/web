@@ -1,13 +1,20 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import ProtectedRoute from '../components/layout/ProtectedRoute';
 import LandingPage from '../pages/LandingPage';
-import PaqueteDetallesPage from '../pages/PaqueteDetallesPage';
-import LoginPage from '../pages/LoginPage';
-import RegisterPage from '../pages/RegisterPage';
-import ForgotPasswordPage from '../pages/ForgotPasswordPage';
-import ResetPasswordPage from '../pages/ResetPasswordPage';
-import DashboardPage from '../pages/DashboardPage';
-import UsersPage from '../pages/UsersPage';
+import Loading from '../components/ui/Loading';
+
+const PaqueteDetallesPage = lazy(() => import('../pages/PaqueteDetallesPage'));
+const LoginPage = lazy(() => import('../pages/LoginPage'));
+const RegisterPage = lazy(() => import('../pages/RegisterPage'));
+const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'));
+const DashboardPage = lazy(() => import('../pages/DashboardPage'));
+const UsersPage = lazy(() => import('../pages/UsersPage'));
+
+const LazyPage = ({ children }) => (
+  <Suspense fallback={<Loading text="Cargando..." />}>{children}</Suspense>
+);
 
 export const router = createBrowserRouter([
   {
@@ -16,29 +23,29 @@ export const router = createBrowserRouter([
   },
   {
     path: '/paquete/:id',
-    element: <PaqueteDetallesPage />,
+    element: <LazyPage><PaqueteDetallesPage /></LazyPage>,
   },
   {
     path: '/login',
-    element: <LoginPage />,
+    element: <LazyPage><LoginPage /></LazyPage>,
   },
   {
     path: '/register',
-    element: <RegisterPage />,
+    element: <LazyPage><RegisterPage /></LazyPage>,
   },
   {
     path: '/forgot-password',
-    element: <ForgotPasswordPage />,
+    element: <LazyPage><ForgotPasswordPage /></LazyPage>,
   },
   {
     path: '/reset-password',
-    element: <ResetPasswordPage />,
+    element: <LazyPage><ResetPasswordPage /></LazyPage>,
   },
   {
     path: '/dashboard',
     element: (
       <ProtectedRoute>
-        <DashboardPage />
+        <LazyPage><DashboardPage /></LazyPage>
       </ProtectedRoute>
     ),
   },
@@ -46,7 +53,7 @@ export const router = createBrowserRouter([
     path: '/users',
     element: (
       <ProtectedRoute adminOnly>
-        <UsersPage />
+        <LazyPage><UsersPage /></LazyPage>
       </ProtectedRoute>
     ),
   },

@@ -23,7 +23,16 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        manualChunks: {
+          // Librerías core de React
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          // Redux y estado
+          'vendor-redux': ['@reduxjs/toolkit', 'react-redux', 'redux-persist'],
+          // UI y formularios
+          'vendor-ui': ['@headlessui/react', '@heroicons/react', 'lucide-react', 'react-icons', 'react-hot-toast', 'react-hook-form'],
+          // HTTP
+          'vendor-http': ['axios'],
+        },
       },
     },
   },

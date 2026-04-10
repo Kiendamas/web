@@ -29,6 +29,7 @@ const PackageCard = ({ paquete, formatPrice, navigate, subcategoria }) => {
           src={paquete.imagenes?.[0] || '/placeholder-travel.jpg'}
           alt={paquete.nombre}
           className="w-full h-full object-cover object-center"
+          loading="lazy"
           onError={(e) => {
             e.currentTarget.src =
               "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='%23f3f4f6'/%3E%3Ctext x='128' y='128' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='14'%3EImagen no disponible%3C/text%3E%3C/svg%3E";
