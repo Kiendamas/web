@@ -39,12 +39,18 @@ export async function testConnection() {
 }
 
 // Helper para sincronizar modelos
-export async function syncModels(force = true) {
+export async function syncModels(force = false) {
   try {
-    await sequelize.sync({ force });
+    if (force) {
+      await sequelize.sync({ force: true });
+    } else {
+      // alter: true agrega columnas/tablas nuevas sin borrar datos existentes
+      await sequelize.sync({ alter: true });
+    }
     console.log('✅ Modelos sincronizados');
   } catch (error) {
     console.error('❌ Error al sincronizar modelos:', error.message);
+    throw error;
   }
 }
 
