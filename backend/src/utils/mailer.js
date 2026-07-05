@@ -1,6 +1,6 @@
 // El transporter y su validación viven en config/mailer.js.
 // Este módulo expone las funciones de envío de emails que usa el resto de la app.
-import transporter from '../config/mailer.js';
+import getTransporter, { getMailEnv } from '../config/mailer.js';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -9,8 +9,8 @@ const isDev = process.env.NODE_ENV === 'development';
 // ---------------------------------------------------------------------------
 export async function sendMail({ to, subject, text, html, from }) {
   try {
-    const info = await transporter.sendMail({
-      from: from || `"Kiendamas Turismo" <${process.env.MAIL_USER}>`,
+    const info = await getTransporter().sendMail({
+      from: from || `"Kiendamas Turismo" <${getMailEnv('USER')}>`,
       to,
       subject,
       text,
@@ -95,4 +95,4 @@ export async function sendPasswordRecoveryMail(to, token) {
   });
 }
 
-export default transporter;
+export default getTransporter;

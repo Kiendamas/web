@@ -1,19 +1,35 @@
+import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 
-// ---------------------------------------------------------------------------
-// Validación de variables de entorno
-// No detiene la app, pero logea claramente los problemas para facilitar el debug.
-// ---------------------------------------------------------------------------
-const requiredVars = ['MAIL_HOST', 'MAIL_PORT', 'MAIL_USER', 'MAIL_PASS'];
-const missingVars = requiredVars.filter((v) => !process.env[v]);
+dotenv.config();
 
-if (missingVars.length > 0) {
+// Soporta MAIL_* (preferido) y SMTP_* (legacy / .env.example anterior)
+export function getMailEnv(name) {
+  return process.env[`MAIL_${name}`] || process.env[`SMTP_${name}`] || '';
+}
+
+export function getMailConfig() {
+  return {
+    host: getMailEnv('HOST'),
+    port: Number(getMailEnv('PORT')),
+    user: getMailEnv('USER'),
+    pass: getMailEnv('PASS'),
+  };
+}
+
+const mailConfig = getMailConfig();
+const missingFields = ['host', 'port', 'user', 'pass'].filter(
+  (field) => !mailConfig[field] || Number.isNaN(mailConfig.port)
+);
+
+if (missingFields.length > 0) {
   console.error(
-    `⚠️  [Mailer] Variables de entorno faltantes: ${missingVars.join(', ')}.\n` +
+    `⚠️  [Mailer] Configuración SMTP incompleta (${missingFields.join(', ')}).\n` +
+      '   Definí MAIL_HOST, MAIL_PORT, MAIL_USER y MAIL_PASS (o SMTP_* equivalentes).\n' +
       '   El envío de emails no funcionará hasta que estén configuradas.'
   );
 } else {
-  console.log(`✅ [Mailer] Configuración SMTP cargada | usuario: ${process.env.MAIL_USER}`);
+  console.log(`✅ [Mailer] Configuración SMTP cargada | usuario: ${mailConfig.user}`);
 }
 
 if (!process.env.FRONTEND_URL) {
@@ -27,31 +43,39 @@ if (!process.env.FRONTEND_URL) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Transporter
-// Diseñado para funcionar con Gmail (App Password) y fácilmente intercambiable
-// por Brevo / Resend / SendGrid cambiando solo las variables de entorno.
-// ---------------------------------------------------------------------------
-const port = Number(process.env.MAIL_PORT);
+let transporter = null;
 
-const transporter = nodemailer.createTransport({
-  host: process.env.MAIL_HOST,
-  port,
-  secure: port === 465, // true → SSL/TLS directo (ej. Gmail 465); false → STARTTLS (ej. Brevo 587)
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: true, // Rechaza certificados inválidos en producción
-  },
-  debug: process.env.NODE_ENV === 'development', // Logs detallados solo en desarrollo
-  logger: process.env.NODE_ENV === 'development',
-});
+function createTransporter() {
+  const { host, port, user, pass } = getMailConfig();
 
-// Verifica la conexión al arrancar solo cuando la configuración está completa
-if (missingVars.length === 0) {
-  transporter.verify((error) => {
+  if (!host || !port || !user || !pass || Number.isNaN(port)) {
+    throw new Error(
+      '[Mailer] Configuración SMTP incompleta. Revisá MAIL_HOST, MAIL_PORT, MAIL_USER y MAIL_PASS.'
+    );
+  }
+
+  return nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465,
+    auth: { user, pass },
+    tls: {
+      rejectUnauthorized: true,
+    },
+    debug: process.env.NODE_ENV === 'development',
+    logger: process.env.NODE_ENV === 'development',
+  });
+}
+
+export function getTransporter() {
+  if (!transporter) {
+    transporter = createTransporter();
+  }
+  return transporter;
+}
+
+if (missingFields.length === 0) {
+  getTransporter().verify((error) => {
     if (error) {
       console.error('❌ [Mailer] Error verificando conexión SMTP:', error.message);
     } else {
@@ -60,4 +84,4 @@ if (missingVars.length === 0) {
   });
 }
 
-export default transporter;
+export default getTransporter;

@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
 import multer from 'multer';
-import nodemailer from 'nodemailer';
 import morgan from 'morgan';
 import routes from './routes/index.js';
 

@@ -169,8 +169,8 @@ const LandingSidebar = ({ isOpen, onClose, onSectionClick, activeSection }) => {
                 <div className="w-2 h-2 bg-kiendamas-gold rounded-full animate-pulse delay-150"></div>
               </div>
               <div className="text-xs text-kiendamas-text/80 font-raleway">
-                <p>📧 info@kiendamas.com</p>
-                <p className="mt-1">📱 +54 9 11 1234-5678</p>
+                <p>📧 consultas.kiendamas@gmail.com</p>
+                <p className="mt-1">📱 +54 9 341 2 613097</p>
               </div>
             </div>
           </div>
