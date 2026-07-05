@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { HiOutlineMapPin, HiOutlineGlobeAlt } from 'react-icons/hi2';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useCreateContactoMutation } from '../../features/contacto/contactoApi';
+import { useUI } from '../../hooks/useUI';
 
 const ContactSection = () => {
   const [createContacto, { isLoading }] = useCreateContactoMutation();
+  const { showSuccess: notifySuccess, showError: notifyError } = useUI();
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
@@ -24,7 +26,7 @@ const ContactSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createContacto(formData).unwrap();
+      const result = await createContacto(formData).unwrap();
       setShowSuccess(true);
       setFormData({
         nombre: '',
@@ -32,8 +34,19 @@ const ContactSection = () => {
         telefono: '',
         mensaje: ''
       });
+      if (result.emailSent === false) {
+        notifyError('Tu mensaje se guardó, pero no pudimos enviar el email de aviso.');
+      } else {
+        notifySuccess('¡Mensaje enviado correctamente!');
+      }
       setTimeout(() => setShowSuccess(false), 5000);
     } catch (error) {
+      const message =
+        error?.data?.message ||
+        (error?.status === 'FETCH_ERROR'
+          ? 'No se pudo conectar con el servidor. Verificá que el backend esté activo.'
+          : 'Error al enviar el mensaje. Intentá de nuevo.');
+      notifyError(message);
       console.error('Error al enviar contacto:', error);
     }
   };

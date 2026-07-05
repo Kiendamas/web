@@ -17,6 +17,10 @@ Contacto.init({
     type: DataTypes.STRING,
     allowNull: false,
   },
+  telefono: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   mensaje: {
     type: DataTypes.TEXT,
     allowNull: false,
