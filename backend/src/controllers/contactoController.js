@@ -1,14 +1,16 @@
 import Contacto from '../models/contacto.js';
 import { sendMail } from '../utils/mailer.js';
+import { getContactInbox } from '../config/mailer.js';
 
 export const create = async (req, res, next) => {
   try {
     const contacto = await Contacto.create(req.body);
+    const inbox = getContactInbox();
     
     // Enviar email con nodemailer
     try {
       await sendMail({
-        to: 'consultas.kiendamas@gmail.com',
+        to: inbox,
         replyTo: contacto.email,
         subject: 'Nuevo mensaje de contacto',
         html: `
@@ -22,7 +24,7 @@ export const create = async (req, res, next) => {
         text: `Nombre: ${contacto.nombre}\nEmail: ${contacto.email}\nTel\u00e9fono: ${contacto.telefono || 'No proporcionado'}\nMensaje: ${contacto.mensaje}`,
       });
       
-      console.log('Email enviado exitosamente a consultas.kiendamas@gmail.com');
+      console.log(`Email enviado exitosamente a ${inbox}`);
       res.status(201).json({ 
         ...contacto.toJSON(), 
         emailSent: true,

@@ -30,6 +30,17 @@ export function getMailConfig() {
   };
 }
 
+// Resend en modo prueba solo permite enviar al email de la cuenta registrada.
+export function getContactInbox() {
+  if (process.env.CONTACT_INBOX) {
+    return process.env.CONTACT_INBOX;
+  }
+  if (MAIL_TRANSPORT === 'resend') {
+    return getMailEnv('USER') || 'kiendamasturismo@gmail.com';
+  }
+  return 'consultas.kiendamas@gmail.com';
+}
+
 const mailConfig = getMailConfig();
 const smtpFields = ['host', 'port', 'user', 'pass'];
 const missingSmtpFields = smtpFields.filter(
