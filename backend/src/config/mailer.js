@@ -3,7 +3,18 @@ import nodemailer from 'nodemailer';
 
 dotenv.config();
 
-export const MAIL_TRANSPORT = (process.env.MAIL_TRANSPORT || 'smtp').toLowerCase();
+export const MAIL_TRANSPORT = (() => {
+  if (process.env.MAIL_TRANSPORT) {
+    return process.env.MAIL_TRANSPORT.toLowerCase();
+  }
+  if (process.env.RESEND_API_KEY) {
+    return 'resend';
+  }
+  if (process.env.BREVO_API_KEY) {
+    return 'brevo';
+  }
+  return 'smtp';
+})();
 
 // Soporta MAIL_* (preferido) y SMTP_* (legacy)
 export function getMailEnv(name) {
@@ -25,7 +36,14 @@ const missingSmtpFields = smtpFields.filter(
   (field) => !mailConfig[field] || Number.isNaN(mailConfig.port)
 );
 
-if (MAIL_TRANSPORT === 'brevo') {
+if (MAIL_TRANSPORT === 'resend') {
+  if (!process.env.RESEND_API_KEY) {
+    console.error('⚠️  [Mailer] MAIL_TRANSPORT=resend pero falta RESEND_API_KEY.');
+  } else {
+    const from = process.env.MAIL_FROM || 'Kiendamas Turismo <onboarding@resend.dev>';
+    console.log(`✅ [Mailer] Transporte Resend API | remitente: ${from}`);
+  }
+} else if (MAIL_TRANSPORT === 'brevo') {
   if (!process.env.BREVO_API_KEY) {
     console.error('⚠️  [Mailer] MAIL_TRANSPORT=brevo pero falta BREVO_API_KEY.');
   } else if (!getMailEnv('USER')) {
@@ -37,12 +55,17 @@ if (MAIL_TRANSPORT === 'brevo') {
   console.error(
     `⚠️  [Mailer] Configuración SMTP incompleta (${missingSmtpFields.join(', ')}).\n` +
       '   Definí MAIL_HOST, MAIL_PORT, MAIL_USER y MAIL_PASS.\n' +
-      '   En producción con timeout SMTP, usá MAIL_TRANSPORT=brevo + BREVO_API_KEY.'
+      '   En producción con timeout SMTP, usá MAIL_TRANSPORT=resend + RESEND_API_KEY (sin SMS).'
   );
 } else {
   console.log(
     `✅ [Mailer] Transporte SMTP | ${mailConfig.host}:${mailConfig.port} | usuario: ${mailConfig.user}`
   );
+  if (process.env.RENDER) {
+    console.warn(
+      '⚠️  [Mailer] Render bloquea SMTP saliente. En producción usá RESEND_API_KEY o BREVO_API_KEY.'
+    );
+  }
 }
 
 if (!process.env.FRONTEND_URL) {
@@ -106,7 +129,7 @@ function verifySmtpConnection() {
     if (error) {
       const hint =
         error.message?.includes('timeout') || error.code === 'ETIMEDOUT'
-          ? ' Muchos hosts cloud bloquean SMTP (587/465). Probá MAIL_PORT=465 o MAIL_TRANSPORT=brevo.'
+          ? ' Muchos hosts cloud bloquean SMTP (587/465). Usá MAIL_TRANSPORT=resend + RESEND_API_KEY.'
           : '';
       console.error(`❌ [Mailer] Error verificando conexión SMTP: ${error.message}.${hint}`);
     } else {

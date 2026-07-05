@@ -1,30 +1,120 @@
-// El transporter y su validación viven en config/mailer.js.
-// Este módulo expone las funciones de envío de emails que usa el resto de la app.
-import getTransporter, { getMailEnv } from '../config/mailer.js';
+import getTransporter, { getMailEnv, MAIL_TRANSPORT } from '../config/mailer.js';
 
 const isDev = process.env.NODE_ENV === 'development';
 
-// ---------------------------------------------------------------------------
-// sendMail — función base reutilizable
-// ---------------------------------------------------------------------------
-export async function sendMail({ to, subject, text, html, from }) {
-  try {
-    const info = await getTransporter().sendMail({
-      from: from || `"Kiendamas Turismo" <${getMailEnv('USER')}>`,
-      to,
-      subject,
-      text,
-      html,
-    });
+function getFromAddress(from) {
+  return from || `"Kiendamas Turismo" <${getMailEnv('USER')}>`;
+}
 
-    console.log(`✅ [Mailer] Email enviado a ${to} | messageId: ${info.messageId}`);
-    return info;
+function parseSender(from) {
+  const value = getFromAddress(from);
+  const match = value.match(/^"([^"]+)"\s*<([^>]+)>$/);
+  if (match) {
+    return { name: match[1], email: match[2] };
+  }
+  return { name: 'Kiendamas Turismo', email: getMailEnv('USER') };
+}
+
+async function sendViaResend({ to, subject, text, html, from, replyTo }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error('[Mailer] RESEND_API_KEY no configurada');
+  }
+
+  const fromAddress = from || process.env.MAIL_FROM || 'Kiendamas Turismo <onboarding@resend.dev>';
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: fromAddress,
+      to: [to],
+      subject,
+      html,
+      text,
+      ...(replyTo && { reply_to: replyTo }),
+    }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.message || data.error || `Resend API respondió ${response.status}`);
+  }
+
+  console.log(`✅ [Mailer] Email enviado vía Resend a ${to} | id: ${data.id}`);
+  return { messageId: data.id, provider: 'resend' };
+}
+
+async function sendViaBrevo({ to, subject, text, html, from }) {
+  const apiKey = process.env.BREVO_API_KEY;
+  if (!apiKey) {
+    throw new Error('[Mailer] BREVO_API_KEY no configurada');
+  }
+
+  const sender = parseSender(from);
+  if (!sender.email) {
+    throw new Error('[Mailer] MAIL_USER no configurada (remitente verificado en Brevo)');
+  }
+
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      'api-key': apiKey,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      sender,
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+      textContent: text,
+    }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.message || `Brevo API respondió ${response.status}`);
+  }
+
+  console.log(`✅ [Mailer] Email enviado vía Brevo a ${to} | messageId: ${data.messageId}`);
+  return { messageId: data.messageId, provider: 'brevo' };
+}
+
+async function sendViaSmtp({ to, subject, text, html, from }) {
+  const info = await getTransporter().sendMail({
+    from: getFromAddress(from),
+    to,
+    subject,
+    text,
+    html,
+  });
+
+  console.log(`✅ [Mailer] Email enviado vía SMTP a ${to} | messageId: ${info.messageId}`);
+  return info;
+}
+
+export async function sendMail({ to, subject, text, html, from, replyTo }) {
+  try {
+    if (MAIL_TRANSPORT === 'resend') {
+      return await sendViaResend({ to, subject, text, html, from, replyTo });
+    }
+    if (MAIL_TRANSPORT === 'brevo') {
+      return await sendViaBrevo({ to, subject, text, html, from });
+    }
+    return await sendViaSmtp({ to, subject, text, html, from });
   } catch (error) {
     const details = {
       message: error.message,
       code: error.code,
       command: error.command,
       response: error.response,
+      transport: MAIL_TRANSPORT,
     };
     if (isDev) details.stack = error.stack;
     console.error('❌ [Mailer] Error enviando email:', details);
@@ -32,9 +122,6 @@ export async function sendMail({ to, subject, text, html, from }) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// sendRegistrationMail — bienvenida al registrarse
-// ---------------------------------------------------------------------------
 export async function sendRegistrationMail(to) {
   return sendMail({
     to,
@@ -50,9 +137,6 @@ export async function sendRegistrationMail(to) {
   });
 }
 
-// ---------------------------------------------------------------------------
-// sendPasswordRecoveryMail — enlace de recuperación de contraseña
-// ---------------------------------------------------------------------------
 export async function sendPasswordRecoveryMail(to, token) {
   const baseUrl =
     process.env.FRONTEND_URL ||

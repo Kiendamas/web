@@ -9,6 +9,7 @@ export const create = async (req, res, next) => {
     try {
       await sendMail({
         to: 'consultas.kiendamas@gmail.com',
+        replyTo: contacto.email,
         subject: 'Nuevo mensaje de contacto',
         html: `
           <h2>Nuevo mensaje de contacto</h2>
